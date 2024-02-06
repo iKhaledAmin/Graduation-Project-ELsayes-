@@ -1,0 +1,44 @@
+package com.GP.ELsayes.controller;
+
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
+import com.GP.ELsayes.service.ManagerService;
+import jakarta.validation.Valid;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/managers")
+public class ManagerController {
+
+    @Autowired
+private ManagerService managerService;
+
+
+    @PostMapping("")
+    public ResponseEntity<?> add(@RequestBody @Valid ManagerRequest managerRequest) {
+        return new ResponseEntity<>(this.managerService.add(managerRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-by-id/{managerId}")
+    public ResponseEntity<?> getById(@PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.getById(managerId),HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.managerService.getAll(), HttpStatus.OK);
+    }
+
+    @PutMapping("/{managerId}")
+    public ResponseEntity<?> update(@RequestBody ManagerRequest managerRequest,@PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.update(managerRequest , managerId), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/{managerId}")
+    public ResponseEntity<?> delete(@PathVariable Long managerId){
+        this.managerService.delete(managerId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
+}
