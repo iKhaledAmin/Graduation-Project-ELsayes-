@@ -1,5 +1,6 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
+import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.enums.permissions.ManagerPermission;
 import jakarta.persistence.*;
@@ -24,4 +25,8 @@ public class Manager extends Employee {
 
     @Enumerated(EnumType.STRING)
     private ManagerPermission managerPermission;
+
+    @OneToOne
+    @JoinColumn(name = "branch-id")
+    private Branch branch;
 }
