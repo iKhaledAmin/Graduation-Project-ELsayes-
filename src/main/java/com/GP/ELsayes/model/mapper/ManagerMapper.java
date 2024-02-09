@@ -4,11 +4,12 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.M
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
 public interface ManagerMapper {
-    //ManagerMapper INSTANCE = Mappers.getMapper(ManagerMapper.class);
-    ManagerRequest toRequest(Manager entity);
+
+    OwnerMapper INSTANCE = Mappers.getMapper(OwnerMapper.class);
 
     Manager toEntity(ManagerRequest request);
 

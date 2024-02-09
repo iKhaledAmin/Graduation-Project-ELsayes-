@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Man
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
 import com.GP.ELsayes.repository.ManagerRepo;
+import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -18,6 +19,7 @@ import java.util.NoSuchElementException;
 public class ManagerServiceImpl implements ManagerService {
     private final ManagerMapper managerMapper;
     private final ManagerRepo managerRepo;
+    private final BranchService branchService;
 
 
     @Override
@@ -30,6 +32,7 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public ManagerResponse add(ManagerRequest managerRequest) {
         Manager manager = this.managerMapper.toEntity(managerRequest);
+        manager.setBranch(branchService.getById(managerRequest.getBranchId()));
         manager.setUserRole(UserRole.MANAGER);
         return this.managerMapper.toResponse(this.managerRepo.save(manager));
     }

@@ -37,8 +37,10 @@ public abstract class User {
     private String firstName;
     private String lastName;
     private String userName;
+    private String passWord;
     private String phoneNumber;
     private String email;
+    private String profileImageURL;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;

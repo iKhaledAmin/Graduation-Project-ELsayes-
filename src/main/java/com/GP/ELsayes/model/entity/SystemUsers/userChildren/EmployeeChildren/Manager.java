@@ -26,7 +26,8 @@ public class Manager extends Employee {
     @Enumerated(EnumType.STRING)
     private ManagerPermission managerPermission;
 
-    @OneToOne
+    @OneToOne(cascade = CascadeType.ALL)
     @JoinColumn(name = "branch-id")
     private Branch branch;
+
 }
