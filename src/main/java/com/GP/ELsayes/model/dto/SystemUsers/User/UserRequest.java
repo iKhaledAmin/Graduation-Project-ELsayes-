@@ -1,6 +1,8 @@
 package com.GP.ELsayes.model.dto.SystemUsers.User;
 
 import com.GP.ELsayes.model.enums.UserGender;
+import jakarta.persistence.Column;
+import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -28,17 +30,25 @@ public class UserRequest {
     @Size(max = 10 ,message = "Last name Must be less than 10 letters")
     private String lastName;
 
+    @Size(min = 5 ,message = "User name must be more than 5 letters")
+    @Size(max = 20 ,message = "Last name must be less than 20 letters")
     @NotNull(message = "User-name Must Not Be Null")
     @NotEmpty(message = "User-name Must Not Be Empty")
     private String userName;
 
-    @Pattern(regexp="(^$|[0-9]{11})" , message = "Invalid Phone Number")
-    private String phoneNumber;
+    @NotNull(message = "Password must not be null")
+    @NotEmpty(message = "Password must not be empty")
+    private String password;
 
     @NotNull(message = "Email name must not be null")
     @NotEmpty(message = "Email name must not be empty")
     @Email(message = "Invalid email address")
     private String email;
+
+    private String profileImageURL;
+
+    @Pattern(regexp="(^$|[0-9]{11})" , message = "Invalid phone number")
+    private String phoneNumber;
 
     @NotNull (message = "Birthday must not be null")
     private Date birthday;

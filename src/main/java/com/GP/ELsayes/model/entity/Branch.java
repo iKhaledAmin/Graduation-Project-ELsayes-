@@ -1,5 +1,9 @@
 package com.GP.ELsayes.model.entity;
 
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -9,6 +13,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SuperBuilder
 @Data
@@ -21,7 +26,6 @@ import java.time.LocalDateTime;
 public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "branch-id")
     private Long id;
     private String name;
     private String location;
@@ -35,5 +39,13 @@ public class Branch {
 
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
+
+    @OneToOne(mappedBy = "managedBranch")
+    @JsonBackReference
+    private Manager manager;
+
+//    @JsonManagedReference
+//    @OneToMany(mappedBy = "branchWorkOn")
+//    private List<Employee> employees;
 
 }

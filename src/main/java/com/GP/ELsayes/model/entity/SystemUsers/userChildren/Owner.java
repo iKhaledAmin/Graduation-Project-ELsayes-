@@ -12,12 +12,11 @@ import lombok.experimental.SuperBuilder;
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
-//@AllArgsConstructor
 
 //@Where(clause = "deleted_at is null")
 @Entity
 @Table(name = "owner")
-@PrimaryKeyJoinColumn(name = "owner-id")
+@PrimaryKeyJoinColumn(name = "owner_id")
 public class Owner extends User {
 
 

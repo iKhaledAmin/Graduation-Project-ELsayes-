@@ -37,10 +37,10 @@ public abstract class User {
     private String firstName;
     private String lastName;
     private String userName;
-    private String passWord;
-    private String phoneNumber;
+    private String password;
     private String email;
     private String profileImageURL;
+    private String phoneNumber;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;
@@ -58,7 +58,6 @@ public abstract class User {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
 

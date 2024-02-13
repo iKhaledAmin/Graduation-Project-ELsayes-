@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -25,16 +26,31 @@ public class ManagerServiceImpl implements ManagerService {
     @Override
     public Manager getById(Long ManagerId) {
         return managerRepo.findById(ManagerId).orElseThrow(
-                () -> new NoSuchElementException("There Are No Manager With Id = " + ManagerId)
+                () -> new NoSuchElementException("There Is No Manager With Id = " + ManagerId)
+        );
+    }
+
+    @Override
+    public Manager getByBranchId(long branchId) {
+        return managerRepo.findByBranchId(branchId).orElseThrow(
+                () -> new NoSuchElementException("There Is No Manager With Branch Id = " + branchId)
         );
     }
 
     @Override
     public ManagerResponse add(ManagerRequest managerRequest) {
         Manager manager = this.managerMapper.toEntity(managerRequest);
-        manager.setBranch(branchService.getById(managerRequest.getBranchId()));
-        manager.setUserRole(UserRole.MANAGER);
-        return this.managerMapper.toResponse(this.managerRepo.save(manager));
+
+        Optional<Manager> branchManager = this.managerRepo.findByBranchId(managerRequest.getManagedBranchId());
+        if(branchManager.isPresent()){
+            throw new RuntimeException("This branch already have manager and every branch only have one manager");
+        }
+
+            //manager.setBranchWorkOn(branchService.getById(managerRequest.getBranchIdWorkOn()));
+            manager.setManagedBranch(branchService.getById(managerRequest.getManagedBranchId()));
+            manager.setUserRole(UserRole.MANAGER);
+            return this.managerMapper.toResponse(this.managerRepo.save(manager));
+
     }
 
     @Override
@@ -58,4 +74,6 @@ public class ManagerServiceImpl implements ManagerService {
         getById(managerId);
         managerRepo.deleteById(managerId);
     }
+
+
 }

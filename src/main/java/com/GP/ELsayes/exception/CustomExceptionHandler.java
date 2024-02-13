@@ -21,6 +21,12 @@ public class CustomExceptionHandler {
     public ErrorResponse handleNoSuchElementException(NoSuchElementException exception) {
         return new ErrorResponse(exception.getMessage());
     }
+
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(RuntimeException.class)
+    public ErrorResponse handleRuntimeException(RuntimeException exception) {
+        return new ErrorResponse(exception.getMessage());
+    }
     @ExceptionHandler (MethodArgumentNotValidException .class)
     protected ResponseEntity<Object> handleValidationExceptions(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();

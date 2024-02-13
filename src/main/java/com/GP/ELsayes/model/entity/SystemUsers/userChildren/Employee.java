@@ -1,12 +1,16 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren;
 
+import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.enums.roles.EmployeeRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+import java.util.Date;
 
 @SuperBuilder
 @Data
@@ -19,7 +23,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "employee")
-@PrimaryKeyJoinColumn(name = "employee-id")
+@PrimaryKeyJoinColumn(name = "employee_id")
 @Inheritance(strategy = InheritanceType.JOINED)
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public abstract class Employee extends User {
@@ -29,8 +33,13 @@ public abstract class Employee extends User {
     private String bonus;
     private String totalSalary;
 
-    @Enumerated(EnumType.STRING)
-    private EmployeeRole employeeRole;
+    private Date dateOfEmployment;
+    private Date DateOfResignation;
+
+//    @JsonBackReference
+//    @ManyToOne(fetch = FetchType.LAZY)
+//    @JoinColumn(name = "branch_id")
+//    private Branch branchWorkOn;
 
     //public abstract double setTotalSalary();
 }

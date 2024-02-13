@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 
 @Entity
 @Table(name = "worker")
-@PrimaryKeyJoinColumn(name = "worker-id")
+@PrimaryKeyJoinColumn(name = "worker_id")
 public class Worker {
     @Id
     private Long id;
