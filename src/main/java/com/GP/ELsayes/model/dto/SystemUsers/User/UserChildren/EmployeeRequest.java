@@ -20,8 +20,6 @@ public class EmployeeRequest extends UserRequest {
     @Positive(message = "Base Salary must be greater than 0")
     private String baseSalary;
 
-//    @NotNull(message = "branch Id Work On Must Not Be Null")
-//    @NotEmpty(message = "branch Id Work On Must Not Be Empty")
-    private Long branchIdWorkOn;
+
 
 }

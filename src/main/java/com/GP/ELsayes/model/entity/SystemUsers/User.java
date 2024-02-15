@@ -32,7 +32,7 @@ public abstract class User {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     //@GeneratedValue(strategy = GenerationType.TABLE)
-    @Column(name = "user-id")
+    @Column(name = "user_id")
     private Long id;
     private String firstName;
     private String lastName;

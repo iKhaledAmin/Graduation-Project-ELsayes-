@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -26,6 +27,7 @@ import java.util.List;
 public class Branch {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "branch_id")
     private Long id;
     private String name;
     private String location;
@@ -40,12 +42,15 @@ public class Branch {
     @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
+
+
     @OneToOne(mappedBy = "managedBranch")
     @JsonBackReference
     private Manager manager;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "branchWorkOn")
-//    private List<Employee> employees;
+
+    @JsonManagedReference
+        @OneToMany(mappedBy = "branchWorkOn")
+    private List<Worker> workers;
 
 }

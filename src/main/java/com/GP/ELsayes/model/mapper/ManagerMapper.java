@@ -9,7 +9,7 @@ import org.mapstruct.factory.Mappers;
 @Mapper(componentModel = "spring")
 public interface ManagerMapper {
 
-    OwnerMapper INSTANCE = Mappers.getMapper(OwnerMapper.class);
+    ManagerMapper INSTANCE = Mappers.getMapper(ManagerMapper.class);
 
     Manager toEntity(ManagerRequest request);
 

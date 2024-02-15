@@ -24,9 +24,9 @@ public class ManagerServiceImpl implements ManagerService {
 
 
     @Override
-    public Manager getById(Long ManagerId) {
-        return managerRepo.findById(ManagerId).orElseThrow(
-                () -> new NoSuchElementException("There Is No Manager With Id = " + ManagerId)
+    public Manager getById(Long managerId) {
+        return managerRepo.findById(managerId).orElseThrow(
+                () -> new NoSuchElementException("There Is No Manager With Id = " + managerId)
         );
     }
 
@@ -46,10 +46,9 @@ public class ManagerServiceImpl implements ManagerService {
             throw new RuntimeException("This branch already have manager and every branch only have one manager");
         }
 
-            //manager.setBranchWorkOn(branchService.getById(managerRequest.getBranchIdWorkOn()));
-            manager.setManagedBranch(branchService.getById(managerRequest.getManagedBranchId()));
-            manager.setUserRole(UserRole.MANAGER);
-            return this.managerMapper.toResponse(this.managerRepo.save(manager));
+        manager.setManagedBranch(branchService.getById(managerRequest.getManagedBranchId()));
+        manager.setUserRole(UserRole.MANAGER);
+        return this.managerMapper.toResponse(this.managerRepo.save(manager));
 
     }
 

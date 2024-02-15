@@ -36,10 +36,7 @@ public abstract class Employee extends User {
     private Date dateOfEmployment;
     private Date DateOfResignation;
 
-//    @JsonBackReference
-//    @ManyToOne(fetch = FetchType.LAZY)
-//    @JoinColumn(name = "branch_id")
-//    private Branch branchWorkOn;
+
 
     //public abstract double setTotalSalary();
 }

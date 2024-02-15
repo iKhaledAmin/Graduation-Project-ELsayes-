@@ -1,11 +1,11 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.PrimaryKeyJoinColumn;
-import jakarta.persistence.Table;
+import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
+import com.GP.ELsayes.model.enums.roles.WorkerRole;
+import com.fasterxml.jackson.annotation.JsonBackReference;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
@@ -20,8 +20,17 @@ import lombok.experimental.SuperBuilder;
 @Entity
 @Table(name = "worker")
 @PrimaryKeyJoinColumn(name = "worker_id")
-public class Worker {
+public class Worker extends Employee {
     @Id
+    @Column(name = "worker_id")
     private Long id;
     private String Score;
+
+    @Enumerated(EnumType.STRING)
+    private WorkerRole workerRole;
+
+    @JsonBackReference
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "branch_id")
+    private Branch branchWorkOn;
 }
