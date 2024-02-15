@@ -56,7 +56,7 @@ public class OwnerServiceImpl implements OwnerService {
 
     @Override
     public void delete(Long ownerId) {
-        getById(ownerId);
+        this.getById(ownerId);
         ownerRepo.deleteById(ownerId);
     }
 
