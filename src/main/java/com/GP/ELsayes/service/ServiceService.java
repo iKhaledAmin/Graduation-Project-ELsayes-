@@ -6,5 +6,5 @@ import com.GP.ELsayes.model.entity.ServiceEntity;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ServiceService extends CrudService<ServiceRequest, ServiceEntity, ServiceResponse,Long> {
+public interface ServiceService extends CrudService<ServiceRequest , ServiceEntity , ServiceResponse ,Long> {
 }

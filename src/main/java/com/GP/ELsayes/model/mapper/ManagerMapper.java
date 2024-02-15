@@ -13,5 +13,5 @@ public interface ManagerMapper {
 
     Manager toEntity(ManagerRequest request);
 
-    ManagerResponse toResponse(Manager responses);
+    ManagerResponse toResponse(Manager entity);
 }

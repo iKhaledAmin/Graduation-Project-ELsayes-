@@ -13,5 +13,6 @@ public interface ServiceMapper {
 
     ServiceEntity toEntity(ServiceRequest request);
 
-    ServiceResponse toResponse(ServiceEntity responses);
+    ServiceResponse toResponse(ServiceEntity entity);
+
 }

@@ -16,5 +16,5 @@ public interface WorkerMapper {
 
     Worker toEntity(WorkerRequest request);
 
-    WorkerResponse toResponse(Worker responses);
+    WorkerResponse toResponse(Worker entity);
 }

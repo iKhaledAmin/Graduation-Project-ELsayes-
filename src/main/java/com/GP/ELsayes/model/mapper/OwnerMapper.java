@@ -11,10 +11,9 @@ import org.mapstruct.factory.Mappers;
 public interface OwnerMapper {
 
     OwnerMapper INSTANCE = Mappers.getMapper(OwnerMapper.class);
-    OwnerRequest toRequest(Owner entity);
 
     Owner toEntity(OwnerRequest request);
 
-    OwnerResponse toResponse(Owner responses);
+    OwnerResponse toResponse(Owner entity);
 
 }

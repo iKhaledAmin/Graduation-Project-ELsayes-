@@ -1,10 +1,13 @@
 package com.GP.ELsayes.model.dto;
 
 import com.GP.ELsayes.model.enums.ServiceCategory;
+import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.CreationTimestamp;
+import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
 
@@ -18,8 +21,8 @@ public class ServiceResponse {
     private String name;
     private String description;
     private String serviceImageURL;
-    private double price;
-    private float requiredTime;
+    private String price;
+    private String requiredTime;
     private ServiceCategory serviceCategory;
 
 }

@@ -33,7 +33,7 @@ public class WorkerController {
     }
 
     @PutMapping("/{workerId}")
-    public ResponseEntity<?> update(@RequestBody WorkerRequest workerRequest, @PathVariable Long workerId){
+    public ResponseEntity<?> update(@RequestBody @Valid WorkerRequest workerRequest, @PathVariable Long workerId){
         return new ResponseEntity<>(this.workerService.update(workerRequest , workerId), HttpStatus.ACCEPTED);
     }
 

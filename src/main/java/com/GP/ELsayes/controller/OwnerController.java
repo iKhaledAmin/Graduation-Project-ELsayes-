@@ -32,7 +32,7 @@ public class OwnerController {
     }
 
     @PutMapping("/{ownerId}")
-    public ResponseEntity<?> update(@RequestBody OwnerRequest ownerRequest,@PathVariable Long ownerId){
+    public ResponseEntity<?> update(@RequestBody @Valid OwnerRequest ownerRequest,@PathVariable Long ownerId){
         return new ResponseEntity<>(this.ownerService.update(ownerRequest , ownerId), HttpStatus.ACCEPTED);
     }
 

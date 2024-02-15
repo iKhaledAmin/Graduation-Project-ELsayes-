@@ -10,9 +10,8 @@ import org.mapstruct.factory.Mappers;
 public interface BranchMapper {
 
     BranchMapper INSTANCE = Mappers.getMapper(BranchMapper.class);
-    BranchRequest toRequest(Branch entity);
 
     Branch toEntity(BranchRequest request);
 
-    BranchResponse toResponse(Branch responses);
+    BranchResponse toResponse(Branch entity);
 }

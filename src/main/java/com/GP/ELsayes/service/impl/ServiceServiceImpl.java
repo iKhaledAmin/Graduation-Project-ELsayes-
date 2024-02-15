@@ -2,26 +2,28 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
 import com.GP.ELsayes.service.ServiceService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
-import com.GP.ELsayes.model.entity.ServiceEntity;
 
 import java.util.List;
 import java.util.NoSuchElementException;
 
+
 @RequiredArgsConstructor
 @Service
 public class ServiceServiceImpl implements ServiceService {
-
-    private final ServiceMapper serviceMapper;
     private final ServiceRepo serviceRepo;
+    private final ServiceMapper serviceMapper;
+
     @Override
     public ServiceEntity getById(Long serviceId) {
         return serviceRepo.findById(serviceId).orElseThrow(
-                () -> new NoSuchElementException("There are no service with id = " + serviceId)
+                () -> new NoSuchElementException("There is no service with id = " + serviceId)
         );
     }
 
@@ -35,7 +37,7 @@ public class ServiceServiceImpl implements ServiceService {
     public List<ServiceResponse> getAll() {
         return serviceRepo.findAll()
                 .stream()
-                .map(owner ->  serviceMapper.toResponse(owner))
+                .map(service ->  serviceMapper.toResponse(service))
                 .toList();
     }
 
@@ -49,7 +51,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public void delete(Long serviceId) {
-        getById(serviceId);
+        this.getById(serviceId);
         serviceRepo.deleteById(serviceId);
     }
 }

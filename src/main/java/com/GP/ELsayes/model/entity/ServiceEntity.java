@@ -1,6 +1,5 @@
 package com.GP.ELsayes.model.entity;
 
-
 import com.GP.ELsayes.model.enums.ServiceCategory;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -21,6 +20,7 @@ import java.time.LocalDateTime;
 @Entity
 @Table(name = "service")
 public class ServiceEntity {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "service_id")
@@ -34,7 +34,6 @@ public class ServiceEntity {
 
     @Enumerated(EnumType.STRING)
     private ServiceCategory serviceCategory;
-
 
     @CreationTimestamp
     private LocalDateTime createdAt;
