@@ -1,5 +1,6 @@
 package com.GP.ELsayes.model.dto;
 
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
@@ -18,7 +19,5 @@ public class BranchResponse {
     private String name;
     private String location;
     private String capacityOfCars;
-
-    @JsonManagedReference
-    private List<Worker> workers;
+    private Long managerId;
 }

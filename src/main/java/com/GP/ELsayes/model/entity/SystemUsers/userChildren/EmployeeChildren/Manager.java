@@ -31,6 +31,6 @@ public class Manager extends Employee {
     @OneToOne
     @JsonBackReference
     @JoinColumn(name = "branch_Id")
-    private Branch managedBranch;
+    private Branch branch;
 
 }

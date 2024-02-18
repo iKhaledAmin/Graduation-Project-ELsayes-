@@ -20,7 +20,7 @@ public class ManagerRequest extends EmployeeRequest {
     private ManagerPermission managerPermission;
 
     @NotNull(message = "Branch id manage it must not be null")
-    private Long managedBranchId;
+    private Long branchId;
 
 
 

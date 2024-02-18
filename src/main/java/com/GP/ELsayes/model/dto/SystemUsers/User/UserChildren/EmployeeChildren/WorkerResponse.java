@@ -21,9 +21,7 @@ public class WorkerResponse  extends EmployeeResponse {
     private String Score;
     WorkerRole workerRole;
 
-    //@JsonBackReference
-    //@JsonIgnore
-    @JsonManagedReference
+    @JsonBackReference
     Branch branchWorkOn;
 }
 

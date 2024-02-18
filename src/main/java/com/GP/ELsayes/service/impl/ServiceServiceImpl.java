@@ -2,6 +2,7 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
@@ -25,6 +26,11 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findById(serviceId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId)
         );
+    }
+
+    @Override
+    public ServiceResponse getResponseById(Long serviceId) {
+        return serviceMapper.toResponse(getById(serviceId));
     }
 
     @Override

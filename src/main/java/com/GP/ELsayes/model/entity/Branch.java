@@ -39,18 +39,17 @@ public class Branch {
     @UpdateTimestamp
     private LocalDateTime updatedAt;
 
-    @Column(name = "deleted_at")
     private LocalDateTime deletedAt;
 
 
 
-    @OneToOne(mappedBy = "managedBranch")
-    @JsonBackReference
+    @OneToOne(mappedBy = "branch")
+    @JsonManagedReference
     private Manager manager;
 
 
     @JsonManagedReference
-        @OneToMany(mappedBy = "branchWorkOn")
+    @OneToMany(mappedBy = "branch")
     private List<Worker> workers;
 
 }

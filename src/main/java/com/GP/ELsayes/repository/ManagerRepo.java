@@ -9,6 +9,6 @@ import java.util.Optional;
 
 
 public interface ManagerRepo extends JpaRepository<Manager,Long> {
-    @Query("SELECT manager FROM Manager manager WHERE manager.managedBranch.id = :branchId")
+    @Query("SELECT manager FROM Manager manager WHERE manager.branch.id = :branchId")
     Optional<Manager> findByBranchId(Long branchId);
 }

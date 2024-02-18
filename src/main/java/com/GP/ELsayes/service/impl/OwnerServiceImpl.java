@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service.impl;
 
 
+import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -28,6 +29,11 @@ public class OwnerServiceImpl implements OwnerService {
         return ownerRepo.findById(ownerId).orElseThrow(
                 () -> new NoSuchElementException("There Are No Owner With Id = " + ownerId)
         );
+    }
+
+    @Override
+    public OwnerResponse getResponseById(Long ownerId) {
+        return ownerMapper.toResponse(getById(ownerId));
     }
 
     @Override

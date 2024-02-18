@@ -1,12 +1,14 @@
 package com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
-import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.enums.roles.EmployeeRole;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+
+
+import java.util.Date;
 
 @Data
 @AllArgsConstructor
@@ -18,5 +20,7 @@ public class EmployeeResponse extends UserResponse {
     private String baseSalary;
     private String bonus;
     private String totalSalary;
-    private Branch branchWorkOn;
+
+    private Date dateOfEmployment;
+
 }

@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.M
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -13,5 +14,6 @@ public interface ManagerMapper {
 
     Manager toEntity(ManagerRequest request);
 
+    @Mapping(target = "branchId" , source = "entity.branch.id")
     ManagerResponse toResponse(Manager entity);
 }

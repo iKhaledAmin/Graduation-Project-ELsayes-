@@ -3,6 +3,7 @@ package com.GP.ELsayes.model.entity.SystemUsers;
 import com.GP.ELsayes.model.enums.UserGender;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -52,12 +53,14 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
+    @JsonIgnore
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @JsonIgnore
     @UpdateTimestamp
     private LocalDateTime updatedAt;
-
+    @JsonIgnore
     private LocalDateTime deletedAt;
 
 

@@ -15,10 +15,14 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class EmployeeRequest extends UserRequest {
 
-    @NotNull(message = "Base Salary Must Not Be Null")
-    @NotEmpty(message = "Base Salary Must Not Be Empty")
-    @Positive(message = "Base Salary must be greater than 0")
+    @NotNull(message = "Base salary must not be null")
+    @NotEmpty(message = "Base salary must not be empty")
+    @Positive(message = "Base salary must be greater than 0")
     private String baseSalary;
+
+    @NotNull(message = "Bonus must not be null")
+    @NotEmpty(message = "Bonus must not be empty")
+    private String bonus;
 
 
 

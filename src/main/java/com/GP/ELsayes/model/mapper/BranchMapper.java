@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -13,5 +14,6 @@ public interface BranchMapper {
 
     Branch toEntity(BranchRequest request);
 
+    @Mapping(target = "managerId" , source = "entity.manager.id")
     BranchResponse toResponse(Branch entity);
 }

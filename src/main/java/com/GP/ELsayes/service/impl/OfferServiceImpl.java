@@ -1,5 +1,6 @@
 package com.GP.ELsayes.service.impl;
 
+import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.dto.OfferRequest;
 import com.GP.ELsayes.model.dto.OfferResponse;
 import com.GP.ELsayes.model.entity.Offer;
@@ -26,6 +27,11 @@ public class OfferServiceImpl implements OfferService {
         return offerRepo.findById(offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no offer with id = " + offerId)
         );
+    }
+
+    @Override
+    public OfferResponse getResponseById(Long offerId) {
+        return offerMapper.toResponse(getById(offerId));
     }
 
     @Override

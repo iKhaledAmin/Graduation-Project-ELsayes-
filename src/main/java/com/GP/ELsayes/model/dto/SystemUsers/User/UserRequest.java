@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.dto.SystemUsers.User;
 
 import com.GP.ELsayes.model.enums.UserGender;
+import com.GP.ELsayes.model.enums.roles.UserRole;
 import jakarta.persistence.Column;
 import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.*;
@@ -38,6 +39,7 @@ public class UserRequest {
 
     @NotNull(message = "Password must not be null")
     @NotEmpty(message = "Password must not be empty")
+    @Size(max = 20, min = 8, message = "student_password Must Be Between 8 and 20 character.")
     private String password;
 
     @NotNull(message = "Email name must not be null")
@@ -55,6 +57,8 @@ public class UserRequest {
 
     @NotNull (message = "Gender must not be null")
     private UserGender gender ;
+
+    //private UserRole userRole;
 
 
 }

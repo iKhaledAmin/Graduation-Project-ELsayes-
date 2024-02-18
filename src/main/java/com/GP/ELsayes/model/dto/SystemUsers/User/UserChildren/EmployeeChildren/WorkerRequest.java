@@ -2,7 +2,6 @@ package com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeRequest;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -19,6 +18,7 @@ public class WorkerRequest extends EmployeeRequest {
    private WorkerRole workerRole;
 
     @NotNull(message = "branch id must not be null")
-   private Long branchIdWorkOn;
+   private Long branchId;
+
 
 }

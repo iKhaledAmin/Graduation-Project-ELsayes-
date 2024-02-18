@@ -32,5 +32,5 @@ public class Worker extends Employee {
     @JsonBackReference
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "branch_id")
-    private Branch branchWorkOn;
+    private Branch branch;
 }

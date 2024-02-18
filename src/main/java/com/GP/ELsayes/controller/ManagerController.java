@@ -21,16 +21,6 @@ private ManagerService managerService;
         return new ResponseEntity<>(this.managerService.add(managerRequest), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-by-id/{managerId}")
-    public ResponseEntity<?> getById(@PathVariable Long managerId){
-        return new ResponseEntity<>(this.managerService.getById(managerId),HttpStatus.OK);
-    }
-
-    @GetMapping("")
-    ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.managerService.getAll(), HttpStatus.OK);
-    }
-
     @PutMapping("/{managerId}")
     public ResponseEntity<?> update(@RequestBody ManagerRequest managerRequest,@PathVariable Long managerId){
         return new ResponseEntity<>(this.managerService.update(managerRequest , managerId), HttpStatus.ACCEPTED);
@@ -41,4 +31,23 @@ private ManagerService managerService;
         this.managerService.delete(managerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("")
+    ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.managerService.getAll(), HttpStatus.OK);
+    }
+
+
+    @GetMapping("/get-by-id/{managerId}")
+    public ResponseEntity<?> getById(@PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.getResponseById(managerId),HttpStatus.OK);
+    }
+
+    @GetMapping("/get-by-branchId/{branchId}")
+    public ResponseEntity<?> getByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.managerService.getResponseByBranchId(branchId),HttpStatus.OK);
+    }
+
+
+
 }

@@ -29,11 +29,16 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
+    public WorkerResponse getResponseById(Long workerId) {
+        return workerMapper.toResponse(getById(workerId));
+    }
+
+    @Override
     public WorkerResponse add(WorkerRequest workerRequest) {
 
         Worker worker = this.workerMapper.toEntity(workerRequest);
         worker.setUserRole(UserRole.WORKER);
-        worker.setBranchWorkOn(this.branchService.getById(workerRequest.getBranchIdWorkOn()));
+        worker.setBranch(this.branchService.getById(workerRequest.getBranchId()));
         return this.workerMapper.toResponse(this.workerRepo.save(worker));
     }
 
