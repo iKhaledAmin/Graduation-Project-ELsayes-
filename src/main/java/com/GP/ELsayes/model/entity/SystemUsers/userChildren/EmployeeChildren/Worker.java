@@ -24,13 +24,19 @@ public class Worker extends Employee {
     @Id
     @Column(name = "worker_id")
     private Long id;
-    private String Score;
 
     @Enumerated(EnumType.STRING)
     private WorkerRole workerRole;
 
+    private String Score;
+
     @JsonBackReference
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "branch_id")
+    @ManyToOne
+    @JoinColumn(name = "branch_Id")
     private Branch branch;
+
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "manager_Id")
+    private Manager manager;
 }

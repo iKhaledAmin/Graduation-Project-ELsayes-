@@ -79,12 +79,7 @@ public class BranchServiceImpl implements BranchService {
         return branchMapper.toResponse(getByManagerId(managerId));
     }
 
-    @Override
-    public List<WorkerResponse> getAllBranchWorkers(Long branchId) {
-        return branchRepo.getById(branchId).getWorkers()
-                .stream().map(worker ->  workerMapper.toResponse(worker))
-                .collect(Collectors.toList());
-    }
+
 
 
 

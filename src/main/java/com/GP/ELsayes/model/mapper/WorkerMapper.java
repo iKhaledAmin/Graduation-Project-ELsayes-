@@ -7,6 +7,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.W
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -16,5 +17,7 @@ public interface WorkerMapper {
 
     Worker toEntity(WorkerRequest request);
 
+    @Mapping(target = "branchId" , source = "entity.branch.id")
+    @Mapping(target = "managerId" , source = "entity.branch.manager.id")
     WorkerResponse toResponse(Worker entity);
 }

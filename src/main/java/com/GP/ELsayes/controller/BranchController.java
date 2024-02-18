@@ -50,9 +50,5 @@ public class BranchController {
         return new ResponseEntity<>(this.branchService.getResponseByManagerId(managerId),HttpStatus.OK);
     }
 
-    @GetMapping("/get-workers-in-branch/{branchId}")
-    public ResponseEntity<?> getAllBranchWorkers(@PathVariable Long branchId){
-        return new ResponseEntity<>(branchService.getAllBranchWorkers(branchId) ,HttpStatus.OK);
-    }
 
 }

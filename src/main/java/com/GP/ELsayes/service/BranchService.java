@@ -11,8 +11,7 @@ import java.util.List;
 
 @Service
 public interface BranchService extends CrudService<BranchRequest, Branch, BranchResponse,Long>{
-    List<WorkerResponse> getAllBranchWorkers(Long branchId);
 
-    Branch getByManagerId(Long managerId);
+    public Branch getByManagerId(Long managerId);
     public BranchResponse getResponseByManagerId(Long managerId);
 }

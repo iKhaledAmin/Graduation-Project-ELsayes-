@@ -17,8 +17,7 @@ public class WorkerRequest extends EmployeeRequest {
     @NotNull(message = "Worker role must not be null")
    private WorkerRole workerRole;
 
-    @NotNull(message = "branch id must not be null")
+    @NotNull(message = "Branch id must not be null")
    private Long branchId;
-
 
 }

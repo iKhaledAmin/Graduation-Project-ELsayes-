@@ -22,16 +22,6 @@ public class WorkerController {
         return new ResponseEntity<>(this.workerService.add(workerRequest), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-by-id/{workerId}")
-    public ResponseEntity<?> getById(@PathVariable Long workerId){
-        return new ResponseEntity<>(this.workerService.getById(workerId),HttpStatus.OK);
-    }
-
-    @GetMapping("")
-    ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.workerService.getAll(), HttpStatus.OK);
-    }
-
     @PutMapping("/{workerId}")
     public ResponseEntity<?> update(@RequestBody @Valid WorkerRequest workerRequest, @PathVariable Long workerId){
         return new ResponseEntity<>(this.workerService.update(workerRequest , workerId), HttpStatus.ACCEPTED);
@@ -42,4 +32,20 @@ public class WorkerController {
         this.workerService.delete(workerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("")
+    ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.workerService.getAll(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-by-id/{workerId}")
+    public ResponseEntity<?> getById(@PathVariable Long workerId){
+        return new ResponseEntity<>(this.workerService.getResponseById(workerId),HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-by-branchId/{branchId}")
+    public ResponseEntity<?> getAllByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.workerService.getAllByBranchId(branchId), HttpStatus.OK);
+    }
+
 }

@@ -18,10 +18,9 @@ import lombok.experimental.SuperBuilder;
 @SuperBuilder
 public class WorkerResponse  extends EmployeeResponse {
     private Long id;
+    private WorkerRole workerRole;
     private String Score;
-    WorkerRole workerRole;
-
-    @JsonBackReference
-    Branch branchWorkOn;
+    private Long branchId;
+    private Long managerId;
 }
 

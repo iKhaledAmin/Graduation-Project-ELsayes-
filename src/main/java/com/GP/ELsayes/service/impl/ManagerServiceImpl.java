@@ -34,10 +34,9 @@ public class ManagerServiceImpl implements ManagerService {
 
     void throwExceptionIfBranchHasAdifferentManager(Branch branch , Long managerId){
 
-        //throwExceptionIfBranchAlreadyHasAManager(branch);
-
         if(branch.getManager() == null || branch.getManager().getId() == managerId)
             return;
+        //throwExceptionIfBranchAlreadyHasAManager(branch);
         throw new RuntimeException("This branch with id = "+ branch.getId() +" already have a manager and every branch only have one manager");
     }
 
@@ -57,23 +56,6 @@ public class ManagerServiceImpl implements ManagerService {
         return this.managerMapper.toResponse(this.managerRepo.save(manager));
     }
 
-//    @Override
-//    public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
-//        Manager existedManager = this.getById(managerId);
-//
-//        existedManager = this.managerMapper.toEntity(managerRequest);
-//        existedManager.setId(managerId);
-//        existedManager.setUserRole(UserRole.MANAGER);
-//
-//
-//        Branch branch = branchService.getById(managerRequest.getBranchId());
-//        throwExceptionIfBranchHasAdifferentManager(branch,managerId);
-//        existedManager.setBranch(branch);
-//
-//        return this.managerMapper.toResponse(managerRepo.save(existedManager));
-//
-//    }
-
 
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
@@ -83,6 +65,7 @@ public class ManagerServiceImpl implements ManagerService {
 
         updatedManager.setId(managerId);
         updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
+        updatedManager.setUserRole(existedManager.getUserRole());
 
 
         try {
@@ -98,8 +81,8 @@ public class ManagerServiceImpl implements ManagerService {
         throwExceptionIfBranchHasAdifferentManager(branch,managerId);
         updatedManager.setBranch(branch);
 
-        System.out.println("existedManager "+existedManager.getDateOfEmployment());
-        System.out.println("updatedManager "+updatedManager.getDateOfEmployment());
+//        System.out.println("existedManager "+existedManager.getDateOfEmployment());
+//        System.out.println("updatedManager "+updatedManager.getDateOfEmployment());
 
         return this.managerMapper.toResponse(managerRepo.save(updatedManager));
 
