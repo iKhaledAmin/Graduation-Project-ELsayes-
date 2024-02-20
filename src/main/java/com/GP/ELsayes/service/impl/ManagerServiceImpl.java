@@ -14,6 +14,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -74,6 +75,7 @@ public class ManagerServiceImpl implements ManagerService {
     }
 
 
+    @SneakyThrows
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
 
@@ -85,22 +87,23 @@ public class ManagerServiceImpl implements ManagerService {
         updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
         updatedManager.setUserRole(existedManager.getUserRole());
 
-        try {
-            BeanUtils.copyProperties(existedManager,updatedManager);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
 
+        BeanUtils.copyProperties(existedManager,updatedManager);
 
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchHasAdifferentManager(branch,managerId);
         updatedManager.setBranch(branch);
 
 
-        return this.managerMapper.toResponse(managerRepo.save(updatedManager));
+        Owner owner = ownerService.getById(managerRequest.getOwnerId());
+        ownersOfManagers.setOwner(owner);
+        ownersOfManagers.setManager(updatedManager);
+        ownersOfManagers.setOperationDate(new Date());
+        ownersOfManagers.setOperationType(CrudType.UPDATE);
+        ownersOfManagersRepo.save(ownersOfManagers);
 
+
+        return this.managerMapper.toResponse(managerRepo.save(updatedManager));
     }
 
 

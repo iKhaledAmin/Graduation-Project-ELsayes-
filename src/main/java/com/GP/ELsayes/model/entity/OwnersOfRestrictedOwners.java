@@ -26,13 +26,13 @@ public class OwnersOfRestrictedOwners {
 
     @JsonBackReference
     @JoinColumn(name = "old_owner_id")
-    @Cascade({org.hibernate.annotations.CascadeType.REPLICATE, org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DETACH})
+    @Cascade({org.hibernate.annotations.CascadeType.REPLICATE, org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DETACH})
     @ManyToOne
     private Owner oldOwner;
 
     @JsonBackReference
     @JoinColumn(name = "restricted_owner_id")
-    @Cascade({org.hibernate.annotations.CascadeType.REPLICATE, org.hibernate.annotations.CascadeType.SAVE_UPDATE, org.hibernate.annotations.CascadeType.DETACH})
+    @Cascade({org.hibernate.annotations.CascadeType.REPLICATE, org.hibernate.annotations.CascadeType.ALL, org.hibernate.annotations.CascadeType.DETACH})
     @ManyToOne
     private Owner restrictedOwner;
 

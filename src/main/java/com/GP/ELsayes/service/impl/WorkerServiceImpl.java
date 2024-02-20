@@ -3,6 +3,7 @@ package com.GP.ELsayes.service.impl;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
@@ -11,6 +12,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.WorkerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -29,6 +31,11 @@ public class WorkerServiceImpl implements WorkerService {
     private final BranchService branchService;
     private final ManagerService managerService;
 
+    void throwExceptionIfBranchNoteHasManager(Branch branch){
+        if(branch.getManager() == null)
+            throw new RuntimeException("This branch with id = "+ branch.getId() +" do not have a Manager yet");
+        return;
+    }
 
     @Override
     public WorkerResponse add(WorkerRequest workerRequest) {
@@ -37,14 +44,18 @@ public class WorkerServiceImpl implements WorkerService {
         worker.setUserRole(UserRole.WORKER);
         worker.setDateOfEmployment(new Date());
 
+
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
+        throwExceptionIfBranchNoteHasManager(branch);
         worker.setBranch(branch);
         worker.setManager(branch.getManager());
+
         return this.workerMapper.toResponse(this.workerRepo.save(worker));
     }
 
 
 
+    @SneakyThrows
     @Override
     public WorkerResponse update(WorkerRequest workerRequest, Long workerId) {
         Worker existedWorker = this.getById(workerId);
@@ -54,19 +65,13 @@ public class WorkerServiceImpl implements WorkerService {
         updatedWorker.setId(workerId);
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
         updatedWorker.setUserRole(existedWorker.getUserRole());
-        //updatedWorker.setBranch(this.branchService.getById(workerRequest.getBranchId()));
+
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
         updatedWorker.setBranch(branch);
         updatedWorker.setManager(branch.getManager());
 
 
-        try {
-            BeanUtils.copyProperties(existedWorker,updatedWorker);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
+        BeanUtils.copyProperties(existedWorker,updatedWorker);
 
 
         return this.workerMapper.toResponse(workerRepo.save(updatedWorker));

@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.CrudType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
@@ -12,8 +13,11 @@ import com.GP.ELsayes.repository.OwnersOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -49,11 +53,26 @@ public class BranchServiceImpl implements BranchService {
         return this.branchMapper.toResponse(this.branchRepo.save(branch));
     }
 
+    @SneakyThrows
     @Override
     public BranchResponse update(BranchRequest branchRequest, Long branchId) {
+
         Branch existedBranch = this.getById(branchId);
-        existedBranch = this.branchMapper.toEntity(branchRequest);
-        existedBranch.setId(branchId);
+        Branch updatedBranch = this.branchMapper.toEntity(branchRequest);
+
+
+        updatedBranch.setId(branchId);
+        BeanUtils.copyProperties(existedBranch,updatedBranch);
+
+
+        Owner owner = ownerService.getById(branchRequest.getOwnerId());
+        ownersOfBranches.setOwner(owner);
+        ownersOfBranches.setBranch(updatedBranch);
+        ownersOfBranches.setOperationDate(new Date());
+        ownersOfBranches.setOperationType(CrudType.CREATE);
+        ownersOfBranchesRepo.save(ownersOfBranches);
+
+
         return this.branchMapper.toResponse(branchRepo.save(existedBranch));
     }
 

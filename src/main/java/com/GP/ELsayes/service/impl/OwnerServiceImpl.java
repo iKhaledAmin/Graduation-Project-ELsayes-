@@ -14,6 +14,7 @@ import com.GP.ELsayes.repository.OwnerRepo;
 import com.GP.ELsayes.repository.OwnersOfRestrictedOwnersRepo;
 import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
+import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
@@ -50,6 +51,7 @@ public class OwnerServiceImpl implements OwnerService {
         return this.ownerMapper.toResponse(this.ownerRepo.save(newOwner));
     }
 
+    @SneakyThrows
     @Override
     public OwnerResponse update(OwnerRequest ownerRequest, Long ownerId) {
         Owner existedOwner = this.getById(ownerId);
@@ -59,14 +61,8 @@ public class OwnerServiceImpl implements OwnerService {
         updatedOwner.setUserRole(existedOwner.getUserRole());
         updatedOwner.setOwnerPermission(existedOwner.getOwnerPermission());
 
-        try {
-            BeanUtils.copyProperties(existedOwner,updatedOwner);
-        } catch (IllegalAccessException e) {
-            throw new RuntimeException(e);
-        } catch (InvocationTargetException e) {
-            throw new RuntimeException(e);
-        }
 
+        BeanUtils.copyProperties(existedOwner,updatedOwner);
 
         // this if condition must be removed at production (important note)
         if(ownerRequest.getOldOwnerId() != null){
