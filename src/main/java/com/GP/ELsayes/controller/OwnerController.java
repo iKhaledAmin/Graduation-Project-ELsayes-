@@ -32,16 +32,15 @@ public class OwnerController {
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("/get-by-id/{ownerId}")
-    public ResponseEntity<?> getById(@PathVariable Long ownerId){
-        return new ResponseEntity<>(this.ownerService.getResponseById(ownerId),HttpStatus.OK);
-    }
-
     @GetMapping("")
     ResponseEntity<?> getAll(){
         return new ResponseEntity<>(this.ownerService.getAll(), HttpStatus.OK);
     }
 
+    @GetMapping("/get-by-id/{ownerId}")
+    public ResponseEntity<?> getById(@PathVariable Long ownerId){
+        return new ResponseEntity<>(this.ownerService.getResponseById(ownerId),HttpStatus.OK);
+    }
 
 
 

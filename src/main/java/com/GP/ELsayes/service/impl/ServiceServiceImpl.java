@@ -52,11 +52,6 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServiceResponse getResponseById(Long serviceId) {
-        return serviceMapper.toResponse(getById(serviceId));
-    }
-
-    @Override
     public List<ServiceResponse> getAll() {
         return serviceRepo.findAll()
                 .stream()
@@ -69,6 +64,12 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findById(serviceId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId)
         );
+    }
+
+
+    @Override
+    public ServiceResponse getResponseById(Long serviceId) {
+        return serviceMapper.toResponse(getById(serviceId));
     }
 
 

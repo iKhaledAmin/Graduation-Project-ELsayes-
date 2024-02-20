@@ -4,7 +4,6 @@ import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.OwnersOfBranches;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.CrudType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
