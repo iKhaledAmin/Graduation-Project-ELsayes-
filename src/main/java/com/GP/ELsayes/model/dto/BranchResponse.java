@@ -20,4 +20,5 @@ public class BranchResponse {
     private String location;
     private String capacityOfCars;
     private Long managerId;
+    private Long ownerIdCreateIt;
 }

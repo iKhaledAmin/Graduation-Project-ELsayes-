@@ -24,4 +24,7 @@ public class BranchRequest {
     @NotNull(message = "Capacity of cars must not be null")
     @NotEmpty(message = "Capacity of cars must not be empty")
     private String capacityOfCars;
+
+    @NotNull(message = "Owner id must not be null")
+    private Long ownerId;
 }

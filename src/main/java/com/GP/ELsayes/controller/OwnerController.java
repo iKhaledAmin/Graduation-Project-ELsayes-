@@ -21,16 +21,6 @@ public class OwnerController {
         return new ResponseEntity<>(this.ownerService.add(ownerRequest), HttpStatus.CREATED);
     }
 
-    @GetMapping("/get-by-id/{ownerId}")
-    public ResponseEntity<?> getById(@PathVariable Long ownerId){
-        return new ResponseEntity<>(this.ownerService.getById(ownerId),HttpStatus.OK);
-    }
-
-    @GetMapping("")
-    ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.ownerService.getAll(), HttpStatus.OK);
-    }
-
     @PutMapping("/{ownerId}")
     public ResponseEntity<?> update(@RequestBody @Valid OwnerRequest ownerRequest,@PathVariable Long ownerId){
         return new ResponseEntity<>(this.ownerService.update(ownerRequest , ownerId), HttpStatus.ACCEPTED);
@@ -41,4 +31,18 @@ public class OwnerController {
         this.ownerService.delete(ownerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/get-by-id/{ownerId}")
+    public ResponseEntity<?> getById(@PathVariable Long ownerId){
+        return new ResponseEntity<>(this.ownerService.getResponseById(ownerId),HttpStatus.OK);
+    }
+
+    @GetMapping("")
+    ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.ownerService.getAll(), HttpStatus.OK);
+    }
+
+
+
+
 }

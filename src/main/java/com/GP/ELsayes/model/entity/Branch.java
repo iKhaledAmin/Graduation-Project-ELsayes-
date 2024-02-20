@@ -1,9 +1,7 @@
 package com.GP.ELsayes.model.entity;
 
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -34,6 +32,7 @@ public class Branch {
     private String capacityOfCars;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp
@@ -47,9 +46,21 @@ public class Branch {
     @JsonManagedReference
     private Manager manager;
 
-
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")
     private List<Worker> workers;
+
+
+//    @ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
+//    @JoinTable(
+//            //name = "Course Student Allowed",
+//            joinColumns = @JoinColumn(name = "branch_id"),
+//            inverseJoinColumns = @JoinColumn(name = "owner_id")
+//    )
+//    private List<Owner> owners;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch")
+    private List<OwnersOfBranches> ownersOfBranches;
 
 }

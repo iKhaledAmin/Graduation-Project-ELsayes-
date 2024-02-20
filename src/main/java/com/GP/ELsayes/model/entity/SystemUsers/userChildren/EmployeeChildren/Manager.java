@@ -1,6 +1,8 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.enums.permissions.ManagerPermission;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -39,5 +41,9 @@ public class Manager extends Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "manager")
     private List<Worker> workers;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "manager")
+    private List<OwnersOfManagers> ownersOfManagers;
 
 }

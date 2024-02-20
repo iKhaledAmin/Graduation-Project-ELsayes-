@@ -36,6 +36,7 @@ public class ServiceEntity {
     private ServiceCategory serviceCategory;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

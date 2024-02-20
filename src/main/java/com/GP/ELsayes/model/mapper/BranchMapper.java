@@ -15,5 +15,7 @@ public interface BranchMapper {
     Branch toEntity(BranchRequest request);
 
     @Mapping(target = "managerId" , source = "entity.manager.id")
+    //@Mapping(target = "ownerIdCreateIt" , source = "entity.ownersOfBranches[1].owner.id")
     BranchResponse toResponse(Branch entity);
+
 }

@@ -69,7 +69,6 @@ public class WorkerServiceImpl implements WorkerService {
         }
 
 
-
         return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
     }
 

@@ -55,6 +55,7 @@ public abstract class User {
 
     @JsonIgnore
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @JsonIgnore

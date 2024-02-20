@@ -2,20 +2,21 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
+import com.GP.ELsayes.model.enums.CrudType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
-import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.BranchRepo;
-import com.GP.ELsayes.repository.WorkerRepo;
+import com.GP.ELsayes.repository.OwnersOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
+import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
-import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
@@ -23,12 +24,28 @@ public class BranchServiceImpl implements BranchService {
 
     private final BranchMapper branchMapper;
     private final BranchRepo branchRepo;
-    private final WorkerRepo workerRepo;
-    private final WorkerMapper workerMapper;
+    private final OwnerService ownerService;
+
+
+    private final OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
+    private final OwnersOfBranchesRepo ownersOfBranchesRepo;
 
     @Override
     public BranchResponse add(BranchRequest branchRequest) {
         Branch branch = this.branchMapper.toEntity(branchRequest);
+       // branch.setOwner(ownerService.getById(branchRequest.getOwnerId()));
+
+
+
+        Owner owner = ownerService.getById(branchRequest.getOwnerId());
+        ownersOfBranches.setOwner(owner);
+        ownersOfBranches.setBranch(branch);
+        ownersOfBranches.setOperationDate(new Date());
+        ownersOfBranches.setOperationType(CrudType.CREATE);
+
+        ownersOfBranchesRepo.save(ownersOfBranches);
+
+
         return this.branchMapper.toResponse(this.branchRepo.save(branch));
     }
 

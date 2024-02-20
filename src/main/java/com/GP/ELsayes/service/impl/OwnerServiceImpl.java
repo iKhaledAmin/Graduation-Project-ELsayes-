@@ -1,18 +1,24 @@
 package com.GP.ELsayes.service.impl;
 
 
-import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
+import com.GP.ELsayes.model.entity.OwnersOfRestrictedOwners;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
+import com.GP.ELsayes.model.enums.CrudType;
 import com.GP.ELsayes.model.enums.permissions.OwnerPermission;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.OwnerMapper;
 import com.GP.ELsayes.repository.OwnerRepo;
+import com.GP.ELsayes.repository.OwnersOfRestrictedOwnersRepo;
 import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
+import java.lang.reflect.InvocationTargetException;
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -22,6 +28,72 @@ public class OwnerServiceImpl implements OwnerService {
 
     private final OwnerMapper ownerMapper;
     private final OwnerRepo ownerRepo;
+    private final OwnersOfRestrictedOwnersRepo ownersOfRestrictedOwnersRepo;
+    private OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
+
+    @Override
+    public OwnerResponse add(OwnerRequest ownerRequest) {
+        Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
+        newOwner.setUserRole(UserRole.OWNER);
+        newOwner.setOwnerPermission(OwnerPermission.RESTRICTED);
+
+        // this if condition must be removed at production (important note)
+        if(ownerRequest.getOldOwnerId() != null){
+            Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
+            ownersOfRestrictedOwners.setRestrictedOwner(newOwner);
+            ownersOfRestrictedOwners.setOldOwner(oldOwner);
+            ownersOfRestrictedOwners.setOperationDate(new Date());
+            ownersOfRestrictedOwners.setOperationType(CrudType.CREATE);
+            ownersOfRestrictedOwnersRepo.save(ownersOfRestrictedOwners);
+        }
+
+        return this.ownerMapper.toResponse(this.ownerRepo.save(newOwner));
+    }
+
+    @Override
+    public OwnerResponse update(OwnerRequest ownerRequest, Long ownerId) {
+        Owner existedOwner = this.getById(ownerId);
+        Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
+
+        updatedOwner.setId(ownerId);
+        updatedOwner.setUserRole(existedOwner.getUserRole());
+        updatedOwner.setOwnerPermission(existedOwner.getOwnerPermission());
+
+        try {
+            BeanUtils.copyProperties(existedOwner,updatedOwner);
+        } catch (IllegalAccessException e) {
+            throw new RuntimeException(e);
+        } catch (InvocationTargetException e) {
+            throw new RuntimeException(e);
+        }
+
+
+        // this if condition must be removed at production (important note)
+        if(ownerRequest.getOldOwnerId() != null){
+            Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
+            ownersOfRestrictedOwners.setRestrictedOwner(updatedOwner);
+            ownersOfRestrictedOwners.setOldOwner(oldOwner);
+            ownersOfRestrictedOwners.setOperationDate(new Date());
+            ownersOfRestrictedOwners.setOperationType(CrudType.UPDATE);
+            ownersOfRestrictedOwnersRepo.save(ownersOfRestrictedOwners);
+        }
+
+        return this.ownerMapper.toResponse(ownerRepo.save(existedOwner));
+    }
+
+    @Override
+    public void delete(Long ownerId) {
+        getById(ownerId);
+        ownerRepo.deleteById(ownerId);
+    }
+
+    @Override
+    public List<OwnerResponse> getAll() {
+        return ownerRepo.findAll()
+                .stream()
+                .map(owner ->  ownerMapper.toResponse(owner))
+                .toList();
+    }
 
 
     @Override
@@ -36,34 +108,8 @@ public class OwnerServiceImpl implements OwnerService {
         return ownerMapper.toResponse(getById(ownerId));
     }
 
-    @Override
-    public OwnerResponse add(OwnerRequest ownerRequest) {
-        Owner owner = this.ownerMapper.toEntity(ownerRequest);
-        owner.setUserRole(UserRole.OWNER);
-        owner.setOwnerPermission(OwnerPermission.RESTRICTED);
-        return this.ownerMapper.toResponse(this.ownerRepo.save(owner));
-    }
 
-    @Override
-    public List<OwnerResponse> getAll() {
-        return ownerRepo.findAll()
-                .stream()
-                .map(owner ->  ownerMapper.toResponse(owner))
-                .toList();
-    }
 
-    @Override
-    public OwnerResponse update(OwnerRequest ownerRequest, Long ownerId) {
-        Owner existedOwner = this.getById(ownerId);
-        existedOwner = this.ownerMapper.toEntity(ownerRequest);
-        existedOwner.setId(ownerId);
-        return this.ownerMapper.toResponse(ownerRepo.save(existedOwner));
-    }
 
-    @Override
-    public void delete(Long ownerId) {
-        getById(ownerId);
-        ownerRepo.deleteById(ownerId);
-    }
 
 }

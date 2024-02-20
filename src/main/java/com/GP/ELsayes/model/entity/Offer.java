@@ -31,6 +31,7 @@ public class Offer {
     private String offerPercentage;
 
     @CreationTimestamp
+    @Column(updatable = false)
     private LocalDateTime createdAt;
 
     @UpdateTimestamp

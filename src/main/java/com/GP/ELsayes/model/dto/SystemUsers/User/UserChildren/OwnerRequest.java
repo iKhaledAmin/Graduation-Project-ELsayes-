@@ -23,4 +23,6 @@ public class OwnerRequest extends UserRequest {
     @Positive(message = "percentage must be greater than 0")
     private String percentage;
 
+    private Long oldOwnerId;
+
 }

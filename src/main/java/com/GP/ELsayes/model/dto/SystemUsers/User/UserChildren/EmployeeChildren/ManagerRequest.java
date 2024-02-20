@@ -22,6 +22,9 @@ public class ManagerRequest extends EmployeeRequest {
     @NotNull(message = "Branch id manage it must not be null")
     private Long branchId;
 
+    @NotNull(message = "Owner id manage it must not be null")
+    private Long ownerId;
+
 
 
 }

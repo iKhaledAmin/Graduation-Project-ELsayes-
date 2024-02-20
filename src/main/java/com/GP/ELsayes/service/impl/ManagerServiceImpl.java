@@ -2,14 +2,20 @@ package com.GP.ELsayes.service.impl;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
+import com.GP.ELsayes.model.enums.CrudType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
 import com.GP.ELsayes.repository.ManagerRepo;
+import com.GP.ELsayes.repository.OwnersOfManagersRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
+import com.GP.ELsayes.service.OwnerService;
 import lombok.RequiredArgsConstructor;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
@@ -25,6 +31,9 @@ public class ManagerServiceImpl implements ManagerService {
     private final ManagerMapper managerMapper;
     private final ManagerRepo managerRepo;
     private final BranchService branchService;
+    private final OwnerService ownerService;
+    private final OwnersOfManagersRepo ownersOfManagersRepo;
+    private final OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
 
     void throwExceptionIfBranchAlreadyHasAManager(Branch branch){
         if(branch.getManager() == null)
@@ -53,12 +62,21 @@ public class ManagerServiceImpl implements ManagerService {
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchAlreadyHasAManager(branch);
 
+        Owner owner = ownerService.getById(managerRequest.getOwnerId());
+        ownersOfManagers.setOwner(owner);
+        ownersOfManagers.setManager(manager);
+        ownersOfManagers.setOperationDate(new Date());
+        ownersOfManagers.setOperationType(CrudType.CREATE);
+        ownersOfManagersRepo.save(ownersOfManagers);
+
+
         return this.managerMapper.toResponse(this.managerRepo.save(manager));
     }
 
 
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
+
         Manager existedManager = this.getById(managerId);
         Manager updatedManager = this.managerMapper.toEntity(managerRequest);
 
@@ -66,7 +84,6 @@ public class ManagerServiceImpl implements ManagerService {
         updatedManager.setId(managerId);
         updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
         updatedManager.setUserRole(existedManager.getUserRole());
-
 
         try {
             BeanUtils.copyProperties(existedManager,updatedManager);
@@ -81,8 +98,6 @@ public class ManagerServiceImpl implements ManagerService {
         throwExceptionIfBranchHasAdifferentManager(branch,managerId);
         updatedManager.setBranch(branch);
 
-//        System.out.println("existedManager "+existedManager.getDateOfEmployment());
-//        System.out.println("updatedManager "+updatedManager.getDateOfEmployment());
 
         return this.managerMapper.toResponse(managerRepo.save(updatedManager));
 
