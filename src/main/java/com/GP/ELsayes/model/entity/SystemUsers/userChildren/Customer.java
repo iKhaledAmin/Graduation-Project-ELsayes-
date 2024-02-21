@@ -1,15 +1,17 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren;
 
-import com.GP.ELsayes.model.entity.Branch;
+
+import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.hibernate.annotations.Cascade;
 
 import java.util.Date;
+import java.util.List;
 
 
 @Data
@@ -26,6 +28,13 @@ public class Customer extends User {
     private Long id;
     private Date dateOfJoining;
     private String firstTrialCode;
+
+    @JsonManagedReference
+    @Cascade({org.hibernate.annotations.CascadeType.REMOVE,
+            org.hibernate.annotations.CascadeType.PERSIST,
+    })
+    @OneToMany(mappedBy = "customer")
+    private List<Car> cars;
 
 //    @JsonBackReference
 //    @ManyToOne

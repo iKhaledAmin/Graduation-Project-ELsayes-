@@ -1,8 +1,11 @@
 package com.GP.ELsayes.model.entity;
 
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.enums.CarType;
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -49,5 +52,9 @@ public class Car {
     @JsonIgnore
     private LocalDateTime deletedAt;
 
+    @JsonBackReference
+    @ManyToOne
+    @JoinColumn(name = "customerId")
+    private Customer customer;
 
 }

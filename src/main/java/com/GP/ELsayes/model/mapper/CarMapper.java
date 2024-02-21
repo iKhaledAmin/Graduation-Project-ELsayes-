@@ -7,6 +7,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
@@ -17,5 +18,6 @@ public interface CarMapper {
 
     Car toEntity(CarRequest request);
 
+    @Mapping(target = "customerId" , source = "entity.customer.id")
     CarResponse toResponse(Car entity);
 }
