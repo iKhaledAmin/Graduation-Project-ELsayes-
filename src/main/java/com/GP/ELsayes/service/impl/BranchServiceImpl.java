@@ -30,17 +30,18 @@ public class BranchServiceImpl implements BranchService {
     private final OwnerService ownerService;
 
 
-    private final OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
     private final OwnersOfBranchesRepo ownersOfBranchesRepo;
 
     @Override
     public BranchResponse add(BranchRequest branchRequest) {
         Branch branch = this.branchMapper.toEntity(branchRequest);
-       // branch.setOwner(ownerService.getById(branchRequest.getOwnerId()));
+        branch = this.branchRepo.save(branch);
 
 
 
+        OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
+
         ownersOfBranches.setOwner(owner);
         ownersOfBranches.setBranch(branch);
         ownersOfBranches.setOperationDate(new Date());
@@ -49,7 +50,7 @@ public class BranchServiceImpl implements BranchService {
         ownersOfBranchesRepo.save(ownersOfBranches);
 
 
-        return this.branchMapper.toResponse(this.branchRepo.save(branch));
+        return this.branchMapper.toResponse(branch);
     }
 
     @SneakyThrows
@@ -59,20 +60,21 @@ public class BranchServiceImpl implements BranchService {
         Branch existedBranch = this.getById(branchId);
         Branch updatedBranch = this.branchMapper.toEntity(branchRequest);
 
-
         updatedBranch.setId(branchId);
         BeanUtils.copyProperties(existedBranch,updatedBranch);
+        updatedBranch = branchRepo.save(updatedBranch);
 
 
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
+        OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
         ownersOfBranches.setOwner(owner);
         ownersOfBranches.setBranch(updatedBranch);
         ownersOfBranches.setOperationDate(new Date());
-        ownersOfBranches.setOperationType(CrudType.CREATE);
+        ownersOfBranches.setOperationType(CrudType.UPDATE);
         ownersOfBranchesRepo.save(ownersOfBranches);
 
 
-        return this.branchMapper.toResponse(branchRepo.save(existedBranch));
+        return this.branchMapper.toResponse(updatedBranch);
     }
 
     @Override

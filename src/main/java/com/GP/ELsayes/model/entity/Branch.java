@@ -8,6 +8,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Cascade;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -51,15 +52,8 @@ public class Branch {
     private List<Worker> workers;
 
 
-//    @ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-//    @JoinTable(
-//            //name = "Course Student Allowed",
-//            joinColumns = @JoinColumn(name = "branch_id"),
-//            inverseJoinColumns = @JoinColumn(name = "owner_id")
-//    )
-//    private List<Owner> owners;
-
     @JsonManagedReference
+   // @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     @OneToMany(mappedBy = "branch")
     private List<OwnersOfBranches> ownersOfBranches;
 

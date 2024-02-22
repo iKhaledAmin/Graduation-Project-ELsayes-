@@ -28,14 +28,15 @@ public class OwnersOfManagers {
 
     @JsonBackReference
     @JoinColumn(name = "owner_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Owner owner;
 
 
     @JsonBackReference
     @JoinColumn(name = "manager_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Manager manager;
+
 
     @Enumerated(EnumType.STRING)
     CrudType operationType;

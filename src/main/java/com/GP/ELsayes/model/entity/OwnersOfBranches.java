@@ -26,13 +26,13 @@ public class OwnersOfBranches {
 
     @JsonBackReference
     @JoinColumn(name = "owner_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Owner owner;
 
 
     @JsonBackReference
     @JoinColumn(name = "branch_id")
-    @ManyToOne(cascade = CascadeType.ALL)
+    @ManyToOne
     private Branch branch;
 
     @Enumerated(EnumType.STRING)

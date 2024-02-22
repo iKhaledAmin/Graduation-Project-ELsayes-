@@ -30,9 +30,7 @@ public class Customer extends User {
     private String firstTrialCode;
 
     @JsonManagedReference
-    @Cascade({org.hibernate.annotations.CascadeType.REMOVE,
-            org.hibernate.annotations.CascadeType.PERSIST,
-    })
+    @Cascade({org.hibernate.annotations.CascadeType.REMOVE, org.hibernate.annotations.CascadeType.PERSIST,})
     @OneToMany(mappedBy = "customer")
     private List<Car> cars;
 

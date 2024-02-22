@@ -30,16 +30,18 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnerMapper ownerMapper;
     private final OwnerRepo ownerRepo;
     private final OwnersOfRestrictedOwnersRepo ownersOfRestrictedOwnersRepo;
-    private OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
+    //private OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
 
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
         newOwner.setUserRole(UserRole.OWNER);
         newOwner.setOwnerPermission(OwnerPermission.RESTRICTED);
+        newOwner = this.ownerRepo.save(newOwner);
 
         // this if condition must be removed at production (important note)
         if(ownerRequest.getOldOwnerId() != null){
+            OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
             Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
             ownersOfRestrictedOwners.setRestrictedOwner(newOwner);
             ownersOfRestrictedOwners.setOldOwner(oldOwner);
@@ -48,7 +50,7 @@ public class OwnerServiceImpl implements OwnerService {
             ownersOfRestrictedOwnersRepo.save(ownersOfRestrictedOwners);
         }
 
-        return this.ownerMapper.toResponse(this.ownerRepo.save(newOwner));
+        return this.ownerMapper.toResponse(newOwner);
     }
 
     @SneakyThrows
@@ -63,9 +65,11 @@ public class OwnerServiceImpl implements OwnerService {
 
 
         BeanUtils.copyProperties(existedOwner,updatedOwner);
+        updatedOwner = ownerRepo.save(existedOwner);
 
         // this if condition must be removed at production (important note)
         if(ownerRequest.getOldOwnerId() != null){
+            OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
             Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
             ownersOfRestrictedOwners.setRestrictedOwner(updatedOwner);
             ownersOfRestrictedOwners.setOldOwner(oldOwner);
@@ -74,7 +78,7 @@ public class OwnerServiceImpl implements OwnerService {
             ownersOfRestrictedOwnersRepo.save(ownersOfRestrictedOwners);
         }
 
-        return this.ownerMapper.toResponse(ownerRepo.save(existedOwner));
+        return this.ownerMapper.toResponse(updatedOwner);
     }
 
     @Override

@@ -11,6 +11,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -34,15 +35,9 @@ public class Owner extends User {
     private OwnerPermission ownerPermission;
 
 
-//    @ManyToMany(cascade = CascadeType.ALL , fetch = FetchType.EAGER)
-//    @JoinTable(
-//            //name = "Course Student Allowed",
-//            joinColumns = @JoinColumn(name = "owner_id"),
-//            inverseJoinColumns = @JoinColumn(name = "branch_id")
-//    )
-//    private List<Branch> branches;
 
     @JsonManagedReference
+    //@Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     @OneToMany(mappedBy = "owner")
     private List<OwnersOfBranches> ownersOfBranches;
 
@@ -50,13 +45,15 @@ public class Owner extends User {
     @OneToMany(mappedBy = "owner")
     private List<OwnersOfManagers> ownersOfManagers;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "oldOwner",cascade = CascadeType.MERGE)
-    private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners;
+
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "restrictedOwner",cascade = CascadeType.MERGE)
-    private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwner;
+    @OneToMany(mappedBy = "oldOwner")
+    private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners1;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "restrictedOwner")
+    private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners2;
 
 
 }

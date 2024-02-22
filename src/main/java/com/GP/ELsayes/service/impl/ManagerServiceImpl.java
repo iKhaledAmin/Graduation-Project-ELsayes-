@@ -34,7 +34,7 @@ public class ManagerServiceImpl implements ManagerService {
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final OwnersOfManagersRepo ownersOfManagersRepo;
-    private final OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
+    //private final OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
 
     void throwExceptionIfBranchAlreadyHasAManager(Branch branch){
         if(branch.getManager() == null)
@@ -53,9 +53,8 @@ public class ManagerServiceImpl implements ManagerService {
 
     @Override
     public ManagerResponse add(ManagerRequest managerRequest) {
+
         Manager manager = this.managerMapper.toEntity(managerRequest);
-
-
         manager.setUserRole(UserRole.MANAGER);
         manager.setBranch(branchService.getById(managerRequest.getBranchId()));
         manager.setDateOfEmployment(new Date());
@@ -63,7 +62,11 @@ public class ManagerServiceImpl implements ManagerService {
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchAlreadyHasAManager(branch);
 
+        manager = this.managerRepo.save(manager);
+
+
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
+        OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
         ownersOfManagers.setOwner(owner);
         ownersOfManagers.setManager(manager);
         ownersOfManagers.setOperationDate(new Date());
@@ -71,7 +74,7 @@ public class ManagerServiceImpl implements ManagerService {
         ownersOfManagersRepo.save(ownersOfManagers);
 
 
-        return this.managerMapper.toResponse(this.managerRepo.save(manager));
+        return this.managerMapper.toResponse(manager);
     }
 
 
@@ -93,9 +96,10 @@ public class ManagerServiceImpl implements ManagerService {
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchHasAdifferentManager(branch,managerId);
         updatedManager.setBranch(branch);
-
+        updatedManager = managerRepo.save(updatedManager);
 
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
+        OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
         ownersOfManagers.setOwner(owner);
         ownersOfManagers.setManager(updatedManager);
         ownersOfManagers.setOperationDate(new Date());
@@ -103,7 +107,7 @@ public class ManagerServiceImpl implements ManagerService {
         ownersOfManagersRepo.save(ownersOfManagers);
 
 
-        return this.managerMapper.toResponse(managerRepo.save(updatedManager));
+        return this.managerMapper.toResponse(updatedManager);
     }
 
 
