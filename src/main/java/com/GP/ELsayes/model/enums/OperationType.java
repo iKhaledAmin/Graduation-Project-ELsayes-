@@ -1,6 +1,6 @@
 package com.GP.ELsayes.model.enums;
 
-public enum CrudType {
+public enum OperationType {
     CREATE,
     UPDATE,
     DELETE

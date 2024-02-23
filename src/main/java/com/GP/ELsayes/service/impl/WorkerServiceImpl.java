@@ -29,7 +29,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final  WorkerMapper workerMapper;
     private final  WorkerRepo workerRepo;
     private final BranchService branchService;
-    private final ManagerService managerService;
+
 
     void throwExceptionIfBranchNoteHasManager(Branch branch){
         if(branch.getManager() == null)

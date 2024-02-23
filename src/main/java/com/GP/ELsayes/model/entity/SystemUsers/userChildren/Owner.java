@@ -1,8 +1,8 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren;
 
-import com.GP.ELsayes.model.entity.OwnersOfBranches;
-import com.GP.ELsayes.model.entity.OwnersOfManagers;
-import com.GP.ELsayes.model.entity.OwnersOfRestrictedOwners;
+import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
+import com.GP.ELsayes.model.entity.relations.OwnersOfRestrictedOwners;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.enums.permissions.OwnerPermission;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -11,7 +11,6 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.Cascade;
 
 import java.util.List;
 
@@ -48,11 +47,11 @@ public class Owner extends User {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "oldOwner")
+    @OneToMany(mappedBy = "oldOwner", cascade = CascadeType.PERSIST)
     private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners1;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "restrictedOwner")
+    @OneToMany(mappedBy = "restrictedOwner", cascade = CascadeType.PERSIST)
     private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners2;
 
 

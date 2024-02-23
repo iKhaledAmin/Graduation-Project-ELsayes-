@@ -35,4 +35,7 @@ public class ServiceRequest {
 
     @NotNull(message = "Service category must not be null")
     private ServiceCategory serviceCategory;
+
+    @NotNull(message = "Manager id created this service must not be null")
+    private Long managerId;
 }

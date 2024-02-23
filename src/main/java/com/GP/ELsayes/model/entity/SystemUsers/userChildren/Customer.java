@@ -20,7 +20,7 @@ import java.util.List;
 
 //@Where(clause = "deleted_at is null")
 
-@Entity
+@Entity(name = "customer")
 @Table(name = "customer")
 @PrimaryKeyJoinColumn(name = "customer_id")
 public class Customer extends User {
@@ -30,12 +30,8 @@ public class Customer extends User {
     private String firstTrialCode;
 
     @JsonManagedReference
-    @Cascade({org.hibernate.annotations.CascadeType.REMOVE, org.hibernate.annotations.CascadeType.PERSIST,})
-    @OneToMany(mappedBy = "customer")
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
     private List<Car> cars;
 
-//    @JsonBackReference
-//    @ManyToOne
-//    @JoinColumn(name = "worker_id")
-//    private Worker worker;
+
 }

@@ -18,6 +18,5 @@ public class ServiceResponse {
     private String price;
     private String requiredTime;
     private ServiceCategory serviceCategory;
-    private Long managerIdCreatedIt;
-
+    //private Long managerIdCreatedIt;
 }

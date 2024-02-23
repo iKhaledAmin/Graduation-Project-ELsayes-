@@ -1,41 +1,40 @@
-package com.GP.ELsayes.model.entity;
+package com.GP.ELsayes.model.entity.relations;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
-import com.GP.ELsayes.model.enums.CrudType;
+import com.GP.ELsayes.model.enums.OperationType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
-@SuperBuilder
+
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 
 
 @Entity
-@Table(name = "owners_of_branches")
-public class OwnersOfBranches {
+@Table(name = "owners_of_restricted_owners")
+public class OwnersOfRestrictedOwners {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonBackReference
-    @JoinColumn(name = "owner_id")
+    @JoinColumn(name = "old_owner_id")
     @ManyToOne
-    private Owner owner;
-
+    private Owner oldOwner;
 
     @JsonBackReference
-    @JoinColumn(name = "branch_id")
+    @JoinColumn(name = "restricted_owner_id")
     @ManyToOne
-    private Branch branch;
+    private Owner restrictedOwner;
 
     @Enumerated(EnumType.STRING)
-    CrudType operationType;
+    OperationType operationType;
     Date operationDate;
+
 }

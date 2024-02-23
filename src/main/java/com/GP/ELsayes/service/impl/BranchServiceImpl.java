@@ -3,20 +3,20 @@ package com.GP.ELsayes.service.impl;
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
-import com.GP.ELsayes.model.enums.CrudType;
+import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
 import com.GP.ELsayes.repository.BranchRepo;
-import com.GP.ELsayes.repository.OwnersOfBranchesRepo;
+import com.GP.ELsayes.repository.relations.OwnersOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.OwnerService;
+import com.GP.ELsayes.service.relations.OwnersOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -28,27 +28,19 @@ public class BranchServiceImpl implements BranchService {
     private final BranchMapper branchMapper;
     private final BranchRepo branchRepo;
     private final OwnerService ownerService;
-
-
-    private final OwnersOfBranchesRepo ownersOfBranchesRepo;
+    private final OwnersOfBranchesService ownersOfBranchesService;
 
     @Override
     public BranchResponse add(BranchRequest branchRequest) {
         Branch branch = this.branchMapper.toEntity(branchRequest);
         branch = this.branchRepo.save(branch);
 
-
-
-        OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
-
-        ownersOfBranches.setOwner(owner);
-        ownersOfBranches.setBranch(branch);
-        ownersOfBranches.setOperationDate(new Date());
-        ownersOfBranches.setOperationType(CrudType.CREATE);
-
-        ownersOfBranchesRepo.save(ownersOfBranches);
-
+        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.save(
+                owner,
+                branch,
+                OperationType.CREATE
+        );
 
         return this.branchMapper.toResponse(branch);
     }
@@ -66,13 +58,11 @@ public class BranchServiceImpl implements BranchService {
 
 
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
-        OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
-        ownersOfBranches.setOwner(owner);
-        ownersOfBranches.setBranch(updatedBranch);
-        ownersOfBranches.setOperationDate(new Date());
-        ownersOfBranches.setOperationType(CrudType.UPDATE);
-        ownersOfBranchesRepo.save(ownersOfBranches);
-
+        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.save(
+                owner,
+                updatedBranch,
+                OperationType.UPDATE
+        );
 
         return this.branchMapper.toResponse(updatedBranch);
     }

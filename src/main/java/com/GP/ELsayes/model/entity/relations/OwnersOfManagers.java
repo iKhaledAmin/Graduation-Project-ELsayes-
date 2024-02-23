@@ -1,8 +1,8 @@
-package com.GP.ELsayes.model.entity;
+package com.GP.ELsayes.model.entity.relations;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
-import com.GP.ELsayes.model.enums.CrudType;
+import com.GP.ELsayes.model.enums.OperationType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -39,6 +39,6 @@ public class OwnersOfManagers {
 
 
     @Enumerated(EnumType.STRING)
-    CrudType operationType;
+    OperationType operationType;
     Date operationDate;
 }

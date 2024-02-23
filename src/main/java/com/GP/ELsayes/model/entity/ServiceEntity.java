@@ -1,6 +1,8 @@
 package com.GP.ELsayes.model.entity;
 
+import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.enums.ServiceCategory;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -10,6 +12,7 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 @SuperBuilder
 @Data
@@ -43,5 +46,10 @@ public class ServiceEntity {
     private LocalDateTime updatedAt;
 
     private LocalDateTime deletedAt;
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "service")
+    private List<ManagersOfServices> managersOfServices;
 
 }

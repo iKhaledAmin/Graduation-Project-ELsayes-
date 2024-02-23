@@ -2,8 +2,6 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import org.springframework.stereotype.Service;
 

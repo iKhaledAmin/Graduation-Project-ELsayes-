@@ -2,25 +2,24 @@ package com.GP.ELsayes.service.impl;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.OwnersOfManagers;
+import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
-import com.GP.ELsayes.model.enums.CrudType;
+import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
 import com.GP.ELsayes.repository.ManagerRepo;
-import com.GP.ELsayes.repository.OwnersOfManagersRepo;
+import com.GP.ELsayes.repository.relations.OwnersOfManagersRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
+import com.GP.ELsayes.service.relations.OwnersOfManagersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -33,8 +32,7 @@ public class ManagerServiceImpl implements ManagerService {
     private final ManagerRepo managerRepo;
     private final BranchService branchService;
     private final OwnerService ownerService;
-    private final OwnersOfManagersRepo ownersOfManagersRepo;
-    //private final OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
+    private final OwnersOfManagersService ownersOfManagersService;
 
     void throwExceptionIfBranchAlreadyHasAManager(Branch branch){
         if(branch.getManager() == null)
@@ -66,12 +64,11 @@ public class ManagerServiceImpl implements ManagerService {
 
 
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
-        OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
-        ownersOfManagers.setOwner(owner);
-        ownersOfManagers.setManager(manager);
-        ownersOfManagers.setOperationDate(new Date());
-        ownersOfManagers.setOperationType(CrudType.CREATE);
-        ownersOfManagersRepo.save(ownersOfManagers);
+        OwnersOfManagers ownersOfManagers = ownersOfManagersService.save(
+                owner,
+                manager,
+                OperationType.CREATE
+        );
 
 
         return this.managerMapper.toResponse(manager);
@@ -99,12 +96,11 @@ public class ManagerServiceImpl implements ManagerService {
         updatedManager = managerRepo.save(updatedManager);
 
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
-        OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
-        ownersOfManagers.setOwner(owner);
-        ownersOfManagers.setManager(updatedManager);
-        ownersOfManagers.setOperationDate(new Date());
-        ownersOfManagers.setOperationType(CrudType.UPDATE);
-        ownersOfManagersRepo.save(ownersOfManagers);
+        OwnersOfManagers ownersOfManagers = ownersOfManagersService.save(
+                owner,
+                updatedManager,
+                OperationType.UPDATE
+        );
 
 
         return this.managerMapper.toResponse(updatedManager);
