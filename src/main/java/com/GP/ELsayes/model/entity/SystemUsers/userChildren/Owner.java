@@ -11,6 +11,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -37,10 +39,11 @@ public class Owner extends User {
 
     @JsonManagedReference
     //@Cascade({org.hibernate.annotations.CascadeType.PERSIST})
-    @OneToMany(mappedBy = "owner")
+    @OneToMany(mappedBy = "owner",cascade = CascadeType.PERSIST)
     private List<OwnersOfBranches> ownersOfBranches;
 
     @JsonManagedReference
+//    @OnDelete(action= OnDeleteAction.SET_NULL)
     @OneToMany(mappedBy = "owner")
     private List<OwnersOfManagers> ownersOfManagers;
 

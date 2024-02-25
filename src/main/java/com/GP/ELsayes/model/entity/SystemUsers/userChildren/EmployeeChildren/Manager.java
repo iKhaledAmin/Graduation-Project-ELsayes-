@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
 
@@ -43,11 +45,12 @@ public class Manager extends Employee {
     private List<Worker> workers;
 
     @JsonManagedReference
+    @OnDelete(action= OnDeleteAction.SET_NULL)
     @OneToMany(mappedBy = "manager")
     private List<OwnersOfManagers> ownersOfManagers;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "manager")
+    @OneToMany(mappedBy = "manager",cascade = CascadeType.PERSIST)
     private List<ManagersOfServices>managersOfServices;
 
 }

@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 
@@ -28,12 +30,14 @@ public class OwnersOfManagers {
 
     @JsonBackReference
     @JoinColumn(name = "owner_id")
+    @OnDelete(action= OnDeleteAction.SET_NULL)
     @ManyToOne
     private Owner owner;
 
 
     @JsonBackReference
     @JoinColumn(name = "manager_id")
+    @OnDelete(action= OnDeleteAction.SET_NULL)
     @ManyToOne
     private Manager manager;
 

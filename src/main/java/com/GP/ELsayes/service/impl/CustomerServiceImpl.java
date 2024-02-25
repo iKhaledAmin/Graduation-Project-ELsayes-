@@ -2,7 +2,6 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
-import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
@@ -52,7 +51,6 @@ public class CustomerServiceImpl implements CustomerService {
     public void delete(Long customerId) {
 
         getById(customerId);
-        customerRepo.updateCarCustomer(customerId);
         customerRepo.deleteById(customerId);
     }
 

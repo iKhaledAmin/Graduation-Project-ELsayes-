@@ -83,7 +83,6 @@ public class OwnerServiceImpl implements OwnerService {
     @Override
     public void delete(Long ownerId) {
         getById(ownerId);
-        ownerRepo.deleteAllRelationsWithOtherOwners(ownerId);
         ownerRepo.deleteById(ownerId);
     }
 

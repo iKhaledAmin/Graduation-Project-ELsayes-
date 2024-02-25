@@ -9,6 +9,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.Date;
 
@@ -26,12 +28,14 @@ public class OwnersOfBranches {
     private Long id;
 
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "owner_id")
     @ManyToOne
     private Owner owner;
 
 
     @JsonBackReference
+    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "branch_id")
     @ManyToOne
     private Branch branch;
