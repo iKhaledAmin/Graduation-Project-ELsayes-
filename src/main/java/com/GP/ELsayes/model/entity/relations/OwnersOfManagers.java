@@ -43,6 +43,6 @@ public class OwnersOfManagers {
 
 
     @Enumerated(EnumType.STRING)
-    OperationType operationType;
-    Date operationDate;
+    private OperationType operationType;
+    private Date operationDate;
 }

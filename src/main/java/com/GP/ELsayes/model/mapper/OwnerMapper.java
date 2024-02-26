@@ -13,7 +13,6 @@ public interface OwnerMapper {
     OwnerMapper INSTANCE = Mappers.getMapper(OwnerMapper.class);
 
     Owner toEntity(OwnerRequest request);
-
     OwnerResponse toResponse(Owner entity);
 
 }

@@ -1,7 +1,8 @@
 package com.GP.ELsayes.model.entity.relations;
 
-import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
+import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
@@ -19,28 +20,31 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 
-
 @Entity
-@Table(name = "owners_of_branches")
-public class OwnersOfBranches {
+@Table(name = "managers_of_offers")
+public class ManagersOfOffers {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @JsonBackReference
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "owner_id")
-    @ManyToOne
-    private Owner owner;
-
 
     @JsonBackReference
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "branch_id")
     @ManyToOne
-    private Branch branch;
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "offer_id")
+    private Offer offer;
+
+    @JsonBackReference
+    @ManyToOne
+    @OnDelete(action = OnDeleteAction.SET_NULL)
+    @JoinColumn(name = "manager_id")
+    private Manager manager;
+
 
     @Enumerated(EnumType.STRING)
     private OperationType operationType;
     private Date operationDate;
+
+
+
 }

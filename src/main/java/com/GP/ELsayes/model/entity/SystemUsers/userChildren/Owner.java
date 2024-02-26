@@ -38,23 +38,19 @@ public class Owner extends User {
 
 
     @JsonManagedReference
-    //@Cascade({org.hibernate.annotations.CascadeType.PERSIST})
-    @OneToMany(mappedBy = "owner",cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "owner")
     private List<OwnersOfBranches> ownersOfBranches;
 
     @JsonManagedReference
-//    @OnDelete(action= OnDeleteAction.SET_NULL)
     @OneToMany(mappedBy = "owner")
     private List<OwnersOfManagers> ownersOfManagers;
 
-
-
     @JsonManagedReference
-    @OneToMany(mappedBy = "oldOwner", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "oldOwner")
     private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners1;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "restrictedOwner", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "restrictedOwner")
     private List<OwnersOfRestrictedOwners> ownersOfRestrictedOwners2;
 
 

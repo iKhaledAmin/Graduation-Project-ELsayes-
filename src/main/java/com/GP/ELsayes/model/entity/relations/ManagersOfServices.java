@@ -26,7 +26,6 @@ import java.util.Date;
 @NoArgsConstructor
 @AllArgsConstructor
 
-@Component
 @Entity
 @Table(name = "managers_of_services")
 public class ManagersOfServices {
@@ -47,7 +46,7 @@ public class ManagersOfServices {
     private Manager manager;
 
     @Enumerated(EnumType.STRING)
-    OperationType operationType;
-    Date operationDate;
+    private OperationType operationType;
+    private Date operationDate;
 
 }

@@ -22,6 +22,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
+import static java.lang.Double.parseDouble;
+
 @RequiredArgsConstructor
 @Service
 public class OwnerServiceImpl implements OwnerService {
@@ -31,11 +33,19 @@ public class OwnerServiceImpl implements OwnerService {
     private final OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService;
 
 
+    private OwnerPermission setPermission(String ownerPercentage){
+        if (parseDouble(ownerPercentage) > 60.0)
+            return OwnerPermission.FULL_PERMISSION;
+        else
+            return OwnerPermission.RESTRICTED;
+    }
+
+
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
         newOwner.setUserRole(UserRole.OWNER);
-        newOwner.setOwnerPermission(OwnerPermission.RESTRICTED);
+        newOwner.setOwnerPermission(setPermission(ownerRequest.getPercentage()));
         newOwner = this.ownerRepo.save(newOwner);
 
         // this if condition must be removed at production (important note)
@@ -61,7 +71,7 @@ public class OwnerServiceImpl implements OwnerService {
         Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
         updatedOwner.setId(ownerId);
         updatedOwner.setUserRole(existedOwner.getUserRole());
-        updatedOwner.setOwnerPermission(existedOwner.getOwnerPermission());
+        updatedOwner.setOwnerPermission(setPermission(ownerRequest.getPercentage()));
 
         BeanUtils.copyProperties(existedOwner,updatedOwner);
 
