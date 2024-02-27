@@ -53,7 +53,7 @@ public class Car {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "customerId")
+    @JoinColumn(name = "customer_id")
     private Customer customer;
 
 }

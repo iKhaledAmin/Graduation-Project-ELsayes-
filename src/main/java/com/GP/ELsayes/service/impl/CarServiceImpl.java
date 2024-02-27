@@ -14,7 +14,6 @@ import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -47,7 +46,7 @@ public class CarServiceImpl implements CarService {
         updatedCar.setCustomer(existedCar.getCustomer());
         BeanUtils.copyProperties(existedCar,updatedCar);
 
-        return this.carMapper.toResponse(carRepo.save(existedCar));
+        return this.carMapper.toResponse(carRepo.save(updatedCar));
     }
 
     @Override

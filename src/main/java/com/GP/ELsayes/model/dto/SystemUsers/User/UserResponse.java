@@ -29,6 +29,8 @@ public class UserResponse {
     private String email;
     private String profileImageURL;
     private String phoneNumber;
+
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;
     private UserGender gender ;
     private UserRole userRole;

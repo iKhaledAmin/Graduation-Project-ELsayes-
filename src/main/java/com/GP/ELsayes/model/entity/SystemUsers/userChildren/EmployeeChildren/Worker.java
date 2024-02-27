@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.FreeTrialCode;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
@@ -47,9 +48,9 @@ public class Worker extends Employee {
     @JoinColumn(name = "manager_id")
     private Manager manager;
 
-//    @JsonManagedReference
-//    @OneToMany(mappedBy = "worker")
-//    private List<Customer> customers;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "worker")
+    private List<FreeTrialCode> codes;
 
 
 }

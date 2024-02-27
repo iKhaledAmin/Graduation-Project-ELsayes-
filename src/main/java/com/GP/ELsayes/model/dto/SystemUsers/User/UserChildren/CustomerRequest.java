@@ -11,5 +11,5 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 @SuperBuilder
 public class CustomerRequest extends UserRequest {
-    private String firstTrialCode;
+    private String freeTrialCode;
 }

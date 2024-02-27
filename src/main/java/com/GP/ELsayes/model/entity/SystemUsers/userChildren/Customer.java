@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.entity.SystemUsers.userChildren;
 
 
 import com.GP.ELsayes.model.entity.Car;
+import com.GP.ELsayes.model.entity.FreeTrialCode;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -27,11 +28,15 @@ public class Customer extends User {
     @Id
     private Long id;
     private Date dateOfJoining;
-    private String firstTrialCode;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "customer", cascade = CascadeType.PERSIST)
+    @OneToMany(mappedBy = "customer", cascade = CascadeType.REMOVE)
     private List<Car> cars;
+
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer")
+    private List<FreeTrialCode> codes;
 
 
 }
