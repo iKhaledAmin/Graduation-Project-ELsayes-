@@ -58,24 +58,30 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
         return this.freeTrialCodeMapper.toResponse(freeTrialCodeRepo.save(code));
     }
 
+
     @SneakyThrows
     @Override
     public FreeTrialCodeResponse update(FreeTrialCodeRequest freeTrialCodeRequest, Long codeId) {
+
+        System.out.println(" We in Update Fun  ffff " + freeTrialCodeRequest);
+
+        System.out.println(" We in Update Fun  iddd " + codeId);
+
         FreeTrialCode existedCode = this.getById(codeId);
         FreeTrialCode updatedCode = this.freeTrialCodeMapper.toEntity(freeTrialCodeRequest);
 
         updatedCode.setId(codeId);
         BeanUtils.copyProperties(updatedCode,existedCode);
 
+
         Customer customer = customerService.getById(freeTrialCodeRequest.getCustomerId());
         updatedCode.setCustomer(customer);
+
+        System.out.println(" We in Update Fun customer iddd " + updatedCode.getCustomer().getId());
 
         return this.freeTrialCodeMapper.toResponse(freeTrialCodeRepo.save(updatedCode));
     }
 
-    private void applyCode(String code){
-
-    }
 
     @Override
     public void delete(Long codeId) {
@@ -122,10 +128,21 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
     public FreeTrialCodeResponse applyCode(Long customerId , String code){
         Long workerId = getIdFromCode(code);
 
+        //System.out.println(" The Woker Id :::::: "+workerId);
+
         FreeTrialCode freeTrialCode = getByWorkerId(workerId);
+
+        //System.out.println(" The Woker Id 222 :::::: "+freeTrialCode.getWorker().getId());
+
+
         freeTrialCode.setDateOfUsing(new Date());
 
         FreeTrialCodeRequest request = freeTrialCodeMapper.toRequest(freeTrialCode);
+
+        System.out.println(" The request :::::: "+request);
+
+        System.out.println(" The Id :::::: "+freeTrialCode.getId());
+
 
         return update(request,freeTrialCode.getId());
     }

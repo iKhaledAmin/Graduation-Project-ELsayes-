@@ -20,6 +20,8 @@ public interface FreeTrialCodeMapper {
     @Mapping(target = "customerId" , source = "entity.customer.id")
     FreeTrialCodeResponse toResponse(FreeTrialCode entity);
 
+    @Mapping(target = "workerId" , source = "entity.worker.id")
+    @Mapping(target = "customerId" , source = "entity.customer.id")
     FreeTrialCodeRequest toRequest(FreeTrialCode entity );
 
 }

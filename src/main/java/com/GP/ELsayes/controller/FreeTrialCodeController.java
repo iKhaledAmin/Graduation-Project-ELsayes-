@@ -25,8 +25,8 @@ public class FreeTrialCodeController {
     public ResponseEntity<?> update(@RequestBody @Valid FreeTrialCodeRequest freeTrialCodeRequest,@PathVariable Long codeId){
         return new ResponseEntity<>(this.freeTrialCodeService.update(freeTrialCodeRequest , codeId), HttpStatus.ACCEPTED);
     }
-//    @PutMapping("/apply-code")
-//    public ResponseEntity<?> applyCode(@RequestBody @Valid FreeTrialCodeRequest freeTrialCodeRequest){
-//        return new ResponseEntity<>(this.freeTrialCodeService.applyCode(freeTrialCodeRequest), HttpStatus.ACCEPTED);
-//    }
+    @PutMapping("/apply-code")
+    public ResponseEntity<?> applyCode(@RequestBody @Valid FreeTrialCodeRequest freeTrialCodeRequest){
+       return new ResponseEntity<>(this.freeTrialCodeService.applyCode(freeTrialCodeRequest.getCustomerId(),freeTrialCodeRequest.getCode()), HttpStatus.ACCEPTED);
+    }
 }

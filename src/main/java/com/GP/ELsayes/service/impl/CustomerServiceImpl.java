@@ -9,23 +9,34 @@ import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
 import com.GP.ELsayes.service.CustomerService;
 import com.GP.ELsayes.service.FreeTrialCodeService;
+import jakarta.annotation.PostConstruct;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
-@RequiredArgsConstructor
+//@RequiredArgsConstructor
 @Service
 public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final CustomerRepo customerRepo;
-
     private final FreeTrialCodeService freeTrialCodeService;
+
+
+    public CustomerServiceImpl( CustomerMapper customerMapper, CustomerRepo customerRepo,@Lazy FreeTrialCodeService freeTrialCodeService) {
+        this.customerMapper = customerMapper;
+        this.customerRepo = customerRepo;
+        this.freeTrialCodeService = freeTrialCodeService;
+    }
+
+
+
     @Override
     public CustomerResponse add(CustomerRequest customerRequest) {
 
@@ -33,8 +44,9 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setDateOfJoining(new Date());
         customer.setUserRole(UserRole.CUSTOMER);
         customer = this.customerRepo.save(customer);
+        System.out.println("dddddddddddd"+customer);
 
-        //freeTrialCodeService.applyCode(customer.getId(),customerRequest.getFreeTrialCode());
+        freeTrialCodeService.applyCode(customer.getId(),customerRequest.getFreeTrialCode());
 
         return this.customerMapper.toResponse(customer);
     }
