@@ -2,15 +2,19 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.ServicesOfBranchesRequest;
+import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
+import com.GP.ELsayes.model.mapper.ServicesOfBranchesMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ManagersOfServicesService;
+import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -27,6 +31,8 @@ public class ServiceServiceImpl implements ServiceService {
     private final ServiceMapper serviceMapper;
     private final ManagerService managerService;
     private final ManagersOfServicesService managersOfServicesService;
+    private final ServicesOfBranchesService servicesOfBranchesService;
+    //private final ServicesOfBranchesResponse servicesOfBranchesResponse;
 
     @Override
     public ServiceResponse add(ServiceRequest serviceRequest) {
@@ -91,6 +97,28 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceMapper.toResponse(getById(serviceId));
     }
 
+    @Override
+    public ServicesOfBranchesResponse addServiceToBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
+        return servicesOfBranchesService.addServiceToBranch(
+                servicesOfBranchesRequest.getServiceId(),
+                servicesOfBranchesRequest.getBranchId()
+        );
+    }
 
+    @Override
+    public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
+        return servicesOfBranchesService.activateServiceInBranch(
+                servicesOfBranchesRequest.getServiceId(),
+                servicesOfBranchesRequest.getBranchId()
+        );
+    }
+
+    @Override
+    public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
+        return servicesOfBranchesService.deactivateServiceInBranch(
+                servicesOfBranchesRequest.getServiceId(),
+                servicesOfBranchesRequest.getBranchId()
+        );
+    }
 
 }

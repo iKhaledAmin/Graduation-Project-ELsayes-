@@ -1,6 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
+import com.GP.ELsayes.model.dto.ServicesOfBranchesRequest;
 import com.GP.ELsayes.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,5 +42,19 @@ public class ServiceController {
         return new ResponseEntity<>(this.serviceService.getResponseById(serviceId),HttpStatus.OK);
     }
 
+    @PostMapping("/add-service-to-branch")
+    public ResponseEntity<?> addServiceToBranch(@RequestBody @Valid ServicesOfBranchesRequest servicesOfBranchesRequest) {
+        return new ResponseEntity<>(this.serviceService.addServiceToBranch(servicesOfBranchesRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/activate-service-in-branch")
+    public ResponseEntity<?> activateServiceInBranch(@RequestBody @Valid ServicesOfBranchesRequest servicesOfBranchesRequest){
+        return new ResponseEntity<>(this.serviceService.activateServiceInBranch(servicesOfBranchesRequest), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/deactivate-service-in-branch")
+    public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid ServicesOfBranchesRequest servicesOfBranchesRequest){
+        return new ResponseEntity<>(this.serviceService.deactivateServiceInBranch(servicesOfBranchesRequest), HttpStatus.ACCEPTED);
+    }
 
 }

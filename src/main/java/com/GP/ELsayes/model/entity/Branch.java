@@ -3,6 +3,8 @@ package com.GP.ELsayes.model.entity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
+import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
+import com.GP.ELsayes.service.ServiceService;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -56,5 +58,12 @@ public class Branch {
    // @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     @OneToMany(mappedBy = "branch")
     private List<OwnersOfBranches> ownersOfBranches;
+
+
+    @JsonManagedReference
+    // @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
+    @OneToMany(mappedBy = "branch",cascade = CascadeType.REMOVE)
+    private List<ServicesOfBranches> servicesOfBranches;
+
 
 }
