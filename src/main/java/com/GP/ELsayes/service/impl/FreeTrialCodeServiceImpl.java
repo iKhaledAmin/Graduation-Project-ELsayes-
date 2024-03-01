@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
 import com.GP.ELsayes.model.entity.FreeTrialCode;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.mapper.FreeTrialCodeMapper;
 import com.GP.ELsayes.repository.FreeTrialCodeRepo;
 import com.GP.ELsayes.service.CustomerService;
@@ -28,10 +29,18 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
 
     private final CustomerService customerService;
 
+    private void throwExceptionIfCodeIsUsedBefore(String code){
+        Optional<FreeTrialCode> freeTrialCode = freeTrialCodeRepo.findByCode(code);
+        if(freeTrialCode.get().getDateOfUsing() == null){
+            return;
+        }
+        throw new RuntimeException("Invalid code");
+    }
+
     private String newCode(Long workerId){
         Random random = new Random();
-        String part1 = String.format("%04d", workerId);
-        String part2 = String.format("%04d", random.nextInt(10000));
+        String part1 = String.format("%04d", random.nextInt(10000));
+        String part2 = String.format("%04d", workerId);
         String part3 = String.format("%04d", random.nextInt(10000));
 
         return part1 + "-" + part2 + "-" +part3;
@@ -39,7 +48,7 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
 
     private Long getIdFromCode (String code) {
         String[] parts = code.split("-");
-        Long workerId = Long.parseLong(parts[0]);
+        Long workerId = Long.parseLong(parts[1]);
         return workerId;
     }
 
@@ -63,21 +72,11 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
     @Override
     public FreeTrialCodeResponse update(FreeTrialCodeRequest freeTrialCodeRequest, Long codeId) {
 
-        System.out.println(" We in Update Fun  ffff " + freeTrialCodeRequest);
-
-        System.out.println(" We in Update Fun  iddd " + codeId);
-
         FreeTrialCode existedCode = this.getById(codeId);
         FreeTrialCode updatedCode = this.freeTrialCodeMapper.toEntity(freeTrialCodeRequest);
 
         updatedCode.setId(codeId);
         BeanUtils.copyProperties(updatedCode,existedCode);
-
-
-        Customer customer = customerService.getById(freeTrialCodeRequest.getCustomerId());
-        updatedCode.setCustomer(customer);
-
-        System.out.println(" We in Update Fun customer iddd " + updatedCode.getCustomer().getId());
 
         return this.freeTrialCodeMapper.toResponse(freeTrialCodeRepo.save(updatedCode));
     }
@@ -118,6 +117,13 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
         );
     }
 
+    @Override
+    public FreeTrialCode getByCode(String code) {
+        return freeTrialCodeRepo.findByCode(code).orElseThrow(
+                () -> new NoSuchElementException("Invalid code")
+        );
+    }
+
     public FreeTrialCodeResponse generateCode(Long workerId){
         FreeTrialCodeRequest freeTrialCodeRequest = new FreeTrialCodeRequest();
         freeTrialCodeRequest.setWorkerId(workerId);
@@ -126,25 +132,19 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
 
 
     public FreeTrialCodeResponse applyCode(Long customerId , String code){
-        Long workerId = getIdFromCode(code);
+        throwExceptionIfCodeIsUsedBefore(code);
 
-        //System.out.println(" The Woker Id :::::: "+workerId);
+        Customer customer = customerService.getById(customerId);
 
-        FreeTrialCode freeTrialCode = getByWorkerId(workerId);
-
-        //System.out.println(" The Woker Id 222 :::::: "+freeTrialCode.getWorker().getId());
-
-
+        FreeTrialCode freeTrialCode = getByCode(code);
+        freeTrialCode.setCustomer(customer);
         freeTrialCode.setDateOfUsing(new Date());
 
-        FreeTrialCodeRequest request = freeTrialCodeMapper.toRequest(freeTrialCode);
 
-        System.out.println(" The request :::::: "+request);
-
-        System.out.println(" The Id :::::: "+freeTrialCode.getId());
+        FreeTrialCodeRequest freeTrialCodeRequest = freeTrialCodeMapper.toRequest(freeTrialCode);
 
 
-        return update(request,freeTrialCode.getId());
+        return update(freeTrialCodeRequest,freeTrialCode.getId());
     }
 
 }

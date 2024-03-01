@@ -10,6 +10,7 @@ import org.springframework.stereotype.Service;
 public interface FreeTrialCodeService
         extends CrudService<FreeTrialCodeRequest,FreeTrialCode, FreeTrialCodeResponse,Long> {
     public FreeTrialCode getByWorkerId(Long workerId);
+    public FreeTrialCode getByCode(String code);
     public FreeTrialCodeResponse generateCode(Long workerId);
     public FreeTrialCodeResponse applyCode(Long customerId , String code);
 }

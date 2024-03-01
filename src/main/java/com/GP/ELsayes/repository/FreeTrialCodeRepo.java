@@ -11,4 +11,5 @@ import java.util.Optional;
 public interface FreeTrialCodeRepo extends JpaRepository<FreeTrialCode,Long> {
     Optional<FreeTrialCode> findByWorkerId(Long workerId);
 
+    Optional<FreeTrialCode> findByCode(String code);
 }

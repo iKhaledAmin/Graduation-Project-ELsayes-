@@ -44,9 +44,10 @@ public class CustomerServiceImpl implements CustomerService {
         customer.setDateOfJoining(new Date());
         customer.setUserRole(UserRole.CUSTOMER);
         customer = this.customerRepo.save(customer);
-        System.out.println("dddddddddddd"+customer);
 
-        freeTrialCodeService.applyCode(customer.getId(),customerRequest.getFreeTrialCode());
+        if(customerRequest.getFreeTrialCode() != "")
+            freeTrialCodeService.applyCode(customer.getId(),customerRequest.getFreeTrialCode());
+
 
         return this.customerMapper.toResponse(customer);
     }

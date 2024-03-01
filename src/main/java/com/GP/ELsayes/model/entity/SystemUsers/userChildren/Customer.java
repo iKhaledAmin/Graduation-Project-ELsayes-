@@ -35,8 +35,8 @@ public class Customer extends User {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "customer")
-    private List<FreeTrialCode> codes;
+    @OneToOne(mappedBy = "customer")
+    private FreeTrialCode customerFreeTrialCode;
 
 
 }

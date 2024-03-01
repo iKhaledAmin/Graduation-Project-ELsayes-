@@ -1,9 +1,6 @@
 package com.GP.ELsayes.model.mapper;
 
 import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

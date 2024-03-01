@@ -20,8 +20,8 @@ import java.util.Date;
 public class FreeTrialCodeRequest {
 
 
-    //@NotNull(message = "Worker id must not be null")
     private String code;
+
     private Long workerId;
     private Long customerId;
     private Date dateOfGenerate;

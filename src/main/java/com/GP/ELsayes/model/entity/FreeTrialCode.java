@@ -29,7 +29,7 @@ public class FreeTrialCode {
     @Column(name = "code_id")
     private Long id;
 
-    private String code;
+    private String code = "";
     private Date dateOfGenerate;
     private Date dateOfUsing;
 
@@ -41,7 +41,7 @@ public class FreeTrialCode {
     private Worker worker;
 
 
-    @ManyToOne
+    @OneToOne
     @JsonBackReference
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "customer_id")
