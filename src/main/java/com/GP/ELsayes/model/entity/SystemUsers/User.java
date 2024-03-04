@@ -1,5 +1,7 @@
 package com.GP.ELsayes.model.entity.SystemUsers;
 
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.enums.UserGender;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -45,6 +47,9 @@ public abstract class User {
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date birthday;
+
+
+
 
 
     @Enumerated(EnumType.STRING)

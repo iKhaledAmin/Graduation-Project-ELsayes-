@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.OwnerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,11 @@ public class OwnerController {
     @PutMapping("/{ownerId}")
     public ResponseEntity<?> update(@RequestBody @Valid OwnerRequest ownerRequest,@PathVariable Long ownerId){
         return new ResponseEntity<>(this.ownerService.update(ownerRequest , ownerId), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/edit-profile/{ownerId}")
+    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long ownerId){
+        return new ResponseEntity<>(this.ownerService.editProfile(userRequest , ownerId), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/{ownerId}")

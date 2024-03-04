@@ -7,7 +7,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface OwnerService extends CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
+public interface OwnerService extends UserService , CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
 
 
 }

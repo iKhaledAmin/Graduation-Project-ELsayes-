@@ -3,22 +3,24 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.relations.OwnersOfRestrictedOwners;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.permissions.OwnerPermission;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.OwnerMapper;
+import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.OwnerRepo;
-import com.GP.ELsayes.repository.relations.OwnersOfRestrictedOwnersRepo;
 import com.GP.ELsayes.service.OwnerService;
+import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.relations.OwnersOfRestrictedOwnersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 
@@ -26,10 +28,12 @@ import static java.lang.Double.parseDouble;
 
 @RequiredArgsConstructor
 @Service
-public class OwnerServiceImpl implements OwnerService {
+public class OwnerServiceImpl
+        implements UserService , OwnerService {
 
     private final OwnerMapper ownerMapper;
     private final OwnerRepo ownerRepo;
+    private final UserMapper userMapper;
     private final OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService;
 
 
@@ -39,7 +43,6 @@ public class OwnerServiceImpl implements OwnerService {
         else
             return OwnerPermission.RESTRICTED;
     }
-
 
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {
@@ -91,6 +94,18 @@ public class OwnerServiceImpl implements OwnerService {
     }
 
     @Override
+    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+        Owner owner = getById(userId);
+
+        OwnerRequest ownerRequest = userMapper.toOwnerRequest(userRequest);
+        ownerRequest.setPercentage(owner.getPercentage());
+
+
+        OwnerResponse ownerResponse = update(ownerRequest,userId);
+
+        return userMapper.toUserResponse(ownerResponse);
+    }
+    @Override
     public void delete(Long ownerId) {
         getById(ownerId);
         ownerRepo.deleteById(ownerId);
@@ -116,8 +131,6 @@ public class OwnerServiceImpl implements OwnerService {
     public OwnerResponse getResponseById(Long ownerId) {
         return ownerMapper.toResponse(getById(ownerId));
     }
-
-
 
 
 
