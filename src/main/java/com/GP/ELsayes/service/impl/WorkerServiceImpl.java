@@ -5,12 +5,16 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.W
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
+import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.WorkerService;
+import com.GP.ELsayes.service.relations.WorkersOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -29,6 +33,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final  WorkerMapper workerMapper;
     private final  WorkerRepo workerRepo;
     private final BranchService branchService;
+    private final WorkersOfBranchesService workersOfBranchesService;
 
 
     void throwExceptionIfBranchNoteHasManager(Branch branch){
@@ -40,17 +45,19 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public WorkerResponse add(WorkerRequest workerRequest) {
 
+        Branch branch = this.branchService.getById(workerRequest.getBranchId());
+        throwExceptionIfBranchNoteHasManager(branch);
+
         Worker worker = this.workerMapper.toEntity(workerRequest);
         worker.setUserRole(UserRole.WORKER);
         worker.setDateOfEmployment(new Date());
+        worker = workerRepo.save(worker);
+
+        WorkersOfBranches workersOfBranches = workersOfBranchesService.addWorkerToBranch(worker, branch);
+        worker.setWorkersOfBranch(List.of(workersOfBranches));
 
 
-        Branch branch = this.branchService.getById(workerRequest.getBranchId());
-        throwExceptionIfBranchNoteHasManager(branch);
-        worker.setBranch(branch);
-        worker.setManager(branch.getManager());
-
-        return this.workerMapper.toResponse(this.workerRepo.save(worker));
+        return this.workerMapper.toResponse(worker);
     }
 
 
@@ -67,14 +74,21 @@ public class WorkerServiceImpl implements WorkerService {
         updatedWorker.setUserRole(existedWorker.getUserRole());
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
-        updatedWorker.setBranch(branch);
         updatedWorker.setManager(branch.getManager());
 
 
         BeanUtils.copyProperties(existedWorker,updatedWorker);
+        updatedWorker = workerRepo.save(updatedWorker);
+
+        WorkersOfBranches workersOfBranches = workersOfBranchesService.updateWorkerOfBranch(
+                                            updatedWorker.getId(),
+                                            branch.getId()
+                                            );
+        updatedWorker.setWorkersOfBranch(List.of(workersOfBranches));
 
 
-        return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
+
+        return this.workerMapper.toResponse(updatedWorker);
     }
 
     @Override
@@ -107,8 +121,15 @@ public class WorkerServiceImpl implements WorkerService {
 
     @Override
     public List<WorkerResponse> getAllByBranchId(Long branchId) {
-        return branchService.getById(branchId).getWorkers()
+        return workerRepo.findAllWorkersByBranchId(branchId).get()
                 .stream().map(worker ->  workerMapper.toResponse(worker))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public Integer getNumberOfWorkersByBranchId(Long branchId) {
+        return workerRepo.getNumberOfWorkersByBranchId(branchId);
+    }
+
+
 }

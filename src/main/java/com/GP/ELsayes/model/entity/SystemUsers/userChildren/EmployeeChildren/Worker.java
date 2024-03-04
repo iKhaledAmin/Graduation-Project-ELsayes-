@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.FreeTrialCode;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
+import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -39,11 +40,6 @@ public class Worker extends Employee {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "branch_id")
-    private Branch branch;
-
-    @JsonBackReference
-    @ManyToOne
     @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "manager_id")
     private Manager manager;
@@ -51,6 +47,11 @@ public class Worker extends Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "worker")
     private List<FreeTrialCode> codes;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)
+    private List<WorkersOfBranches> workersOfBranch;
+
 
 
 }

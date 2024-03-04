@@ -48,4 +48,10 @@ public class WorkerController {
         return new ResponseEntity<>(this.workerService.getAllByBranchId(branchId), HttpStatus.OK);
     }
 
+    @GetMapping("/get-number-workers-by-branchId/{branchId}")
+    public ResponseEntity<?> getNumberOfWorkersByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.workerService.getNumberOfWorkersByBranchId(branchId), HttpStatus.OK);
+    }
+
 }
+

@@ -1,7 +1,6 @@
 package com.GP.ELsayes.service.relations;
 
-import com.GP.ELsayes.model.dto.ServiceResponse;
-import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import org.springframework.stereotype.Service;
 
 @Service

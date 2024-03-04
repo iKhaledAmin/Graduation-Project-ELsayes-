@@ -9,7 +9,6 @@ import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
 import com.GP.ELsayes.repository.ManagerRepo;
-import com.GP.ELsayes.repository.relations.OwnersOfManagersRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -33,6 +33,12 @@ public class ManagerServiceImpl implements ManagerService {
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final OwnersOfManagersService ownersOfManagersService;
+
+
+    @Override
+    public Optional<Manager> getIfExistByBranchId(Long managerId) {
+        return managerRepo.findByBranchId(managerId);
+    }
 
     void throwExceptionIfBranchAlreadyHasAManager(Branch branch){
         if(branch.getManager() == null)
@@ -127,6 +133,10 @@ public class ManagerServiceImpl implements ManagerService {
                 () -> new NoSuchElementException("There is no manager with id = " + managerId)
         );
     }
+    @Override
+    public ManagerResponse getResponseById(Long managerId) {
+        return managerMapper.toResponse(getById(managerId));
+    }
 
     @Override
     public Manager getByBranchId(long branchId) {
@@ -135,14 +145,11 @@ public class ManagerServiceImpl implements ManagerService {
         );
     }
 
-    @Override
-    public ManagerResponse getResponseById(Long managerId) {
-        return managerMapper.toResponse(getById(managerId));
-    }
-
     public ManagerResponse getResponseByBranchId(Long branchId) {
         return managerMapper.toResponse(getByBranchId(branchId));
     }
+
+
 
 
 }

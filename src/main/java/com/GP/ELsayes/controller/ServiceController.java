@@ -1,7 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
-import com.GP.ELsayes.model.dto.ServicesOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
 import com.GP.ELsayes.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;

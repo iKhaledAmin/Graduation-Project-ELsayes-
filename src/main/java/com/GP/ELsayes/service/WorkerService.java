@@ -11,4 +11,5 @@ import java.util.List;
 public interface WorkerService extends CrudService<WorkerRequest, Worker, WorkerResponse,Long> {
 
     public List<WorkerResponse> getAllByBranchId(Long branchId);
+    public  Integer getNumberOfWorkersByBranchId (Long branchId);
 }

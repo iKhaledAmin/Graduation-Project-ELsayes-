@@ -2,14 +2,13 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
-import com.GP.ELsayes.model.dto.ServicesOfBranchesRequest;
-import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
-import com.GP.ELsayes.model.mapper.ServicesOfBranchesMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.ServiceService;

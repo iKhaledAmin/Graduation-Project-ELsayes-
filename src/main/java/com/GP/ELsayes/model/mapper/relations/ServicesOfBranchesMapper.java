@@ -1,6 +1,6 @@
-package com.GP.ELsayes.model.mapper;
+package com.GP.ELsayes.model.mapper.relations;
 
-import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;

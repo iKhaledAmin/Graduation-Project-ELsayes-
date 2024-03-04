@@ -1,4 +1,4 @@
-package com.GP.ELsayes.model.dto;
+package com.GP.ELsayes.model.dto.relations;
 
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.ServiceEntity;

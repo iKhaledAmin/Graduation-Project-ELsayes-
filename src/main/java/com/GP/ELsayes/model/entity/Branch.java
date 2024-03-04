@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Man
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
+import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.service.ServiceService;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -49,21 +50,20 @@ public class Branch {
     @JsonManagedReference
     private Manager manager;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "branch")
-    private List<Worker> workers;
-
 
     @JsonManagedReference
-   // @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     @OneToMany(mappedBy = "branch")
     private List<OwnersOfBranches> ownersOfBranches;
 
 
     @JsonManagedReference
-    // @Cascade({org.hibernate.annotations.CascadeType.PERSIST})
     @OneToMany(mappedBy = "branch",cascade = CascadeType.REMOVE)
-    private List<ServicesOfBranches> servicesOfBranches;
+    private List<ServicesOfBranches> servicesOfBranch;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch")
+    private List<WorkersOfBranches> WorkersOfBranch;
+
 
 
 }

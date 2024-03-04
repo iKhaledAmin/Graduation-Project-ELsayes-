@@ -1,11 +1,11 @@
 package com.GP.ELsayes.service.relations.impl;
 
-import com.GP.ELsayes.model.dto.ServicesOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.enums.Status;
-import com.GP.ELsayes.model.mapper.ServicesOfBranchesMapper;
+import com.GP.ELsayes.model.mapper.relations.ServicesOfBranchesMapper;
 import com.GP.ELsayes.repository.relations.ServicesOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ServiceService;
