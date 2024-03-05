@@ -1,18 +1,25 @@
 package com.GP.ELsayes.service.impl;
 
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
 import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
+import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
+import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.WorkerService;
 import com.GP.ELsayes.service.relations.WorkersOfBranchesService;
 import lombok.RequiredArgsConstructor;
@@ -28,10 +35,11 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class WorkerServiceImpl implements WorkerService {
+public class WorkerServiceImpl implements UserService, WorkerService {
 
     private final  WorkerMapper workerMapper;
     private final  WorkerRepo workerRepo;
+    private final UserMapper userMapper;
     private final BranchService branchService;
     private final WorkersOfBranchesService workersOfBranchesService;
 
@@ -70,14 +78,13 @@ public class WorkerServiceImpl implements WorkerService {
 
 
         updatedWorker.setId(workerId);
-        updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
-        updatedWorker.setUserRole(existedWorker.getUserRole());
+        //updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
+        //updatedWorker.setUserRole(existedWorker.getUserRole());
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
-        updatedWorker.setManager(branch.getManager());
 
 
-        BeanUtils.copyProperties(existedWorker,updatedWorker);
+        BeanUtils.copyProperties(updatedWorker,existedWorker);
         updatedWorker = workerRepo.save(updatedWorker);
 
         WorkersOfBranches workersOfBranches = workersOfBranchesService.updateWorkerOfBranch(
@@ -89,6 +96,19 @@ public class WorkerServiceImpl implements WorkerService {
 
 
         return this.workerMapper.toResponse(updatedWorker);
+    }
+
+    @Override
+    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+        Worker worker = getById(userId);
+        Branch branch = this.branchService.getByWorkerId(worker.getId());
+
+        WorkerRequest workerRequest = userMapper.toWorkerRequest(userRequest);
+        workerRequest.setBranchId(branch.getId());
+
+        WorkerResponse workerResponse = update(workerRequest,userId);
+
+        return userMapper.toUserResponse(workerResponse);
     }
 
     @Override

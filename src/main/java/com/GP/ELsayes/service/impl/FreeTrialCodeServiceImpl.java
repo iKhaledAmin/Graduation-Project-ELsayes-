@@ -37,6 +37,14 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
         throw new RuntimeException("Invalid code");
     }
 
+    private void throwExceptionIfCodeNotExist(String code){
+        Optional<FreeTrialCode> freeTrialCode = freeTrialCodeRepo.findByCode(code);
+        if(freeTrialCode.isEmpty()){
+            throw new RuntimeException("Invalid code");
+        }
+        return;
+    }
+
     private String newCode(Long workerId){
         Random random = new Random();
         String part1 = String.format("%04d", random.nextInt(10000));
@@ -132,6 +140,7 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
 
 
     public FreeTrialCodeResponse applyCode(Long customerId , String code){
+        throwExceptionIfCodeNotExist(code);
         throwExceptionIfCodeIsUsedBefore(code);
 
         Customer customer = customerService.getById(customerId);

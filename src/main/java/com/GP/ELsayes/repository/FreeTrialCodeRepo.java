@@ -12,4 +12,8 @@ public interface FreeTrialCodeRepo extends JpaRepository<FreeTrialCode,Long> {
     Optional<FreeTrialCode> findByWorkerId(Long workerId);
 
     Optional<FreeTrialCode> findByCode(String code);
+
+
+    Optional<FreeTrialCode> existsByCode(String code);
 }
+

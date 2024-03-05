@@ -135,11 +135,12 @@ public class BranchServiceImpl implements BranchService {
         return branchMapper.toResponse(getByManagerId(managerId));
     }
 
-
-
-
-
-
+    @Override
+    public Branch getByWorkerId(Long workerId) {
+        return branchRepo.findByWorkerId(workerId).orElseThrow(
+                () -> new NoSuchElementException("There is no branch with worker id = " + workerId)
+        );
+    }
 
 
 }

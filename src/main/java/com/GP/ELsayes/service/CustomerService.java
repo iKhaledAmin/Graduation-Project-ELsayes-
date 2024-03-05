@@ -6,5 +6,5 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface CustomerService extends CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
+public interface CustomerService extends  UserService, CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
 }

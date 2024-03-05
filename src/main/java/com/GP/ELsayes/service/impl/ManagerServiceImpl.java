@@ -1,17 +1,25 @@
 package com.GP.ELsayes.service.impl;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
+import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.ManagerRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
+import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.relations.OwnersOfManagersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,9 +35,10 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-public class ManagerServiceImpl implements ManagerService {
+public class ManagerServiceImpl implements UserService, ManagerService {
     private final ManagerMapper managerMapper;
     private final ManagerRepo managerRepo;
+    private final UserMapper userMapper;
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final OwnersOfManagersService ownersOfManagersService;
@@ -90,11 +99,7 @@ public class ManagerServiceImpl implements ManagerService {
 
 
         updatedManager.setId(managerId);
-        updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
-        updatedManager.setUserRole(existedManager.getUserRole());
-
-
-        BeanUtils.copyProperties(existedManager,updatedManager);
+        BeanUtils.copyProperties(updatedManager,existedManager);
 
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchHasAdifferentManager(branch,managerId);
@@ -110,6 +115,23 @@ public class ManagerServiceImpl implements ManagerService {
 
 
         return this.managerMapper.toResponse(updatedManager);
+    }
+
+    @Override
+    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+        Manager manager = getById(userId);
+        Owner owner = ownerService.getByManagerId(manager.getId());
+
+        ManagerRequest managerRequest = userMapper.toManagerRequest(userRequest);
+
+        managerRequest.setManagerPermission(manager.getManagerPermission());
+        managerRequest.setBranchId(manager.getBranch().getId());
+        managerRequest.setOwnerId(owner.getId());
+
+
+        ManagerResponse managerResponse = update(managerRequest,userId);
+
+        return userMapper.toUserResponse(managerResponse);
     }
 
 
@@ -148,8 +170,5 @@ public class ManagerServiceImpl implements ManagerService {
     public ManagerResponse getResponseByBranchId(Long branchId) {
         return managerMapper.toResponse(getByBranchId(branchId));
     }
-
-
-
 
 }

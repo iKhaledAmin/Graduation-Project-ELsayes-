@@ -16,4 +16,6 @@ public interface ManagerMapper {
 
     @Mapping(target = "branchId" , source = "entity.branch.id")
     ManagerResponse toResponse(Manager entity);
+
+    ManagerRequest toRequest(Manager manager);
 }

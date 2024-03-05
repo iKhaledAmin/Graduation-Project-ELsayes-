@@ -3,6 +3,7 @@ package com.GP.ELsayes.controller;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.WorkerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,12 @@ public class WorkerController {
     public ResponseEntity<?> update(@RequestBody @Valid WorkerRequest workerRequest, @PathVariable Long workerId){
         return new ResponseEntity<>(this.workerService.update(workerRequest , workerId), HttpStatus.ACCEPTED);
     }
+
+    @PutMapping("/edit-profile/{workerId}")
+    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long workerId){
+        return new ResponseEntity<>(this.workerService.editProfile(userRequest , workerId), HttpStatus.ACCEPTED);
+    }
+
 
     @DeleteMapping("/{workerId}")
     public ResponseEntity<?> delete(@PathVariable Long workerId){

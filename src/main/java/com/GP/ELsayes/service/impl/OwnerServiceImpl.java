@@ -133,5 +133,10 @@ public class OwnerServiceImpl
     }
 
 
-
+    @Override
+    public Owner getByManagerId(Long managerId) {
+        return ownerRepo.findByManagerId(managerId).orElseThrow(
+                () -> new NoSuchElementException("There is no owner whit manager id = " + managerId)
+        );
+    }
 }

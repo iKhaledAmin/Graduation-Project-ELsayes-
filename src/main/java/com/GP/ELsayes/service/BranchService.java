@@ -12,4 +12,6 @@ public interface BranchService extends CrudService<BranchRequest, Branch, Branch
 
     public Branch getByManagerId(Long managerId);
     public BranchResponse getResponseByManagerId(Long managerId);
+
+    Branch getByWorkerId(Long workerId);
 }

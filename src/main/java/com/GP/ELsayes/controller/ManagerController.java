@@ -1,6 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.ManagerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,12 @@ private ManagerService managerService;
     public ResponseEntity<?> update(@RequestBody ManagerRequest managerRequest,@PathVariable Long managerId){
         return new ResponseEntity<>(this.managerService.update(managerRequest , managerId), HttpStatus.ACCEPTED);
     }
+
+    @PutMapping("/edit-profile/{managerId}")
+    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.editProfile(userRequest , managerId), HttpStatus.ACCEPTED);
+    }
+
 
     @DeleteMapping("/{managerId}")
     public ResponseEntity<?> delete(@PathVariable Long managerId){

@@ -6,6 +6,11 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 public interface OwnerRepo extends JpaRepository<Owner, Long> {
 
+
+    @Query("select o from Owner o join o.ownersOfManagers om where om.manager.id = :managerId")
+    Optional<Owner> findByManagerId(Long managerId);
 }

@@ -43,10 +43,6 @@ public class Manager extends Employee {
     private Branch branch;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "manager")
-    private List<Worker> workers;
-
-    @JsonManagedReference
     @OnDelete(action= OnDeleteAction.SET_NULL)
     @OneToMany(mappedBy = "manager")
     private List<OwnersOfManagers> ownersOfManager;
@@ -62,6 +58,5 @@ public class Manager extends Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "manager")
     private List<WorkersOfBranches> workersOfBranch;
-
 
 }

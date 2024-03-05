@@ -10,4 +10,7 @@ import java.util.Optional;
 public interface BranchRepo extends JpaRepository<Branch,Long> {
     @Query("SELECT branch FROM Branch branch WHERE branch.manager.id = :managerId")
     Optional<Branch> findByManagerId(Long managerId);
+
+    @Query("SELECT b FROM Branch b JOIN b.WorkersOfBranch w WHERE w.worker.id = :workerId")
+    Optional<Branch> findByWorkerId(Long workerId);
 }

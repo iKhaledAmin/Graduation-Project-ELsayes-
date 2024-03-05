@@ -8,6 +8,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface OwnerService extends UserService , CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
-
-
+    public Owner getByManagerId(Long managerId);
 }

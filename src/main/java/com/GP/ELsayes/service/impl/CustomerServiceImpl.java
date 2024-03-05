@@ -2,18 +2,18 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
-import com.GP.ELsayes.model.entity.FreeTrialCode;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
+import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
 import com.GP.ELsayes.service.CustomerService;
 import com.GP.ELsayes.service.FreeTrialCodeService;
-import jakarta.annotation.PostConstruct;
-import lombok.RequiredArgsConstructor;
+import com.GP.ELsayes.service.UserService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -23,15 +23,18 @@ import java.util.NoSuchElementException;
 
 //@RequiredArgsConstructor
 @Service
-public class CustomerServiceImpl implements CustomerService {
+public class CustomerServiceImpl implements UserService, CustomerService {
     private final CustomerMapper customerMapper;
     private final CustomerRepo customerRepo;
+
+    private final UserMapper userMapper;
     private final FreeTrialCodeService freeTrialCodeService;
 
 
-    public CustomerServiceImpl( CustomerMapper customerMapper, CustomerRepo customerRepo,@Lazy FreeTrialCodeService freeTrialCodeService) {
+    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo, UserMapper userMapper, @Lazy FreeTrialCodeService freeTrialCodeService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
+        this.userMapper = userMapper;
         this.freeTrialCodeService = freeTrialCodeService;
     }
 
@@ -61,11 +64,21 @@ public class CustomerServiceImpl implements CustomerService {
 
 
         updatedCustomer.setId(customerId);
-        updatedCustomer.setUserRole(existedCustomer.getUserRole());
-        updatedCustomer.setDateOfJoining(existedCustomer.getDateOfJoining());
-        BeanUtils.copyProperties(existedCustomer,updatedCustomer);
+        BeanUtils.copyProperties(updatedCustomer,existedCustomer);
 
         return this.customerMapper.toResponse(customerRepo.save(existedCustomer));
+    }
+
+    @Override
+    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+        Customer customer = getById(userId);
+
+        CustomerRequest customerRequest = userMapper.toCustomerRequest(userRequest);
+
+
+        CustomerResponse customerResponse = update(customerRequest,userId);
+
+        return userMapper.toUserResponse(customerResponse);
     }
 
     @Override
@@ -94,4 +107,6 @@ public class CustomerServiceImpl implements CustomerService {
     public CustomerResponse getResponseById(Long customerId) {
         return customerMapper.toResponse(getById(customerId));
     }
+
+
 }

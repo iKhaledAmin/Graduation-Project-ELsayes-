@@ -38,12 +38,6 @@ public class Worker extends Employee {
 
     private String Score;
 
-    @JsonBackReference
-    @ManyToOne
-    @OnDelete(action = OnDeleteAction.SET_NULL)
-    @JoinColumn(name = "manager_id")
-    private Manager manager;
-
     @JsonManagedReference
     @OneToMany(mappedBy = "worker")
     private List<FreeTrialCode> codes;

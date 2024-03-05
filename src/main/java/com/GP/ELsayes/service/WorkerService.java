@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface WorkerService extends CrudService<WorkerRequest, Worker, WorkerResponse,Long> {
+public interface WorkerService extends UserService, CrudService<WorkerRequest, Worker, WorkerResponse,Long> {
 
     public List<WorkerResponse> getAllByBranchId(Long branchId);
     public  Integer getNumberOfWorkersByBranchId (Long branchId);

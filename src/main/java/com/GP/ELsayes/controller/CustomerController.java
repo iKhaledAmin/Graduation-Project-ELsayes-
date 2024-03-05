@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.CustomerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,12 @@ public class CustomerController {
     public ResponseEntity<?> update(@RequestBody @Valid CustomerRequest customerRequest,@PathVariable Long customerId){
         return new ResponseEntity<>(this.customerService.update(customerRequest , customerId), HttpStatus.ACCEPTED);
     }
+
+    @PutMapping("/edit-profile/{customerId}")
+    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long customerId){
+        return new ResponseEntity<>(this.customerService.editProfile(userRequest , customerId), HttpStatus.ACCEPTED);
+    }
+
 
     @DeleteMapping("/{customerId}")
     public ResponseEntity<?> delete(@PathVariable Long customerId){
