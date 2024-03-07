@@ -18,7 +18,7 @@ public class OwnersOfBranchesServiceImpl implements OwnersOfBranchesService {
 
     private final OwnersOfBranchesRepo ownersOfBranchesRepo;
     @Override
-    public OwnersOfBranches save(Owner owner, Branch branch, OperationType operationType) {
+    public OwnersOfBranches add(Owner owner, Branch branch, OperationType operationType) {
         OwnersOfBranches ownersOfBranches = new OwnersOfBranches();
         ownersOfBranches.setOwner(owner);
         ownersOfBranches.setBranch(branch);

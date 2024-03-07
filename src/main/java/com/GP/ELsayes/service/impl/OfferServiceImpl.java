@@ -86,10 +86,9 @@ import java.util.NoSuchElementException;
         offer = this.offerRepo.save(offer);
 
         Manager manager = managerService.getById(offerRequest.getManagerId());
-        ManagersOfOffers managersOfOffers = managersOfOffersService.save(
+        ManagersOfOffers managersOfOffers = managersOfOffersService.addManagerToOffer(
                 manager,
-                offer,
-                OperationType.CREATE
+                offer
         );
 
         return this.offerMapper.toResponse(offer);
@@ -115,10 +114,9 @@ import java.util.NoSuchElementException;
         updatedOffer = offerRepo.save(updatedOffer);
 
         Manager manager = managerService.getById(offerRequest.getManagerId());
-        ManagersOfOffers managersOfOffers = managersOfOffersService.save(
-                manager,
-                updatedOffer,
-                OperationType.UPDATE
+        ManagersOfOffers managersOfOffers = managersOfOffersService.updateManagerToOffer(
+                manager.getId(),
+                updatedOffer.getId()
         );
 
         return this.offerMapper.toResponse(updatedOffer);

@@ -18,7 +18,7 @@ public class OwnersOfManagersServiceImpl implements OwnersOfManagersService {
 
     private final OwnersOfManagersRepo ownersOfManagersRepo;
     @Override
-    public OwnersOfManagers save(Owner owner, Manager manager, OperationType operationType) {
+    public OwnersOfManagers add(Owner owner, Manager manager, OperationType operationType) {
         OwnersOfManagers ownersOfManagers = new OwnersOfManagers();
         ownersOfManagers.setManager(manager);
         ownersOfManagers.setOwner(owner);

@@ -64,7 +64,7 @@ public class BranchServiceImpl implements BranchService {
         branch = this.branchRepo.save(branch);
 
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
-        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.save(
+        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.add(
                 owner,
                 branch,
                 OperationType.CREATE
@@ -86,7 +86,7 @@ public class BranchServiceImpl implements BranchService {
 
 
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
-        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.save(
+        OwnersOfBranches ownersOfBranches = ownersOfBranchesService.add(
                 owner,
                 updatedBranch,
                 OperationType.UPDATE

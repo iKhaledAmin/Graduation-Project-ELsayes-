@@ -10,8 +10,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.Optional;
 
 
+@Repository
 public interface ManagerRepo extends JpaRepository<Manager,Long> {
     @Query("SELECT manager FROM Manager manager WHERE manager.branch.id = :branchId")
     Optional<Manager> findByBranchId(Long branchId);
+
+    @Query("SELECT manager FROM Manager manager JOIN manager.managersOfOffer mo WHERE mo.offer.id = :offerId")
+    Optional<Manager> findByOfferId(Long offerId);
 
 }

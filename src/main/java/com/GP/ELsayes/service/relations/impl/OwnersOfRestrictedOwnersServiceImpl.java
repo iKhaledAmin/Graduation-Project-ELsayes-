@@ -16,7 +16,7 @@ public class OwnersOfRestrictedOwnersServiceImpl implements OwnersOfRestrictedOw
     private final OwnersOfRestrictedOwnersRepo ownersOfRestrictedOwnersRepo;
 
     @Override
-    public OwnersOfRestrictedOwners save(Owner oldOwner, Owner restrictedOwner, OperationType operationType) {
+    public OwnersOfRestrictedOwners add(Owner oldOwner, Owner restrictedOwner, OperationType operationType) {
 
         OwnersOfRestrictedOwners ownersOfRestrictedOwners = new OwnersOfRestrictedOwners();
         ownersOfRestrictedOwners.setOldOwner(oldOwner);

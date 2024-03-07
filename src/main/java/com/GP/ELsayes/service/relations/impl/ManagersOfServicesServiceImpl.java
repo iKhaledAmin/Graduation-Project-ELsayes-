@@ -19,7 +19,7 @@ public class ManagersOfServicesServiceImpl implements ManagersOfServicesService{
 
 
     @Override
-    public ManagersOfServices save(Manager manager, ServiceEntity service, OperationType operationType) {
+    public ManagersOfServices add(Manager manager, ServiceEntity service, OperationType operationType) {
 
         ManagersOfServices managersOfServices = new ManagersOfServices();
         managersOfServices.setManager(manager);

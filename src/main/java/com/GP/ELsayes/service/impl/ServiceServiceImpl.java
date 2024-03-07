@@ -59,7 +59,7 @@ public class ServiceServiceImpl implements ServiceService {
         service = this.serviceRepo.save(service);
 
         Manager manager = managerService.getById(serviceRequest.getManagerId());
-        ManagersOfServices managersOfServices= this.managersOfServicesService.save(
+        ManagersOfServices managersOfServices= this.managersOfServicesService.add(
                 manager,
                 service,
                 OperationType.CREATE
@@ -80,7 +80,7 @@ public class ServiceServiceImpl implements ServiceService {
         updatedService = serviceRepo.save(existedService);
 
         Manager manager = managerService.getById(serviceRequest.getManagerId());
-        ManagersOfServices managersOfServices= this.managersOfServicesService.save(
+        ManagersOfServices managersOfServices= this.managersOfServicesService.add(
                 manager,
                 updatedService,
                 OperationType.UPDATE
@@ -168,7 +168,7 @@ public class ServiceServiceImpl implements ServiceService {
 
         OfferRequest offerRequest = new OfferRequest();
         offerRequest.setPercentageOfDiscount(offer.getPercentageOfDiscount());
-        offerRequest.setManagerId(2L);
+        offerRequest.setManagerId(managerService.getByOfferId(offer.getId()).getId());
         offerService.update(offerRequest, offer.getId());
 
         return servicesOfOffersResponse;

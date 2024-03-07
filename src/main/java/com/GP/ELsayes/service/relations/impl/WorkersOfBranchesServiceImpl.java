@@ -21,7 +21,6 @@ import java.util.NoSuchElementException;
 public class WorkersOfBranchesServiceImpl implements WorkersOfBranchesService {
     private final ManagerService managerService;
     private final WorkersOfBranchesRepo workersOfBranchesRepo;
-    //private final WorkerService workerService;
 
     private WorkersOfBranches getByWorkerIdAndBranchId(Long workerId , Long branchId) {
         return workersOfBranchesRepo.findByWorkerIdAndBranchId(workerId,branchId).orElseThrow(

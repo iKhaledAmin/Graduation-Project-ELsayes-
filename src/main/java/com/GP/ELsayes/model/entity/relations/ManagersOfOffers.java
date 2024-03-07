@@ -30,7 +30,6 @@ public class ManagersOfOffers {
 
     @JsonBackReference
     @ManyToOne
-    @OnDelete(action = OnDeleteAction.SET_NULL)
     @JoinColumn(name = "offer_id")
     private Offer offer;
 

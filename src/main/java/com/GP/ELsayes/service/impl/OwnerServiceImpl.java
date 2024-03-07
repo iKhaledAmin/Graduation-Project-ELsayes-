@@ -54,7 +54,7 @@ public class OwnerServiceImpl
         // this if condition must be removed at production (important note)
         if(ownerRequest.getOldOwnerId() != null){
             Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
-            OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.save(
+            OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.add(
                     oldOwner,
                     newOwner,
                     OperationType.CREATE
@@ -83,7 +83,7 @@ public class OwnerServiceImpl
         // this if condition must be removed at production (important note)
         if(ownerRequest.getOldOwnerId() != null){
             Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
-            OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.save(
+            OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.add(
                     oldOwner,
                     updatedOwner,
                     OperationType.UPDATE

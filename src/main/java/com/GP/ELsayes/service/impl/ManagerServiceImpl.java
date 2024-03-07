@@ -1,13 +1,9 @@
 package com.GP.ELsayes.service.impl;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -79,7 +75,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
 
 
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
-        OwnersOfManagers ownersOfManagers = ownersOfManagersService.save(
+        OwnersOfManagers ownersOfManagers = ownersOfManagersService.add(
                 owner,
                 manager,
                 OperationType.CREATE
@@ -107,7 +103,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         updatedManager = managerRepo.save(updatedManager);
 
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
-        OwnersOfManagers ownersOfManagers = ownersOfManagersService.save(
+        OwnersOfManagers ownersOfManagers = ownersOfManagersService.add(
                 owner,
                 updatedManager,
                 OperationType.UPDATE
@@ -164,6 +160,13 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     public Manager getByBranchId(long branchId) {
         return managerRepo.findByBranchId(branchId).orElseThrow(
                 () -> new NoSuchElementException("There is no manager with branch id = " + branchId)
+        );
+    }
+
+    @Override
+    public Manager getByOfferId(long offerId) {
+        return managerRepo.findByOfferId(offerId).orElseThrow(
+                () -> new NoSuchElementException("There is no manager for offer with id = " + offerId)
         );
     }
 

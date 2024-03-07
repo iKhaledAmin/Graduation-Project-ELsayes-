@@ -38,15 +38,6 @@ public class Offer {
     private String actualOfferPrice;
     //private String actualOfferRequiredTime;
 
-//    @CreationTimestamp
-//    @Column(updatable = false)
-//    private LocalDateTime createdAt;
-//
-//    @UpdateTimestamp
-//    private LocalDateTime updatedAt;
-//
-//    private LocalDateTime deletedAt;
-
 
 
     @JsonManagedReference
