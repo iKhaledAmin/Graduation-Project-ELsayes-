@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
 import com.GP.ELsayes.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -56,5 +57,21 @@ public class ServiceController {
     public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid ServicesOfBranchesRequest servicesOfBranchesRequest){
         return new ResponseEntity<>(this.serviceService.deactivateServiceInBranch(servicesOfBranchesRequest), HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/get-all-by-branch-id/{branchId}")
+    public ResponseEntity<?> getAllByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.serviceService.getResponseAllBranchId(branchId),HttpStatus.OK);
+    }
+
+    @PostMapping("/add-service-to-offer")
+    public ResponseEntity<?> addServiceToOffer(@RequestBody @Valid ServicesOfOffersRequest servicesOfOffersRequest) {
+        return new ResponseEntity<>(this.serviceService.addServiceToOffer(servicesOfOffersRequest), HttpStatus.CREATED);
+    }
+
+    @GetMapping("/get-all-by-offer-id/{offerId}")
+    public ResponseEntity<?> getAllByOfferId(@PathVariable Long offerId){
+        return new ResponseEntity<>(this.serviceService.getResponseAllByOfferId(offerId),HttpStatus.OK);
+    }
+
 
 }

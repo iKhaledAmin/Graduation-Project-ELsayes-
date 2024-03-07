@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -31,20 +32,28 @@ public class Offer {
     private String name;
     private String description;
     private String offerImageURL;
-    private String offerPercentage;
+    private String percentageOfDiscount;
+    private String originalTotalPrice;
+    private String originalTotalRequiredTime;
+    private String actualOfferPrice;
+    //private String actualOfferRequiredTime;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
+//    @CreationTimestamp
+//    @Column(updatable = false)
+//    private LocalDateTime createdAt;
+//
+//    @UpdateTimestamp
+//    private LocalDateTime updatedAt;
+//
+//    private LocalDateTime deletedAt;
 
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer")
-    private List<ManagersOfOffers> managersOfOffers;
+    @OneToMany(mappedBy = "offer",cascade = CascadeType.REMOVE)
+    private List<ManagersOfOffers> managersOfOffer;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
+    private List<ServicesOfOffers> servicesOfOffer ;
 }

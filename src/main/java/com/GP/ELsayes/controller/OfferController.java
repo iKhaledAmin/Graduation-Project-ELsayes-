@@ -1,8 +1,8 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.OfferRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.service.OfferService;
+import com.GP.ELsayes.service.ServiceService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -16,19 +16,12 @@ public class OfferController {
     @Autowired
     private OfferService offerService;
 
+    @Autowired
+    private ServiceService serviceService;
+
     @PostMapping("")
     public ResponseEntity<?> add(@RequestBody @Valid OfferRequest offerRequest) {
         return new ResponseEntity<>(this.offerService.add(offerRequest), HttpStatus.CREATED);
-    }
-
-    @GetMapping("/get-by-id/{offerId}")
-    public ResponseEntity<?> getById(@PathVariable Long offerId){
-        return new ResponseEntity<>(this.offerService.getById(offerId),HttpStatus.OK);
-    }
-
-    @GetMapping("")
-    ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.offerService.getAll(), HttpStatus.OK);
     }
 
     @PutMapping("/{offerId}")
@@ -36,10 +29,22 @@ public class OfferController {
         return new ResponseEntity<>(this.offerService.update(offerRequest , offerId), HttpStatus.ACCEPTED);
     }
 
+
+    @GetMapping("/get-by-id/{offerId}")
+    public ResponseEntity<?> getById(@PathVariable Long offerId){
+        return new ResponseEntity<>(this.offerService.getResponseById(offerId),HttpStatus.OK);
+    }
+
     @DeleteMapping("/{offerId}")
     public ResponseEntity<?> delete(@PathVariable Long offerId){
         this.offerService.delete(offerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("")
+    ResponseEntity<?> getAll(){
+        return new ResponseEntity<>(this.offerService.getAll(), HttpStatus.OK);
+    }
+
 
 }

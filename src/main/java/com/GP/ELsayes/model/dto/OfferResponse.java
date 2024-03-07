@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.dto;
 
 
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -15,6 +16,11 @@ public class OfferResponse {
     private String name;
     private String description;
     private String offerImageURL;
-    private String offerPercentage;
+    @JsonIgnore
+    private String percentageOfDiscount;
+    private String originalTotalPrice;
+    private String originalTotalRequiredTime;
+    private String actualOfferPrice;
+    //private String actualOfferRequiredTime;
 
 }

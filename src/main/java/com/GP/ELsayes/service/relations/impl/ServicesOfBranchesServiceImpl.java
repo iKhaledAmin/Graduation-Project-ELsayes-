@@ -11,6 +11,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import lombok.SneakyThrows;
+import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -45,27 +46,7 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         if(servicesOfBranches.isEmpty()){
             return;
         }
-        throw new RuntimeException("This service with id "+ servicesOfBranches.get().getService().getId() +" already existed in branch");
-    }
-
-    @SneakyThrows
-    private ServicesOfBranches update(ServicesOfBranches servicesOfBranches){
-
-        ServicesOfBranches updatedServiceInBranch = servicesOfBranches;
-        ServicesOfBranches existedServiceInBranch = this.getByServiceIdAndBranchId(
-                servicesOfBranches.getService().getId(),
-                servicesOfBranches.getBranch().getId()
-        );
-
-
-        updatedServiceInBranch.setId(existedServiceInBranch.getId());
-        updatedServiceInBranch.setAddingDate(existedServiceInBranch.getAddingDate());
-        updatedServiceInBranch.setBranch(existedServiceInBranch.getBranch());
-        updatedServiceInBranch.setService(existedServiceInBranch.getService());
-
-        //BeanUtils.copyProperties(existedServiceInBranch,updatedServiceInBranch);
-
-        return servicesOfBranchesRepo.save(updatedServiceInBranch);
+        throw new RuntimeException("This service with id "+ servicesOfBranches.get().getService().getId() +" already existed in this branch");
     }
 
     @Override
@@ -85,6 +66,22 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         servicesOfBranchesRepo.save(servicesOfBranches);
 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);
+    }
+
+    @SneakyThrows
+    private ServicesOfBranches update(ServicesOfBranches servicesOfBranches){
+
+        ServicesOfBranches updatedServiceInBranch = servicesOfBranches;
+        ServicesOfBranches existedServiceInBranch = this.getByServiceIdAndBranchId(
+                servicesOfBranches.getService().getId(),
+                servicesOfBranches.getBranch().getId()
+        );
+
+
+        updatedServiceInBranch.setId(existedServiceInBranch.getId());
+        BeanUtils.copyProperties(updatedServiceInBranch,existedServiceInBranch);
+
+        return servicesOfBranchesRepo.save(updatedServiceInBranch);
     }
 
     @Override
