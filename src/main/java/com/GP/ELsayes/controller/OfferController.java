@@ -1,6 +1,8 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.OfferRequest;
+import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
 import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
 import jakarta.validation.Valid;
@@ -47,4 +49,19 @@ public class OfferController {
     }
 
 
+
+    @PostMapping("/add-offer-to-branch")
+    public ResponseEntity<?> addOfferToBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest) {
+        return new ResponseEntity<>(this.offerService.addOfferToBranch(offersOfBranchesRequest), HttpStatus.CREATED);
+    }
+
+    @PutMapping("/activate-offer-in-branch")
+    public ResponseEntity<?> activateServiceInBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest){
+        return new ResponseEntity<>(this.offerService.activateOfferInBranch(offersOfBranchesRequest), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/deactivate-offer-in-branch")
+    public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest){
+        return new ResponseEntity<>(this.offerService.deactivateOfferInBranch(offersOfBranchesRequest), HttpStatus.ACCEPTED);
+    }
 }

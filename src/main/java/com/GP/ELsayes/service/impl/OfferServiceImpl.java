@@ -2,17 +2,19 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.OfferRequest;
 import com.GP.ELsayes.model.dto.OfferResponse;
+import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.OffersOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
-import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.OfferMapper;
 import com.GP.ELsayes.repository.OfferRepo;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ManagersOfOffersService;
+import com.GP.ELsayes.service.relations.OffersOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -29,14 +31,16 @@ import java.util.NoSuchElementException;
     private final ManagerService managerService;
     private final ServiceService serviceService;
     private final ManagersOfOffersService managersOfOffersService;
+    private final OffersOfBranchesService offersOfBranchesService;
 
 
-    public OfferServiceImpl(OfferRepo offerRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, ManagersOfOffersService managersOfOffersService) {
+    public OfferServiceImpl(OfferRepo offerRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, ManagersOfOffersService managersOfOffersService,@Lazy OffersOfBranchesService offersOfBranchesService) {
         this.offerRepo = offerRepo;
         this.offerMapper = offerMapper;
         this.managerService = managerService;
         this.serviceService = serviceService;
         this.managersOfOffersService = managersOfOffersService;
+        this.offersOfBranchesService = offersOfBranchesService;
     }
 
     @Override
@@ -77,7 +81,6 @@ import java.util.NoSuchElementException;
 
         return String.valueOf(originalTotalPrice - amountOfDiscount);
     }
-
 
     @Override
     public OfferResponse add(OfferRequest offerRequest) {
@@ -162,6 +165,32 @@ import java.util.NoSuchElementException;
                 .stream()
                 .map(offer ->  offerMapper.toResponse(offer))
                 .toList();
+    }
+
+
+
+    @Override
+    public OffersOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+        return offersOfBranchesService.addOfferToBranch(
+                offersOfBranchesRequest.getOfferId(),
+                offersOfBranchesRequest.getBranchId()
+        );
+    }
+
+    @Override
+    public OffersOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+        return offersOfBranchesService.activateOfferInBranch(
+                offersOfBranchesRequest.getOfferId(),
+                offersOfBranchesRequest.getBranchId()
+        );
+    }
+
+    @Override
+    public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+        return offersOfBranchesService.deactivateOfferInBranch(
+                offersOfBranchesRequest.getOfferId(),
+                offersOfBranchesRequest.getBranchId()
+        );
     }
 
 

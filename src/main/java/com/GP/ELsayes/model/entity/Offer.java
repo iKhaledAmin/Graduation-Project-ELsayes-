@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -8,10 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuperBuilder
@@ -45,6 +43,12 @@ public class Offer {
     private List<ManagersOfOffers> managersOfOffer;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "offer" )
     private List<ServicesOfOffers> servicesOfOffer ;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
+    private List<OffersOfBranches> offerOfBranch ;
 }
+
+

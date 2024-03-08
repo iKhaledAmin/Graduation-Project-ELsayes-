@@ -49,6 +49,22 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         throw new RuntimeException("This service with id "+ servicesOfBranches.get().getService().getId() +" already existed in this branch");
     }
 
+    @SneakyThrows
+    private ServicesOfBranches update(ServicesOfBranches servicesOfBranches){
+
+        ServicesOfBranches updatedServiceInBranch = servicesOfBranches;
+        ServicesOfBranches existedServiceInBranch = this.getByServiceIdAndBranchId(
+                servicesOfBranches.getService().getId(),
+                servicesOfBranches.getBranch().getId()
+        );
+
+
+        updatedServiceInBranch.setId(existedServiceInBranch.getId());
+        BeanUtils.copyProperties(updatedServiceInBranch,existedServiceInBranch);
+
+        return servicesOfBranchesRepo.save(updatedServiceInBranch);
+    }
+
     @Override
     public ServicesOfBranchesResponse addServiceToBranch(Long serviceId, Long branchId) {
         throwExceptionIfServiceHasAlreadyExistedInBranch(serviceId,branchId);
@@ -68,21 +84,7 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);
     }
 
-    @SneakyThrows
-    private ServicesOfBranches update(ServicesOfBranches servicesOfBranches){
 
-        ServicesOfBranches updatedServiceInBranch = servicesOfBranches;
-        ServicesOfBranches existedServiceInBranch = this.getByServiceIdAndBranchId(
-                servicesOfBranches.getService().getId(),
-                servicesOfBranches.getBranch().getId()
-        );
-
-
-        updatedServiceInBranch.setId(existedServiceInBranch.getId());
-        BeanUtils.copyProperties(updatedServiceInBranch,existedServiceInBranch);
-
-        return servicesOfBranchesRepo.save(updatedServiceInBranch);
-    }
 
     @Override
     public ServicesOfBranchesResponse activateServiceInBranch(Long serviceId, Long branchId) {
