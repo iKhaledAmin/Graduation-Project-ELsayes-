@@ -28,7 +28,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
-
+import java.util.Optional;
 
 
 @RequiredArgsConstructor
@@ -118,6 +118,30 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Optional<ServiceEntity> getByServiceIdAndBranchId(Long serviceId, Long branchId) {
+        return serviceRepo.findByServiceIdAndBranchId(serviceId, branchId);
+    }
+
+    @Override
+    public boolean isExistInBranch(Long serviceId, Long branchId) {
+        Optional<ServiceEntity> serviceEntity = serviceRepo.findByServiceIdAndBranchId(serviceId, branchId);
+        if(serviceEntity.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+    @Override
+    public boolean isAvailableInBranch(Long serviceId, Long branchId) {
+        Optional<ServiceEntity> serviceEntity = serviceRepo.findAvailableInBranch(serviceId, branchId);
+        if(serviceEntity.isEmpty()){
+            return false;
+        }
+        return true;
+    }
+
+
+    @Override
     public ServicesOfBranchesResponse addServiceToBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
         return servicesOfBranchesService.addServiceToBranch(
                 servicesOfBranchesRequest.getServiceId(),
@@ -146,6 +170,13 @@ public class ServiceServiceImpl implements ServiceService {
         branchService.getById(branchId);
         return serviceRepo.findAllByBranchId(branchId);
     }
+
+
+    public List<ServiceEntity> getAllAvailableInBranch(Long branchId) {
+        branchService.getById(branchId);
+        return serviceRepo.findAllAvailableInBranch(branchId);
+    }
+
 
     @Override
     public List<ServiceResponse> getResponseAllBranchId(Long branchId) {
@@ -188,5 +219,7 @@ public class ServiceServiceImpl implements ServiceService {
                 .map(service ->  serviceMapper.toResponse(service))
                 .toList();
     }
+
+
 
 }

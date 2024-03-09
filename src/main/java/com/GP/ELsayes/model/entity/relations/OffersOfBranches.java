@@ -9,6 +9,7 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
+import org.aspectj.internal.lang.annotation.ajcPrivileged;
 
 import java.util.Date;
 
@@ -38,6 +39,6 @@ public class OffersOfBranches {
     private Branch branch;
 
     @Enumerated(EnumType.STRING)
-    Status serviceStatus;
-    Date addingDate;
+    private Status offerStatus;
+    private Date addingDate;
 }

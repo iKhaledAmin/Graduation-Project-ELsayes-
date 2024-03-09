@@ -3,16 +3,14 @@ package com.GP.ELsayes.service.impl;
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
 import com.GP.ELsayes.repository.BranchRepo;
-import com.GP.ELsayes.service.BranchService;
-import com.GP.ELsayes.service.ManagerService;
-import com.GP.ELsayes.service.OwnerService;
-import com.GP.ELsayes.service.WorkerService;
+import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.OwnersOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,14 +33,17 @@ public class BranchServiceImpl implements BranchService {
     private final ManagerService managerService;
     private final OwnersOfBranchesService ownersOfBranchesService;
 
+    private final OfferService offerService;
 
-    public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService, @Lazy WorkerService workerService,@Lazy ManagerService managerService, OwnersOfBranchesService ownersOfBranchesService) {
+
+    public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService, @Lazy WorkerService workerService, @Lazy ManagerService managerService, OwnersOfBranchesService ownersOfBranchesService,@Lazy OfferService offerService) {
         this.branchMapper = branchMapper;
         this.branchRepo = branchRepo;
         this.ownerService = ownerService;
         this.workerService = workerService;
         this.managerService = managerService;
         this.ownersOfBranchesService = ownersOfBranchesService;
+        this.offerService = offerService;
     }
 
     protected boolean hasManager(Long branchId){
@@ -140,6 +141,12 @@ public class BranchServiceImpl implements BranchService {
         return branchRepo.findByWorkerId(workerId).orElseThrow(
                 () -> new NoSuchElementException("There is no branch with worker id = " + workerId)
         );
+    }
+
+    @Override
+    public List<Branch> getAllByOfferId(Long offerId) {
+        Offer offer = offerService.getById(offerId);
+        return branchRepo.findAllByOfferId(offerId);
     }
 
 

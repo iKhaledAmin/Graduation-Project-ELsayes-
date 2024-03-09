@@ -22,7 +22,6 @@ public interface WorkerMapper {
         if (workersOfBranch != null) {
             return workersOfBranch.isEmpty() ? null : workersOfBranch.get(0).getBranch().getId();
         } else {
-            System.out.println("ISSSSSS NNNNNUUUULLL");
             return null;
         }
     }
@@ -30,7 +29,6 @@ public interface WorkerMapper {
         if (workersOfBranch != null) {
             return workersOfBranch.get(0).getManager().getId();
         } else {
-            System.out.println("ISSSSSS NNNNNUUUULLL");
             return null;
         }
     }

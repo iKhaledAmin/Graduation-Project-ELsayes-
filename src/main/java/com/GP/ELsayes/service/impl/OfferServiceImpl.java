@@ -10,6 +10,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Man
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
 import com.GP.ELsayes.model.mapper.OfferMapper;
 import com.GP.ELsayes.repository.OfferRepo;
+import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
@@ -22,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 @Service
  public class OfferServiceImpl implements OfferService {
@@ -30,15 +32,17 @@ import java.util.NoSuchElementException;
     private final OfferMapper offerMapper;
     private final ManagerService managerService;
     private final ServiceService serviceService;
+    private final BranchService branchService;
     private final ManagersOfOffersService managersOfOffersService;
     private final OffersOfBranchesService offersOfBranchesService;
 
 
-    public OfferServiceImpl(OfferRepo offerRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, ManagersOfOffersService managersOfOffersService,@Lazy OffersOfBranchesService offersOfBranchesService) {
+    public OfferServiceImpl(OfferRepo offerRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, BranchService branchService, ManagersOfOffersService managersOfOffersService, @Lazy OffersOfBranchesService offersOfBranchesService) {
         this.offerRepo = offerRepo;
         this.offerMapper = offerMapper;
         this.managerService = managerService;
         this.serviceService = serviceService;
+        this.branchService = branchService;
         this.managersOfOffersService = managersOfOffersService;
         this.offersOfBranchesService = offersOfBranchesService;
     }
@@ -192,6 +196,29 @@ import java.util.NoSuchElementException;
                 offersOfBranchesRequest.getBranchId()
         );
     }
+
+    @Override
+    public List<Offer> getAllByBranchId(Long branchId) {
+        branchService.getById(branchId);
+        return offerRepo.findAllByBranchId(branchId);
+    }
+
+    @Override
+    public List<OfferResponse> getResponseAllBranchId(Long branchId) {
+        branchService.getById(branchId);
+        return offerRepo.findAllByBranchId(branchId)
+                .stream()
+                .map(offer ->  offerMapper.toResponse(offer))
+                .toList();
+    }
+
+    @Override
+    public Optional<Offer> getByServiceIdAndBranchId(Long serviceId, Long branchId) {
+        serviceService.getById(serviceId);
+        branchService.getById(branchId);
+        return offerRepo.findByServiceIdAndBranchId(serviceId,branchId);
+    }
+
 
 
 }

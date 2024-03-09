@@ -1,21 +1,19 @@
 package com.GP.ELsayes.service.relations.impl;
 
-import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.dto.relations.ServicesOfOffersResponse;
+import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.ServiceEntity;
-import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
+import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
 import com.GP.ELsayes.model.enums.Status;
-import com.GP.ELsayes.model.mapper.relations.ServicesOfBranchesMapper;
 import com.GP.ELsayes.model.mapper.relations.ServicesOfOffersMapper;
-import com.GP.ELsayes.repository.relations.ServicesOfBranchesRepo;
 import com.GP.ELsayes.repository.relations.ServicesOfOffersRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
+import com.GP.ELsayes.service.relations.OffersOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfOffersService;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -34,18 +32,39 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
     private final ServiceService serviceService;
     private final OfferService offerService;
 
+    private final BranchService branchService;
+    private final OffersOfBranchesService servicesOfBranchesService;
 
-    public ServicesOfOffersServiceImpl(ServicesOfOffersRepo servicesOfOffersRepo, ServicesOfOffersMapper servicesOfOffersMapper,@Lazy ServiceService serviceService,@Lazy OfferService offerService) {
+
+
+    public ServicesOfOffersServiceImpl(ServicesOfOffersRepo servicesOfOffersRepo, ServicesOfOffersMapper servicesOfOffersMapper, @Lazy ServiceService serviceService, @Lazy OfferService offerService, BranchService branchService, OffersOfBranchesService servicesOfBranchesService) {
         this.servicesOfOffersRepo = servicesOfOffersRepo;
         this.servicesOfOffersMapper = servicesOfOffersMapper;
         this.serviceService = serviceService;
         this.offerService = offerService;
+        this.branchService = branchService;
+
+        this.servicesOfBranchesService = servicesOfBranchesService;
     }
 
     private ServicesOfOffers getByServiceIdAndBranchId(Long serviceId , Long offerId) {
         return servicesOfOffersRepo.findByServiceIdAndOfferId(serviceId,offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this offer")
         );
+    }
+
+    @Override
+    public void handleAvailabilityOfOfferInAllBranches(Long offerId , Long serviceId){
+        List<Branch> branches = branchService.getAllByOfferId(offerId);
+
+        branches.forEach(branch -> {
+            if(serviceService.isAvailableInBranch(serviceId , branch.getId()) == false){
+                OffersOfBranches offersOfBranch = new OffersOfBranches();
+                offersOfBranch = servicesOfBranchesService.getByOfferIdAndBranchId(offerId ,branch.getId());
+                offersOfBranch.setOfferStatus(Status.UNAVAILABLE);
+                servicesOfBranchesService.update(offersOfBranch);
+            }
+        });
     }
 
 
@@ -55,31 +74,6 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
             return;
         }
         throw new RuntimeException("This service with id "+ servicesOfOffer.get().getService().getId() +" already existed in this offer");
-    }
-
-    @Override
-    public ServicesOfOffersResponse addServiceToOffer(Long serviceId, Long offerId) {
-        throwExceptionIfServiceHasAlreadyExistedInOffer(serviceId,offerId);
-
-        ServicesOfOffers servicesOfOffer = new ServicesOfOffers();
-
-        ServiceEntity service = serviceService.getById(serviceId);
-        Offer offer = offerService.getById(offerId);
-
-        List<ServiceEntity> offerServicesList = serviceService.getAllByOfferId(offerId);
-
-        //double newActualTotalRequiredTime = (offerService.calculateActualTotalRequiredTime(offerServicesList)) + service.getRequiredTime();
-
-
-       // offerService.updateActualTotalRequiredTime(actualTotalRequiredTime + service.getRequiredTime());
-
-        servicesOfOffer.setService(service);
-        servicesOfOffer.setOffer(offer);
-        servicesOfOffer.setAddingDate(new Date());
-
-        servicesOfOffersRepo.save(servicesOfOffer);
-
-        return servicesOfOffersMapper.toResponse(servicesOfOffer);
     }
 
     @SneakyThrows
@@ -97,5 +91,25 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
 
         return servicesOfOffersRepo.save(updatedServicesOfOffer);
     }
+
+    @Override
+    public ServicesOfOffersResponse addServiceToOffer(Long serviceId, Long offerId) {
+        throwExceptionIfServiceHasAlreadyExistedInOffer(serviceId,offerId);
+
+        ServiceEntity service = serviceService.getById(serviceId);
+        Offer offer = offerService.getById(offerId);
+
+        ServicesOfOffers servicesOfOffer = new ServicesOfOffers();
+        servicesOfOffer.setService(service);
+        servicesOfOffer.setOffer(offer);
+        servicesOfOffer.setAddingDate(new Date());
+        servicesOfOffersRepo.save(servicesOfOffer);
+
+        handleAvailabilityOfOfferInAllBranches(offerId,serviceId);
+
+        return servicesOfOffersMapper.toResponse(servicesOfOffer);
+    }
+
+
 
 }

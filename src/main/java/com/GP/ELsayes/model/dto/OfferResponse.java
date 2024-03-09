@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.dto;
 
 
 
+import com.GP.ELsayes.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -21,6 +22,7 @@ public class OfferResponse {
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
     private String actualOfferPrice;
+    private Status offerStatus;
     //private String actualOfferRequiredTime;
 
 }

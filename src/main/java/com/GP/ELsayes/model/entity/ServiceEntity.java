@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
 import com.GP.ELsayes.model.enums.ServiceCategory;
+import com.GP.ELsayes.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -61,5 +62,7 @@ public class ServiceEntity {
     @JsonManagedReference
     @OneToMany(mappedBy = "service")
     private List<ServicesOfOffers> servicesOfOffer ;
+
+
 
 }

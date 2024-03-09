@@ -64,4 +64,9 @@ public class OfferController {
     public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest){
         return new ResponseEntity<>(this.offerService.deactivateOfferInBranch(offersOfBranchesRequest), HttpStatus.ACCEPTED);
     }
+
+    @GetMapping("/get-all-by-branch-id/{branchId}")
+    public ResponseEntity<?> getAllByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.offerService.getResponseAllBranchId(branchId),HttpStatus.OK);
+    }
 }

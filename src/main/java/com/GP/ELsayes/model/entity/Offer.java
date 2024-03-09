@@ -48,7 +48,7 @@ public class Offer {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
-    private List<OffersOfBranches> offerOfBranch ;
+    private List<OffersOfBranches> offersOfBranch;
 }
 
 

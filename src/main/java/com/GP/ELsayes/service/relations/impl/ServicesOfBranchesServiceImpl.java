@@ -2,12 +2,14 @@ package com.GP.ELsayes.service.relations.impl;
 
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.relations.ServicesOfBranchesMapper;
 import com.GP.ELsayes.repository.relations.ServicesOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
+import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import lombok.SneakyThrows;
@@ -25,14 +27,18 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
     private final ServicesOfBranchesRepo servicesOfBranchesRepo;
     private final ServiceService serviceService;
     private final BranchService branchService;
+    private final OfferService offerService;
     private final ServicesOfBranchesMapper servicesOfBranchesMapper;
+    private final ServicesOfOffersServiceImpl servicesOfOffersService;
 
 
-    public ServicesOfBranchesServiceImpl(ServicesOfBranchesRepo servicesOfBranchesRepo, @Lazy ServiceService serviceService, BranchService branchService, ServicesOfBranchesMapper servicesOfBranchesMapper) {
+    public ServicesOfBranchesServiceImpl(ServicesOfBranchesRepo servicesOfBranchesRepo, @Lazy ServiceService serviceService, BranchService branchService,@Lazy OfferService offerService, ServicesOfBranchesMapper servicesOfBranchesMapper, @Lazy ServicesOfOffersServiceImpl servicesOfOffersService) {
         this.servicesOfBranchesRepo = servicesOfBranchesRepo;
         this.serviceService = serviceService;
         this.branchService = branchService;
+        this.offerService = offerService;
         this.servicesOfBranchesMapper = servicesOfBranchesMapper;
+        this.servicesOfOffersService = servicesOfOffersService;
     }
 
     private ServicesOfBranches getByServiceIdAndBranchId(Long serviceId , Long branchId) {
@@ -110,6 +116,10 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         servicesOfBranches.setServiceStatus(Status.UNAVAILABLE);
         servicesOfBranchesRepo.save(servicesOfBranches);
 
+
+
+        Optional<Offer> offer = offerService.getByServiceIdAndBranchId(serviceId,branchId);
+        servicesOfOffersService.handleAvailabilityOfOfferInAllBranches(offer.get().getId(),serviceId);
 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);
     }

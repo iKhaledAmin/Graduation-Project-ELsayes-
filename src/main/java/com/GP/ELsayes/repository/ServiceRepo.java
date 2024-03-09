@@ -1,12 +1,10 @@
 package com.GP.ELsayes.repository;
 
 import com.GP.ELsayes.model.entity.ServiceEntity;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
-import javax.sound.sampled.Line;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,4 +18,15 @@ public interface ServiceRepo extends JpaRepository<ServiceEntity,Long> {
     List<ServiceEntity> findAllByOfferId(Long offerId);
 
 
+    @Query("select s from ServiceEntity s join s.servicesOfBranch sb where sb.service.id = :serviceId and sb.branch.id = :branchId")
+    Optional<ServiceEntity> findByServiceIdAndBranchId(Long serviceId, Long branchId);
+
+
+    @Query("select s from ServiceEntity s join s.servicesOfBranch sb where sb.serviceStatus = 'AVAILABLE' and sb.service.id = :serviceId and sb.branch.id = :branchId")
+    Optional<ServiceEntity> findAvailableInBranch(Long serviceId, Long branchId);
+
+    @Query("select s from ServiceEntity s join s.servicesOfBranch sb where sb.branch.id = :branchId and sb.serviceStatus = 'AVAILABLE'")
+    List<ServiceEntity> findAllAvailableInBranch(Long branchId);
 }
+
+

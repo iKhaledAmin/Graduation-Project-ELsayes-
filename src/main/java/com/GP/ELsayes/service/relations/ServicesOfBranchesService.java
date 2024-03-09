@@ -8,4 +8,5 @@ public interface ServicesOfBranchesService {
     ServicesOfBranchesResponse addServiceToBranch(Long serviceId , Long branchId);
     ServicesOfBranchesResponse activateServiceInBranch(Long serviceId , Long branchId);
     ServicesOfBranchesResponse deactivateServiceInBranch(Long serviceId , Long branchId);
+
 }

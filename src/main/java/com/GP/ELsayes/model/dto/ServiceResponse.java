@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.dto;
 
 import com.GP.ELsayes.model.enums.ServiceCategory;
+import com.GP.ELsayes.model.enums.Status;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -18,4 +19,5 @@ public class ServiceResponse {
     private String price;
     private String requiredTime;
     private ServiceCategory serviceCategory;
+    private Status serviceStatus;
 }

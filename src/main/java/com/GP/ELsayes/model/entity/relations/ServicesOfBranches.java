@@ -41,8 +41,7 @@ public class ServicesOfBranches {
     private Branch branch;
 
     @Enumerated(EnumType.STRING)
-    Status serviceStatus;
-    Date addingDate;
-
+    private Status serviceStatus;
+    private Date addingDate;
 
 }
