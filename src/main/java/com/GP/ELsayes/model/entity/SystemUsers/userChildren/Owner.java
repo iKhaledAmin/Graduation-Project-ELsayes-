@@ -30,7 +30,7 @@ public class Owner extends User {
 
     @Id
     private Long id;
-    private String percentage;
+    //private String percentage;
 
     @Enumerated(EnumType.STRING)
     private OwnerPermission ownerPermission;

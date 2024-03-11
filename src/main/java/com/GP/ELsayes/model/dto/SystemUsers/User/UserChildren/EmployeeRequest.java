@@ -24,6 +24,8 @@ public class EmployeeRequest extends UserRequest {
     @NotEmpty(message = "Bonus must not be empty")
     private String bonus;
 
+    private double totalSalary;
+
 
 
 }

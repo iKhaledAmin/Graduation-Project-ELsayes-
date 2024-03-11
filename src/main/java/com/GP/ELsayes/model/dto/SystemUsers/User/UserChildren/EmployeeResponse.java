@@ -19,7 +19,7 @@ public class EmployeeResponse extends UserResponse {
     private Long id;
     private String baseSalary;
     private String bonus;
-    private String totalSalary;
+    private double totalSalary;
 
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateOfEmployment;

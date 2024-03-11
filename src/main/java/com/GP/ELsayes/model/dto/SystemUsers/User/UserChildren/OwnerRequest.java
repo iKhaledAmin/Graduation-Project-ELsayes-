@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren;
 
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.enums.permissions.OwnerPermission;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -16,11 +17,8 @@ import java.lang.String;
 @SuperBuilder
 public class OwnerRequest extends UserRequest {
 
-    @NotNull(message = "Percentage must not be null")
-    @NotEmpty(message = "Percentage must mot be empty")
-    @DecimalMin(value = "0.1",message = "Percentage must be greater than 0")
-    @DecimalMax(value = "99",message = "Percentage must be less than 100")
-    private String percentage;
+    @NotNull(message = "Owner permission must not be null")
+    private OwnerPermission ownerPermission;
 
     private Long oldOwnerId;
 

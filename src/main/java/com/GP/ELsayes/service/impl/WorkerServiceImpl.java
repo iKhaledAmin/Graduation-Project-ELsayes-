@@ -7,6 +7,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.W
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -59,6 +60,12 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         Worker worker = this.workerMapper.toEntity(workerRequest);
         worker.setUserRole(UserRole.WORKER);
         worker.setDateOfEmployment(new Date());
+        worker.setTotalSalary(emp -> {
+            double baseSalary = Double.parseDouble(emp.getBaseSalary());
+            double bonus = Double.parseDouble(emp.getBonus());
+            return baseSalary + bonus;
+        });
+
         worker = workerRepo.save(worker);
 
         WorkersOfBranches workersOfBranches = workersOfBranchesService.addWorkerToBranch(worker, branch);
@@ -76,17 +83,26 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         Worker existedWorker = this.getById(workerId);
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
 
+        // Set fields from the existing manager that are not supposed to change
+        updatedWorker.setUserRole(existedWorker.getUserRole());
+        updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
+
+        if (updatedWorker.getBaseSalary() == null || updatedWorker.getBonus() == null) {
+            updatedWorker.setBaseSalary(existedWorker.getBaseSalary());
+            updatedWorker.setBonus(existedWorker.getBonus());
+        }
+
 
         updatedWorker.setId(workerId);
-        //updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
-        //updatedWorker.setUserRole(existedWorker.getUserRole());
-
-        Branch branch = this.branchService.getById(workerRequest.getBranchId());
-
-
-        BeanUtils.copyProperties(updatedWorker,existedWorker);
+        BeanUtils.copyProperties(existedWorker,updatedWorker);
+        updatedWorker.setTotalSalary(emp -> {
+            double baseSalary = Double.parseDouble(emp.getBaseSalary());
+            double bonus = Double.parseDouble(emp.getBonus());
+            return baseSalary + bonus;
+        });
         updatedWorker = workerRepo.save(updatedWorker);
 
+        Branch branch = this.branchService.getById(workerRequest.getBranchId());
         WorkersOfBranches workersOfBranches = workersOfBranchesService.updateWorkerOfBranch(
                                             updatedWorker.getId(),
                                             branch.getId()
@@ -150,6 +166,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     public Integer getNumberOfWorkersByBranchId(Long branchId) {
         return workerRepo.getNumberOfWorkersByBranchId(branchId);
     }
+
 
 
 }

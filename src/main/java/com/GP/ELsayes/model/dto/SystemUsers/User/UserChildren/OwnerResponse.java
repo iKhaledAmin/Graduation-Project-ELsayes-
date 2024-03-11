@@ -16,6 +16,5 @@ public class OwnerResponse extends UserResponse {
 
 
     private Long id;
-    private String percentage;
     private OwnerPermission ownerPermission;
 }

@@ -11,9 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface ManagerMapper {
 
     ManagerMapper INSTANCE = Mappers.getMapper(ManagerMapper.class);
-
-    Manager toEntity(ManagerRequest request);
-
+    Manager toEntity(ManagerRequest managerRequest);
     @Mapping(target = "branchId" , source = "entity.branch.id")
     ManagerResponse toResponse(Manager entity);
 

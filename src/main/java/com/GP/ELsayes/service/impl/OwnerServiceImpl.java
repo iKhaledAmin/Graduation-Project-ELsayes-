@@ -48,7 +48,7 @@ public class OwnerServiceImpl
     public OwnerResponse add(OwnerRequest ownerRequest) {
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
         newOwner.setUserRole(UserRole.OWNER);
-        newOwner.setOwnerPermission(setPermission(ownerRequest.getPercentage()));
+        newOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
         newOwner = this.ownerRepo.save(newOwner);
 
         // this if condition must be removed at production (important note)
@@ -74,7 +74,7 @@ public class OwnerServiceImpl
         Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
         updatedOwner.setId(ownerId);
         updatedOwner.setUserRole(existedOwner.getUserRole());
-        updatedOwner.setOwnerPermission(setPermission(ownerRequest.getPercentage()));
+        updatedOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
 
         BeanUtils.copyProperties(existedOwner,updatedOwner);
 
@@ -98,7 +98,7 @@ public class OwnerServiceImpl
         Owner owner = getById(userId);
 
         OwnerRequest ownerRequest = userMapper.toOwnerRequest(userRequest);
-        ownerRequest.setPercentage(owner.getPercentage());
+        ownerRequest.setOwnerPermission(owner.getOwnerPermission());
 
 
         OwnerResponse ownerResponse = update(ownerRequest,userId);

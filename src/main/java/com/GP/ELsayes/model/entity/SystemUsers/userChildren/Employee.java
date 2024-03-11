@@ -13,6 +13,9 @@ import lombok.experimental.SuperBuilder;
 
 import java.time.LocalTime;
 import java.util.Date;
+import java.util.function.ToDoubleFunction;
+
+
 
 @SuperBuilder
 @Data
@@ -33,12 +36,17 @@ public abstract class Employee extends User {
     private Long id;
     private String baseSalary;
     private String bonus;
-    private String totalSalary;
+    private double totalSalary;
 
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateOfEmployment;
+    @JsonFormat(pattern="yyyy-MM-dd")
     private Date DateOfResignation;
 
 
 
-    //public abstract double setTotalSalary();
+    public void setTotalSalary(ToDoubleFunction<Employee> salaryCalculator) {
+        double calculatedSalary = salaryCalculator.applyAsDouble(this);
+        this.totalSalary = calculatedSalary;
+    }
 }

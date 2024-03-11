@@ -17,6 +17,7 @@ import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
+import java.util.function.ToDoubleFunction;
 
 @SuperBuilder
 @Data
@@ -45,7 +46,6 @@ public class Worker extends Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "worker",cascade = CascadeType.REMOVE)
     private List<WorkersOfBranches> workersOfBranch;
-
 
 
 }

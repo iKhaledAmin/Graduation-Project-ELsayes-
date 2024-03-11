@@ -67,6 +67,12 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         manager.setUserRole(UserRole.MANAGER);
         manager.setBranch(branchService.getById(managerRequest.getBranchId()));
         manager.setDateOfEmployment(new Date());
+        manager.setTotalSalary(emp -> {
+            double baseSalary = Double.parseDouble(emp.getBaseSalary());
+            double bonus = Double.parseDouble(emp.getBonus());
+            return baseSalary + bonus;
+        });
+
 
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchAlreadyHasAManager(branch);
@@ -86,29 +92,42 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
 
 
-    @SneakyThrows
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
-
         Manager existedManager = this.getById(managerId);
         Manager updatedManager = this.managerMapper.toEntity(managerRequest);
 
+        // Set fields from the existing manager that are not supposed to change
+        updatedManager.setUserRole(existedManager.getUserRole());
+        updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
+
+
+        if (updatedManager.getBaseSalary() == null || updatedManager.getBonus() == null) {
+            updatedManager.setBaseSalary(existedManager.getBaseSalary());
+            updatedManager.setBonus(existedManager.getBonus());
+        }
 
         updatedManager.setId(managerId);
-        BeanUtils.copyProperties(updatedManager,existedManager);
-
+        // Check if the branch has a different manager before setting it
         Branch branch = branchService.getById(managerRequest.getBranchId());
-        throwExceptionIfBranchHasAdifferentManager(branch,managerId);
+        throwExceptionIfBranchHasAdifferentManager(branch, managerId);
         updatedManager.setBranch(branch);
+        updatedManager.setTotalSalary(emp -> {
+            double baseSalary = (emp.getBaseSalary() != null && !emp.getBaseSalary().trim().isEmpty())
+                    ? Double.parseDouble(emp.getBaseSalary().trim()) : 0;
+            double bonus = (emp.getBonus() != null && !emp.getBonus().trim().isEmpty())
+                    ? Double.parseDouble(emp.getBonus().trim()) : 0;
+            return baseSalary + bonus;
+        });
         updatedManager = managerRepo.save(updatedManager);
 
+        // Handle the ownership relationship
         Owner owner = ownerService.getById(managerRequest.getOwnerId());
         OwnersOfManagers ownersOfManagers = ownersOfManagersService.add(
                 owner,
                 updatedManager,
                 OperationType.UPDATE
         );
-
 
         return this.managerMapper.toResponse(updatedManager);
     }
@@ -120,9 +139,11 @@ public class ManagerServiceImpl implements UserService, ManagerService {
 
         ManagerRequest managerRequest = userMapper.toManagerRequest(userRequest);
 
+
         managerRequest.setManagerPermission(manager.getManagerPermission());
         managerRequest.setBranchId(manager.getBranch().getId());
         managerRequest.setOwnerId(owner.getId());
+        System.out.println("TTTTTTTTEdit " + managerRequest.getTotalSalary());
 
 
         ManagerResponse managerResponse = update(managerRequest,userId);

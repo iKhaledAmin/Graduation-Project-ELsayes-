@@ -8,7 +8,7 @@ import org.springframework.stereotype.Service;
 import java.util.Optional;
 
 @Service
-public interface ManagerService extends UserService, CrudService<ManagerRequest, Manager, ManagerResponse,Long>{
+public interface ManagerService extends UserService , CrudService<ManagerRequest, Manager, ManagerResponse,Long>{
 
     public Manager getByBranchId(long branchId);
 
