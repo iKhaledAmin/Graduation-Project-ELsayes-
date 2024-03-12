@@ -2,10 +2,7 @@ package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
-import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
-import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
-import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
+import com.GP.ELsayes.model.entity.relations.*;
 import com.GP.ELsayes.service.ServiceService;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -55,17 +52,22 @@ public class Branch {
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")
     private List<OwnersOfBranches> ownersOfBranches;
-    
-    @JsonManagedReference
-    @OneToMany(mappedBy = "branch",cascade = CascadeType.REMOVE)
-    private List<ServicesOfBranches> servicesOfBranch;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")
     private List<WorkersOfBranches> WorkersOfBranch;
 
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch",cascade = CascadeType.REMOVE)
+    private List<ServicesOfBranches> servicesOfBranch;
+
     @JsonManagedReference
     @OneToMany(mappedBy = "branch" ,cascade = CascadeType.REMOVE)
     private List<OffersOfBranches> offerOfBranch ;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch")
+    private List<CustomerVisitationsOfBranches> customerVisitationsOfBranch;
 
 }
