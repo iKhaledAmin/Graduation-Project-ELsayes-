@@ -15,5 +15,9 @@ public class BranchResponse {
     private String location;
     private String capacityOfCars;
     private Long managerId;
-    private Long ownerIdCreateIt;
+
+    private String profitOfDay;
+    private String profitOfMonth;
+    private String profitOfYear;
+    private String totalProfit;
 }

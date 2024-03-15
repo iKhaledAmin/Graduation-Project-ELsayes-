@@ -33,14 +33,11 @@ public class Branch {
     private String location;
     private String capacityOfCars;
 
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
+    private String profitOfDay;
+    private String profitOfMonth;
+    private String profitOfYear;
+    private String totalProfit;
 
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
 
 
 

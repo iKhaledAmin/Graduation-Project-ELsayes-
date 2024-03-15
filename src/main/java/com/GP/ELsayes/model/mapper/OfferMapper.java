@@ -17,11 +17,11 @@ public interface OfferMapper {
 
     Offer toEntity(OfferRequest request);
 
-    default Status mapOfferStatus(Offer offer) {
-        return offer.getOffersOfBranch().isEmpty() ? null : offer.getOffersOfBranch().get(0).getOfferStatus();
-    }
-
-    @Mapping(target = "offerStatus", expression = "java(mapOfferStatus(entity))")
+//    default Status mapOfferStatus(Offer offer) {
+//        return offer.getOffersOfBranch().isEmpty() ? null : offer.getOffersOfBranch().get(0).getOfferStatus();
+//    }
+//
+//    @Mapping(target = "offerStatus", expression = "java(mapOfferStatus(entity))")
     OfferResponse toResponse(Offer entity);
 
 }

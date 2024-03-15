@@ -37,18 +37,10 @@ public class ServiceEntity {
     private String serviceImageURL;
     private String price;
     private String requiredTime;
+    private String profit;
 
     @Enumerated(EnumType.STRING)
     private ServiceCategory serviceCategory;
-
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
-
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-
-    private LocalDateTime deletedAt;
 
 
     @JsonManagedReference
@@ -62,7 +54,5 @@ public class ServiceEntity {
     @JsonManagedReference
     @OneToMany(mappedBy = "service")
     private List<ServicesOfOffers> servicesOfOffer ;
-
-
 
 }

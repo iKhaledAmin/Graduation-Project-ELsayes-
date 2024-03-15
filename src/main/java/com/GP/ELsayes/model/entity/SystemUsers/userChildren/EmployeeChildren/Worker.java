@@ -1,23 +1,18 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
-import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.FreeTrialCode;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
 import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
-import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.OnDelete;
-import org.hibernate.annotations.OnDeleteAction;
 
 import java.util.List;
-import java.util.function.ToDoubleFunction;
 
 @SuperBuilder
 @Data
@@ -36,6 +31,9 @@ public class Worker extends Employee {
 
     @Enumerated(EnumType.STRING)
     private WorkerRole workerRole;
+
+    @Enumerated(EnumType.STRING)
+    private WorkerStatus workerStatus;
 
     private String Score;
 

@@ -8,6 +8,7 @@ import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.OfferMapper;
 import com.GP.ELsayes.repository.OfferRepo;
 import com.GP.ELsayes.service.BranchService;
@@ -45,6 +46,17 @@ import java.util.Optional;
         this.branchService = branchService;
         this.managersOfOffersService = managersOfOffersService;
         this.offersOfBranchesService = offersOfBranchesService;
+    }
+
+    void throwExceptionIfNotAllServicesOfOfferAvailableInBranch(Long offerId , Long branchId){
+
+        List<ServiceEntity> servicesOfOffer = serviceService.getAllByOfferId(offerId);
+        List<ServiceEntity> servicesAvailableInBranch = serviceService.getAllAvailableInBranch(branchId);
+
+        if(servicesAvailableInBranch.containsAll(servicesOfOffer))
+            return;
+        throw new RuntimeException("Offer with id : " + offerId + " include services not available in this branch");
+
     }
 
     @Override
@@ -157,7 +169,7 @@ import java.util.Optional;
     }
 
     @Override
-    public List<Offer> getAllOffersIncludeService(Long serviceId) {
+    public List<Offer> getAllByServiceId(Long serviceId) {
         return offerRepo.findAllByServiceId(serviceId);
     }
 
@@ -171,10 +183,23 @@ import java.util.Optional;
                 .toList();
     }
 
+    @Override
+    public boolean isAvailableInBranch(Long offerId, Long branchId) {
+        Optional<Offer> offer = offerRepo.findByOfferIdAndBranchIdIfAvailable(offerId, branchId);
+        if(offer.isEmpty()){
+            return false;
+        }
+        return true;
+    }
 
 
     @Override
     public OffersOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+        throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
+            offersOfBranchesRequest.getOfferId(),
+            offersOfBranchesRequest.getBranchId()
+        );
+
         return offersOfBranchesService.addOfferToBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
@@ -183,18 +208,33 @@ import java.util.Optional;
 
     @Override
     public OffersOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        return offersOfBranchesService.activateOfferInBranch(
+        throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
         );
+
+        OffersOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.activateOfferInBranch(
+                offersOfBranchesRequest.getOfferId(),
+                offersOfBranchesRequest.getBranchId()
+        );
+
+        boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
+        servicesOfBranchesResponse.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+
+        return servicesOfBranchesResponse;
     }
 
     @Override
     public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        return offersOfBranchesService.deactivateOfferInBranch(
+        OffersOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.deactivateOfferInBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
         );
+
+        boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
+        servicesOfBranchesResponse.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+
+        return servicesOfBranchesResponse;
     }
 
     @Override
@@ -208,7 +248,12 @@ import java.util.Optional;
         branchService.getById(branchId);
         return offerRepo.findAllByBranchId(branchId)
                 .stream()
-                .map(offer ->  offerMapper.toResponse(offer))
+                .map(service -> {
+                    OfferResponse response = offerMapper.toResponse(service);
+                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
+                    response.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+                    return response;
+                })
                 .toList();
     }
 

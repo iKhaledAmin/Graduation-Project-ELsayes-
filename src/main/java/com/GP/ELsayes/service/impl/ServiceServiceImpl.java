@@ -7,11 +7,13 @@ import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfOffersResponse;
+import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
+import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
 import com.GP.ELsayes.service.BranchService;
@@ -45,12 +47,22 @@ public class ServiceServiceImpl implements ServiceService {
 
 
     void throwExceptionIfServiceStillIncludedInOffer(Long serviceId){
-        List<Offer> offers= offerService.getAllOffersIncludeService(serviceId);
+        List<Offer> offers = offerService.getAllByServiceId(serviceId);
         if(offers.isEmpty())
             return;
         throw new RuntimeException("This service with id = "+ serviceId +" still included in offer, you can not delete it");
 
     }
+
+    void throwExceptionIfServiceStillIncludedInBranch(Long serviceId){
+        List<Branch> branches= branchService.getAllByServiceId(serviceId);
+        if(branches.isEmpty())
+            return;
+        throw new RuntimeException("This service with id = "+ serviceId +" still included in branch, you can not delete it");
+
+    }
+
+
 
 
     @Override
@@ -91,7 +103,9 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public void delete(Long serviceId) {
+        throwExceptionIfServiceStillIncludedInBranch(serviceId);
         throwExceptionIfServiceStillIncludedInOffer(serviceId);
+
         this.getById(serviceId);
         serviceRepo.deleteById(serviceId);
     }
@@ -110,7 +124,6 @@ public class ServiceServiceImpl implements ServiceService {
                 () -> new NoSuchElementException("There is no service with id = " + serviceId)
         );
     }
-
 
     @Override
     public ServiceResponse getResponseById(Long serviceId) {
@@ -133,7 +146,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public boolean isAvailableInBranch(Long serviceId, Long branchId) {
-        Optional<ServiceEntity> serviceEntity = serviceRepo.findAvailableInBranch(serviceId, branchId);
+        Optional<ServiceEntity> serviceEntity = serviceRepo.findByServiceIdAndBranchIdIfAvailable(serviceId, branchId);
         if(serviceEntity.isEmpty()){
             return false;
         }
@@ -151,18 +164,26 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
-        return servicesOfBranchesService.activateServiceInBranch(
+        ServicesOfBranchesResponse servicesOfBranchesResponse =  servicesOfBranchesService.activateServiceInBranch(
                 servicesOfBranchesRequest.getServiceId(),
                 servicesOfBranchesRequest.getBranchId()
         );
+        boolean isAvailable = isAvailableInBranch(  servicesOfBranchesRequest.getServiceId(), servicesOfBranchesRequest.getBranchId());
+        servicesOfBranchesResponse.setServiceStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+
+         return servicesOfBranchesResponse;
     }
 
     @Override
     public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest) {
-        return servicesOfBranchesService.deactivateServiceInBranch(
+        ServicesOfBranchesResponse servicesOfBranchesResponse =  servicesOfBranchesService.deactivateServiceInBranch(
                 servicesOfBranchesRequest.getServiceId(),
                 servicesOfBranchesRequest.getBranchId()
         );
+        boolean isAvailable = isAvailableInBranch(  servicesOfBranchesRequest.getServiceId(), servicesOfBranchesRequest.getBranchId());
+        servicesOfBranchesResponse.setServiceStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+
+        return servicesOfBranchesResponse;
     }
 
     @Override
@@ -179,11 +200,16 @@ public class ServiceServiceImpl implements ServiceService {
 
 
     @Override
-    public List<ServiceResponse> getResponseAllBranchId(Long branchId) {
+    public List<ServiceResponse> getResponseAllByBranchId(Long branchId) {
         branchService.getById(branchId);
         return serviceRepo.findAllByBranchId(branchId)
                 .stream()
-                .map(service ->  serviceMapper.toResponse(service))
+                .map(service -> {
+                    ServiceResponse response = serviceMapper.toResponse(service);
+                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
+                    response.setServiceStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+                    return response;
+                })
                 .toList();
     }
 

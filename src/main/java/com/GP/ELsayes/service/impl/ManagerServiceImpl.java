@@ -1,4 +1,5 @@
 package com.GP.ELsayes.service.impl;
+import com.GP.ELsayes.model.dto.CustomerVisitationsResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -16,6 +17,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
 import com.GP.ELsayes.service.UserService;
+import com.GP.ELsayes.service.relations.CustomerVisitationsOfBranchesService;
 import com.GP.ELsayes.service.relations.OwnersOfManagersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -38,6 +40,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final OwnersOfManagersService ownersOfManagersService;
+;
 
 
     @Override
@@ -194,5 +197,6 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     public ManagerResponse getResponseByBranchId(Long branchId) {
         return managerMapper.toResponse(getByBranchId(branchId));
     }
+
 
 }

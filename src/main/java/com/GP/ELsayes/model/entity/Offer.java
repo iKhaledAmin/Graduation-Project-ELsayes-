@@ -34,6 +34,7 @@ public class Offer {
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
     private String actualOfferPrice;
+    private String profit;
     //private String actualOfferRequiredTime;
 
 

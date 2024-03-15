@@ -20,4 +20,5 @@ public class ServiceResponse {
     private String requiredTime;
     private ServiceCategory serviceCategory;
     private Status serviceStatus;
+    private String profit;
 }

@@ -12,7 +12,9 @@ import java.util.Optional;
 public interface OfferService extends CrudService<OfferRequest, Offer, OfferResponse,Long> {
 
     public List<OfferResponse> getResponseAllOffersIncludeService(Long serviceId);
-    public List<Offer> getAllOffersIncludeService(Long serviceId);
+
+    boolean isAvailableInBranch(Long offerId, Long branchId) ;
+    public List<Offer> getAllByServiceId(Long serviceId);
     public String calculateOriginalTotalRequiredTime(Long offerId);
     public String calculateOriginalTotalPrice(Long offerId);
     public double calculateAmountOfDiscount(Long offerId, String percentageOfDiscount);

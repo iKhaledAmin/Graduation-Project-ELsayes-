@@ -7,4 +7,5 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CarService extends CrudService<CarRequest, Car, CarResponse,Long> {
+    public Car getByCarPlateNumber(String carId);
 }

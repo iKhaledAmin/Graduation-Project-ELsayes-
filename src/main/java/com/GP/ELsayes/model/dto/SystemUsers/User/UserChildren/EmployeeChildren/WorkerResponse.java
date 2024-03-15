@@ -2,11 +2,8 @@ package com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren;
 
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeResponse;
-import com.GP.ELsayes.model.entity.Branch;
+import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
-import com.fasterxml.jackson.annotation.JsonBackReference;
-import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -20,6 +17,7 @@ public class WorkerResponse  extends EmployeeResponse {
     private Long id;
     private WorkerRole workerRole;
     private String Score;
+    private WorkerStatus workerStatus;
     private Long branchId;
     private Long managerId;
 }

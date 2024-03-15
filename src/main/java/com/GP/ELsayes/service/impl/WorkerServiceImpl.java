@@ -1,34 +1,29 @@
 package com.GP.ELsayes.service.impl;
 
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
+import com.GP.ELsayes.model.dto.CheckOutResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
+import com.GP.ELsayes.model.entity.Car;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.CustomerVisitationsOfBranches;
 import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
-import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.roles.UserRole;
+import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
-import com.GP.ELsayes.service.BranchService;
-import com.GP.ELsayes.service.ManagerService;
-import com.GP.ELsayes.service.UserService;
-import com.GP.ELsayes.service.WorkerService;
+import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.CustomerVisitationsOfBranchesService;
 import com.GP.ELsayes.service.relations.WorkersOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
-import java.lang.reflect.InvocationTargetException;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
@@ -42,7 +37,11 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final  WorkerRepo workerRepo;
     private final UserMapper userMapper;
     private final BranchService branchService;
+    private final CustomerService customerService;
+    private final CarService carService;
     private final WorkersOfBranchesService workersOfBranchesService;
+    private final CustomerVisitationsOfBranchesService customerVisitationService;
+
 
 
     void throwExceptionIfBranchNoteHasManager(Branch branch){
@@ -50,6 +49,9 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             throw new RuntimeException("This branch with id = "+ branch.getId() +" do not have a Manager yet");
         return;
     }
+
+
+
 
     @Override
     public WorkerResponse add(WorkerRequest workerRequest) {
@@ -59,6 +61,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
         Worker worker = this.workerMapper.toEntity(workerRequest);
         worker.setUserRole(UserRole.WORKER);
+        worker.setWorkerStatus(WorkerStatus.AVAILABLE);
         worker.setDateOfEmployment(new Date());
         worker.setTotalSalary(emp -> {
             double baseSalary = Double.parseDouble(emp.getBaseSalary());
@@ -85,6 +88,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
         // Set fields from the existing manager that are not supposed to change
         updatedWorker.setUserRole(existedWorker.getUserRole());
+        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
 
         if (updatedWorker.getBaseSalary() == null || updatedWorker.getBonus() == null) {
@@ -160,6 +164,43 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         return workerRepo.findAllWorkersByBranchId(branchId).get()
                 .stream().map(worker ->  workerMapper.toResponse(worker))
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public void recordVisitation(String carPlateNumber , Long branchId) {
+        Car car = carService.getByCarPlateNumber(carPlateNumber);
+
+        Branch branch = branchService.getById(branchId);
+        Customer customer = customerService.getById(car.getCustomer().getId());
+
+
+
+        customerVisitationService.add(customer,branch);
+    }
+
+
+    @Override
+    public CheckOutResponse checkOut(String carPlateNumber, Long branchId) {
+        Car car = carService.getByCarPlateNumber(carPlateNumber);
+        Branch branch = branchService.getById(branchId);
+        Customer customer = customerService.getById(car.getCustomer().getId());
+
+
+        CustomerVisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
+                carPlateNumber,
+                branch.getId()
+        );
+
+
+
+
+        customerVisitationService.endVisitation(customerVisitation);
+        CheckOutResponse  checkOutResponse = new CheckOutResponse();
+        checkOutResponse.setCustomerName(customer.getFirstName() + customer.getLastName());
+        checkOutResponse.setCarPlateNumber(carPlateNumber);
+        checkOutResponse.setPeriodParking(customerVisitation.getPeriod());
+
+        return checkOutResponse;
     }
 
     @Override

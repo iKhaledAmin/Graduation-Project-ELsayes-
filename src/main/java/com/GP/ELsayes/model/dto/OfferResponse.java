@@ -23,6 +23,7 @@ public class OfferResponse {
     private String originalTotalRequiredTime;
     private String actualOfferPrice;
     private Status offerStatus;
-    //private String actualOfferRequiredTime;
+    private String profit;
+
 
 }

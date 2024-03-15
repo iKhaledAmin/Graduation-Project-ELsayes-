@@ -61,7 +61,7 @@ public class ServiceController {
 
     @GetMapping("/get-all-by-branch-id/{branchId}")
     public ResponseEntity<?> getAllByBranchId(@PathVariable Long branchId){
-        return new ResponseEntity<>(this.serviceService.getResponseAllBranchId(branchId),HttpStatus.OK);
+        return new ResponseEntity<>(this.serviceService.getResponseAllByBranchId(branchId),HttpStatus.OK);
     }
 
     @PostMapping("/add-service-to-offer")

@@ -1,9 +1,10 @@
 package com.GP.ELsayes.controller;
 
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
+import com.GP.ELsayes.model.dto.CheckOutRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.RecordVisitationRequest;
 import com.GP.ELsayes.service.WorkerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -59,6 +60,20 @@ public class WorkerController {
     @GetMapping("/get-number-workers-by-branchId/{branchId}")
     public ResponseEntity<?> getNumberOfWorkersByBranchId(@PathVariable Long branchId){
         return new ResponseEntity<>(this.workerService.getNumberOfWorkersByBranchId(branchId), HttpStatus.OK);
+    }
+
+    @PostMapping("/record-visitation")
+    public ResponseEntity<?> recordVisitation(@RequestBody @Valid RecordVisitationRequest customerVisitationsRequest) {
+        this.workerService.recordVisitation(
+                customerVisitationsRequest.getCarPlateNumber(),
+                customerVisitationsRequest.getBranchId()
+        );
+        return new ResponseEntity<>("Recorded Successfully", HttpStatus.CREATED);
+    }
+
+    @PutMapping("/check-out")
+    public ResponseEntity<?> checkOut(@RequestBody @Valid CheckOutRequest checkOutRequest){
+        return new ResponseEntity<>(this.workerService.checkOut(checkOutRequest.getCarPlateNumber(),checkOutRequest.getBranchId()), HttpStatus.ACCEPTED);
     }
 
 }

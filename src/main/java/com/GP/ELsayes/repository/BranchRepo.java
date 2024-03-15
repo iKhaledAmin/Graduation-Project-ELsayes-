@@ -15,7 +15,8 @@ public interface BranchRepo extends JpaRepository<Branch,Long> {
     @Query("SELECT b FROM Branch b JOIN b.WorkersOfBranch w WHERE w.worker.id = :workerId")
     Optional<Branch> findByWorkerId(Long workerId);
 
-    //@Query("select s from ServiceEntity s join s.servicesOfOffer so join so.offer o where o.id = :offerId")
     @Query("select b from Branch b join b.offerOfBranch bo join bo.offer o where o.id = :offerId")
     List<Branch> findAllByOfferId(Long offerId);
+    @Query("select b from Branch b join b.servicesOfBranch bs join bs.service s where s.id = :serviceId")
+    List<Branch> findAllByServiceId(Long serviceId);
 }

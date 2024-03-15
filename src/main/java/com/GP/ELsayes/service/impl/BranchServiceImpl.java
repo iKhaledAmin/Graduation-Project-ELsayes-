@@ -2,8 +2,10 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
+import com.GP.ELsayes.model.dto.CustomerVisitationsResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -11,12 +13,15 @@ import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
 import com.GP.ELsayes.repository.BranchRepo;
 import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.CustomerVisitationsOfBranchesService;
 import com.GP.ELsayes.service.relations.OwnersOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -34,9 +39,14 @@ public class BranchServiceImpl implements BranchService {
     private final OwnersOfBranchesService ownersOfBranchesService;
 
     private final OfferService offerService;
+    private final ServiceService serviceService;
+    private final CustomerVisitationsOfBranchesService customerVisitationsService;
 
 
-    public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService, @Lazy WorkerService workerService, @Lazy ManagerService managerService, OwnersOfBranchesService ownersOfBranchesService,@Lazy OfferService offerService) {
+    public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService,
+                             @Lazy WorkerService workerService, @Lazy ManagerService managerService,
+                             OwnersOfBranchesService ownersOfBranchesService, @Lazy OfferService offerService,
+                             @Lazy ServiceService serviceService,@Lazy CustomerVisitationsOfBranchesService customerVisitationsService) {
         this.branchMapper = branchMapper;
         this.branchRepo = branchRepo;
         this.ownerService = ownerService;
@@ -44,6 +54,37 @@ public class BranchServiceImpl implements BranchService {
         this.managerService = managerService;
         this.ownersOfBranchesService = ownersOfBranchesService;
         this.offerService = offerService;
+        this.serviceService = serviceService;
+        this.customerVisitationsService = customerVisitationsService;
+    }
+    // This method will run at midnight every day to reset the profitOfDay to zero
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void resetProfitOfDay() {
+        List<Branch> branches = branchRepo.findAll();
+        for (Branch branch : branches) {
+            branch.setProfitOfDay("0");
+            branchRepo.save(branch);
+        }
+    }
+
+    // Runs on the first day of every month at midnight
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void resetProfitOfMonthTask() {
+        List<Branch> branches = branchRepo.findAll();
+        for (Branch branch : branches) {
+            branch.setProfitOfMonth("0");
+            branchRepo.save(branch);
+        }
+    }
+
+    // Runs on the first day of every year at midnight
+    @Scheduled(cron = "0 0 0 1 1 ?")
+    public void resetProfitOfYearTask() {
+        List<Branch> branches = branchRepo.findAll();
+        for (Branch branch : branches) {
+            branch.setProfitOfYear("0");
+            branchRepo.save(branch);
+        }
     }
 
     protected boolean hasManager(Long branchId){
@@ -139,14 +180,30 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public Branch getByWorkerId(Long workerId) {
         return branchRepo.findByWorkerId(workerId).orElseThrow(
-                () -> new NoSuchElementException("There is no branch with worker id = " + workerId)
+                () -> new NoSuchElementException("There is no branch has worker with id = " + workerId)
         );
+    }
+
+    @Override
+    public List<Branch> getAllByServiceId(Long serviceId) {
+        ServiceEntity service = serviceService.getById(serviceId);
+        return branchRepo.findAllByServiceId(serviceId);
     }
 
     @Override
     public List<Branch> getAllByOfferId(Long offerId) {
         Offer offer = offerService.getById(offerId);
         return branchRepo.findAllByOfferId(offerId);
+    }
+
+    @Override
+    public List<CustomerVisitationsResponse> getResponseAllCurrentVisitationsInBranch(Long branchId) {
+        return customerVisitationsService.getResponseAllCurrentVisitationsInBranch(branchId);
+    }
+
+    @Override
+    public List<CustomerVisitationsResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
+        return customerVisitationsService.getResponseAllVisitationsInBranchByADate(branchId,date);
     }
 
 

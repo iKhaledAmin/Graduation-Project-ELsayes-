@@ -12,6 +12,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.OfferService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -24,7 +25,7 @@ import java.util.Optional;
 @Service
 //@RequiredArgsConstructor
 public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService {
-    private final ServicesOfBranchesRepo servicesOfBranchesRepo;
+    private static ServicesOfBranchesRepo servicesOfBranchesRepo = null;
     private final ServiceService serviceService;
     private final BranchService branchService;
     private final OfferService offerService;
@@ -41,7 +42,9 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         this.servicesOfOffersService = servicesOfOffersService;
     }
 
-    private ServicesOfBranches getByServiceIdAndBranchId(Long serviceId , Long branchId) {
+
+
+    public static ServicesOfBranches getByServiceIdAndBranchId(Long serviceId , Long branchId) {
         return servicesOfBranchesRepo.findByServiceIdAndBranchId(serviceId,branchId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
         );
@@ -106,20 +109,25 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);
     }
 
+
+
     @Override
     public ServicesOfBranchesResponse deactivateServiceInBranch(Long serviceId, Long branchId) {
-        ServicesOfBranches servicesOfBranches = getByServiceIdAndBranchId(
-                serviceId,
-                branchId
-        );
+        Optional<ServicesOfBranches> servicesOfBranchesOptional = Optional.ofNullable(getByServiceIdAndBranchId(serviceId, branchId));
 
+        if (!servicesOfBranchesOptional.isPresent()) {
+            // Handle the case where the service is not found in the branch
+            throw new EntityNotFoundException("Service with id "+ serviceId + " not found in this branch");
+        }
+
+        ServicesOfBranches servicesOfBranches = servicesOfBranchesOptional.get();
         servicesOfBranches.setServiceStatus(Status.UNAVAILABLE);
         servicesOfBranchesRepo.save(servicesOfBranches);
 
-
-
-        Optional<Offer> offer = offerService.getByServiceIdAndBranchId(serviceId,branchId);
-        servicesOfOffersService.handleAvailabilityOfOfferInAllBranches(offer.get().getId(),serviceId);
+        Optional<Offer> offerOptional = offerService.getByServiceIdAndBranchId(serviceId, branchId);
+        if (offerOptional.isPresent()) {
+            servicesOfOffersService.handleAvailabilityOfOfferInAllBranches(offerOptional.get().getId(), serviceId);
+        }
 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);
     }
