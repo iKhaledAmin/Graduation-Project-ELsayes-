@@ -8,8 +8,8 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 public class CheckOutResponse {
-    private String customerName;
     private String carPlateNumber;
+    private String customerName;
     private String periodParking;
     private String totalCost;
 }

@@ -1,5 +1,6 @@
 package com.GP.ELsayes.controller;
 
+import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -46,6 +47,11 @@ public class CustomerController {
     @GetMapping("/get-by-id/{customerId}")
     public ResponseEntity<?> getById(@PathVariable Long customerId){
         return new ResponseEntity<>(this.customerService.getResponseById(customerId),HttpStatus.OK);
+    }
+
+    @PutMapping("/add-car-to-customer")
+    public ResponseEntity<?> addCarToCustomer(@RequestBody @Valid AddCarToCustomerRequest addCarToCustomerRequest){
+        return new ResponseEntity<>(this.customerService.addCarToCustomer(addCarToCustomerRequest), HttpStatus.ACCEPTED);
     }
 
 }

@@ -17,10 +17,10 @@ public class CarController {
     @Autowired
     private CarService carService;
 
-    @PostMapping("")
-    public ResponseEntity<?> add(@RequestBody @Valid CarRequest carRequest) {
-        return new ResponseEntity<>(this.carService.add(carRequest), HttpStatus.CREATED);
-    }
+//    @PostMapping("")
+//    public ResponseEntity<?> add(@RequestBody @Valid CarRequest carRequest) {
+//        return new ResponseEntity<>(this.carService.add(carRequest), HttpStatus.CREATED);
+//    }
 
     @PutMapping("/{carId}")
     public ResponseEntity<?> update(@RequestBody @Valid CarRequest carRequest,@PathVariable Long carId){

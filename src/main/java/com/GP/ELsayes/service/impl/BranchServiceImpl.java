@@ -2,7 +2,7 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
-import com.GP.ELsayes.model.dto.CustomerVisitationsResponse;
+import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
 import com.GP.ELsayes.model.entity.ServiceEntity;
@@ -13,7 +13,7 @@ import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.mapper.BranchMapper;
 import com.GP.ELsayes.repository.BranchRepo;
 import com.GP.ELsayes.service.*;
-import com.GP.ELsayes.service.relations.CustomerVisitationsOfBranchesService;
+import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import com.GP.ELsayes.service.relations.OwnersOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -40,13 +40,13 @@ public class BranchServiceImpl implements BranchService {
 
     private final OfferService offerService;
     private final ServiceService serviceService;
-    private final CustomerVisitationsOfBranchesService customerVisitationsService;
+    private final VisitationsOfBranchesService customerVisitationsService;
 
 
     public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService,
                              @Lazy WorkerService workerService, @Lazy ManagerService managerService,
                              OwnersOfBranchesService ownersOfBranchesService, @Lazy OfferService offerService,
-                             @Lazy ServiceService serviceService,@Lazy CustomerVisitationsOfBranchesService customerVisitationsService) {
+                             @Lazy ServiceService serviceService,@Lazy VisitationsOfBranchesService customerVisitationsService) {
         this.branchMapper = branchMapper;
         this.branchRepo = branchRepo;
         this.ownerService = ownerService;
@@ -197,12 +197,12 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public List<CustomerVisitationsResponse> getResponseAllCurrentVisitationsInBranch(Long branchId) {
+    public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId) {
         return customerVisitationsService.getResponseAllCurrentVisitationsInBranch(branchId);
     }
 
     @Override
-    public List<CustomerVisitationsResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
+    public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
         return customerVisitationsService.getResponseAllVisitationsInBranchByADate(branchId,date);
     }
 

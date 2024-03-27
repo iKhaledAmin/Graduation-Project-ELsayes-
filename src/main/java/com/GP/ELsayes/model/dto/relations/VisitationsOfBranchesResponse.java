@@ -1,9 +1,5 @@
-package com.GP.ELsayes.model.dto;
+package com.GP.ELsayes.model.dto.relations;
 
-import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Car;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -15,7 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CustomerVisitationsResponse {
+public class VisitationsOfBranchesResponse {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

@@ -12,21 +12,15 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class CarRequest {
-
-
+public class AddCarToCustomerRequest {
     @NotNull(message = "Car plate number must not be null")
-    @NotEmpty(message = "Car plate number must not be empty")
     private String carPlateNumber;
 
+    @NotNull(message = "Customer id number must not be null")
+    private Long customerId;
 
     @NotNull(message = "Car type must not be null")
     private CarType carType;
 
-
     private Date model;
-
-
-    private Long customerId;
-
 }

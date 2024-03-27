@@ -12,8 +12,6 @@ import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
 
-import java.util.Date;
-
 @SuperBuilder
 @Data
 @NoArgsConstructor
@@ -22,7 +20,7 @@ import java.util.Date;
 
 @Entity
 @Table(name = "customer_visitation_of_branches")
-public class CustomerVisitationsOfBranches {
+public class VisitationsOfBranches {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

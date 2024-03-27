@@ -1,11 +1,10 @@
 package com.GP.ELsayes.service.impl;
 
+import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
 import com.GP.ELsayes.model.dto.CarRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
-import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CarMapper;
 import com.GP.ELsayes.repository.CarRepo;
 import com.GP.ELsayes.service.CarService;
@@ -27,14 +26,14 @@ public class CarServiceImpl implements CarService {
     private final CarMapper carMapper;
     private final CustomerService customerService;
 
-    void throwExceptionIfCustomerAlreadyHasCar(Long customerId){
+    private void throwExceptionIfCustomerAlreadyHasCar(Long customerId){
         Optional<Car> car = carRepo.findByCustomerId(customerId);
         if(car.isEmpty())
             return;
         throw new RuntimeException("This customer with id = "+ customerId +" already has a car");
     }
 
-    void throwExceptionIfCarIsAlreadyExist(String carPlateNumber){
+    private void throwExceptionIfCarIsAlreadyExist(String carPlateNumber){
         Optional<Car> car = carRepo.findByCarPlateNumber(carPlateNumber);
         if(car.isEmpty()){
             return;
@@ -43,32 +42,74 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarResponse add(CarRequest carRequest) {
-        throwExceptionIfCarIsAlreadyExist(carRequest.getCarPlateNumber());
-
-        Car car = this.carMapper.toEntity(carRequest);
-
-        Customer customer = this.customerService.getById(carRequest.getCustomerId());
-
-        throwExceptionIfCustomerAlreadyHasCar(customer.getId());
-        car.setCustomer(customer);
-        return this.carMapper.toResponse(this.carRepo.save(car));
-
+    public Car add(Car car){
+        throwExceptionIfCarIsAlreadyExist(car.getCarPlateNumber());
+        return this.carRepo.save(car);
     }
 
     @SneakyThrows
-    @Override
-    public CarResponse update(CarRequest carRequest, Long carId) {
-        Car existedCar = this.getById(carId);
-        Car updatedCar = this.carMapper.toEntity(carRequest);
+    public Car update(Car updatedCar){
+        System.out.println("The id   " + updatedCar.getId());
+        Optional<Car> existedCar = carRepo.findById(updatedCar.getId());
 
-
-        updatedCar.setId(carId);
-        updatedCar.setCustomer(existedCar.getCustomer());
+        updatedCar.setId(updatedCar.getId());
         BeanUtils.copyProperties(existedCar,updatedCar);
 
-        return this.carMapper.toResponse(carRepo.save(updatedCar));
+        Customer customer = updatedCar.getCustomer();
+        if (Optional.ofNullable(customer).isPresent()){
+            updatedCar.setCustomer(customer);
+        }
+
+
+        return carRepo.save(updatedCar);
     }
+
+
+    @Override
+    public CarResponse add(CarRequest carRequest) {
+        //throwExceptionIfCarIsAlreadyExist(carRequest.getCarPlateNumber());
+
+        Car car = this.carMapper.toEntity(carRequest);
+
+        return this.carMapper.toResponse(add(car));
+
+    }
+
+
+    @Override
+    public CarResponse update(CarRequest carRequest, Long carId) {
+
+        Car updatedCar = this.carMapper.toEntity(carRequest);
+        updatedCar.setId(carId);
+
+        Customer customer = customerService.getById(carRequest.getCustomerId());
+        if (Optional.ofNullable(customer).isPresent()){
+            updatedCar.setCustomer(customer);
+        }
+
+        updatedCar = update(updatedCar);
+
+        return this.carMapper.toResponse(updatedCar);
+    }
+
+    @Override
+    public CarResponse addCarToCustomer(AddCarToCustomerRequest addCarToCustomerRequest){
+        Car car = getByCarPlateNumber(addCarToCustomerRequest.getCarPlateNumber());
+        Customer customer = customerService.getById(addCarToCustomerRequest.getCustomerId());
+
+        throwExceptionIfCustomerAlreadyHasCar(customer.getId());
+        car.setCustomer(customer);
+        car.setCarType(addCarToCustomerRequest.getCarType());
+        car.setModel(addCarToCustomerRequest.getModel());
+
+        car = update(car);
+        return carMapper.toResponse(car);
+    }
+
+
+
+
+
 
     @Override
     public void delete(Long carId) {
@@ -92,11 +133,16 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public Optional<Car> getIfExistByCarPlateNumber(String carPlateNumber) {
+        return carRepo.findByCarPlateNumber(carPlateNumber);
+    }
+    @Override
     public Car getByCarPlateNumber(String carPlateNumber) {
         return carRepo.findByCarPlateNumber(carPlateNumber).orElseThrow(
                 () -> new NoSuchElementException("There is no car with car plate number = " + carPlateNumber)
         );
     }
+
 
     @Override
     public CarResponse getResponseById(Long carId) {

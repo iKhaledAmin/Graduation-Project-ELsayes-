@@ -1,5 +1,7 @@
 package com.GP.ELsayes.service.impl;
 
+import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
+import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -9,6 +11,7 @@ import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
+import com.GP.ELsayes.service.CarService;
 import com.GP.ELsayes.service.CustomerService;
 import com.GP.ELsayes.service.FreeTrialCodeService;
 import com.GP.ELsayes.service.UserService;
@@ -26,15 +29,17 @@ import java.util.NoSuchElementException;
 public class CustomerServiceImpl implements UserService, CustomerService {
     private final CustomerMapper customerMapper;
     private final CustomerRepo customerRepo;
-
     private final UserMapper userMapper;
+    private final CarService carService;
+
     private final FreeTrialCodeService freeTrialCodeService;
 
 
-    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo, UserMapper userMapper, @Lazy FreeTrialCodeService freeTrialCodeService) {
+    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo, UserMapper userMapper,@Lazy CarService carService, @Lazy FreeTrialCodeService freeTrialCodeService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
         this.userMapper = userMapper;
+        this.carService = carService;
         this.freeTrialCodeService = freeTrialCodeService;
     }
 
@@ -108,5 +113,9 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         return customerMapper.toResponse(getById(customerId));
     }
 
+    @Override
+    public CarResponse addCarToCustomer(AddCarToCustomerRequest addCarToCustomerRequest){
+        return carService.addCarToCustomer(addCarToCustomerRequest);
+    }
 
 }

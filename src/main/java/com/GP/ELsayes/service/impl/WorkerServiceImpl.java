@@ -9,7 +9,7 @@ import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.GP.ELsayes.model.entity.relations.CustomerVisitationsOfBranches;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
@@ -17,7 +17,7 @@ import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.*;
-import com.GP.ELsayes.service.relations.CustomerVisitationsOfBranchesService;
+import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import com.GP.ELsayes.service.relations.WorkersOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -27,6 +27,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final CustomerService customerService;
     private final CarService carService;
     private final WorkersOfBranchesService workersOfBranchesService;
-    private final CustomerVisitationsOfBranchesService customerVisitationService;
+    private final VisitationsOfBranchesService customerVisitationService;
 
 
 
@@ -168,37 +169,40 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
     @Override
     public void recordVisitation(String carPlateNumber , Long branchId) {
-        Car car = carService.getByCarPlateNumber(carPlateNumber);
-
         Branch branch = branchService.getById(branchId);
-        Customer customer = customerService.getById(car.getCustomer().getId());
 
+        Optional<Car> car = carService.getIfExistByCarPlateNumber(carPlateNumber);
 
+        if (car.isEmpty()){
+            Car newCar = new Car();
+            newCar.setCarPlateNumber(carPlateNumber);
+            car = Optional.ofNullable(carService.add(newCar));
+        }
 
-        customerVisitationService.add(customer,branch);
+        customerVisitationService.addVisitation(car.get(),branch);
     }
 
 
     @Override
     public CheckOutResponse checkOut(String carPlateNumber, Long branchId) {
+
         Car car = carService.getByCarPlateNumber(carPlateNumber);
         Branch branch = branchService.getById(branchId);
-        Customer customer = customerService.getById(car.getCustomer().getId());
+        Optional<Customer> customer = Optional.ofNullable(car.getCustomer());
 
-
-        CustomerVisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
+        VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
                 carPlateNumber,
                 branch.getId()
         );
 
+        customerVisitationService.endVisitation(car,branch);
 
-
-
-        customerVisitationService.endVisitation(customerVisitation);
         CheckOutResponse  checkOutResponse = new CheckOutResponse();
-        checkOutResponse.setCustomerName(customer.getFirstName() + customer.getLastName());
         checkOutResponse.setCarPlateNumber(carPlateNumber);
         checkOutResponse.setPeriodParking(customerVisitation.getPeriod());
+        if(customer.isPresent()){
+            checkOutResponse.setCustomerName(customer.get().getFirstName() +" "+ customer.get().getLastName());
+        }
 
         return checkOutResponse;
     }

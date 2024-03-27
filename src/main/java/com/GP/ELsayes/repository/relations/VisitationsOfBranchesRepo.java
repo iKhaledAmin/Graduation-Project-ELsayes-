@@ -1,7 +1,6 @@
 package com.GP.ELsayes.repository.relations;
 
-import com.GP.ELsayes.model.entity.relations.CustomerVisitationsOfBranches;
-import jakarta.jws.Oneway;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -11,7 +10,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-public interface CustomerVisitationsOfBranchesRepo extends JpaRepository<CustomerVisitationsOfBranches, Long> {
+public interface VisitationsOfBranchesRepo extends JpaRepository<VisitationsOfBranches, Long> {
 
     /**
      * Finds the current visitation record for a car with a given plate number at a specific branch.
@@ -20,26 +19,26 @@ public interface CustomerVisitationsOfBranchesRepo extends JpaRepository<Custome
 
      * @return an Optional containing the current visitation record, if found
      */
-    @Query("SELECT cv FROM CustomerVisitationsOfBranches cv JOIN cv.car c WHERE c.carPlateNumber = :carPlateNumber" +
+    @Query("SELECT cv FROM VisitationsOfBranches cv JOIN cv.car c WHERE c.carPlateNumber = :carPlateNumber" +
             " AND cv.branch.id = :branchId AND cv.dateOfLeaving IS NULL")
-    Optional<CustomerVisitationsOfBranches> findCurrentlyByCarPlateNumberAndBranchId(String carPlateNumber, Long branchId);
+    Optional<VisitationsOfBranches> findCurrentlyByCarPlateNumberAndBranchId(String carPlateNumber, Long branchId);
 
     /**
      * Retrieves the most recent visitation record for a car with a given plate number at a specific branch.
      * The results are ordered by the date of arrival in descending order, ensuring the most recent record is returned first.
-     * This method returns a Page of CustomerVisitationsOfBranches, which should be limited to a single result.
+     * This method returns a Page of VisitationsOfBranches, which should be limited to a single result.
 
      * @param pageable a Pageable object to limit the query to the most recent record
      * @return a Page containing the most recent visitation record, if found
      */
-    @Query("SELECT cv FROM CustomerVisitationsOfBranches cv JOIN cv.car c WHERE c.carPlateNumber = :carPlateNumber" +
+    @Query("SELECT cv FROM VisitationsOfBranches cv JOIN cv.car c WHERE c.carPlateNumber = :carPlateNumber" +
             " AND cv.branch.id = :branchId ORDER BY cv.dateOfArriving DESC")
-    Page<CustomerVisitationsOfBranches> findRecentByCarPlateNumberAndBranchId(String carPlateNumber, Long branchId, Pageable pageable);
+    Page<VisitationsOfBranches> findRecentByCarPlateNumberAndBranchId(String carPlateNumber, Long branchId, Pageable pageable);
 
-    @Query("SELECT cv FROM CustomerVisitationsOfBranches cv WHERE" +
+    @Query("SELECT cv FROM VisitationsOfBranches cv WHERE" +
             " cv.branch.id = :branchId AND cv.dateOfLeaving IS NULL")
-    List<CustomerVisitationsOfBranches> findAllCurrentVisitationsInBranch(Long branchId);
-    @Query("SELECT cv FROM CustomerVisitationsOfBranches cv WHERE " +
+    List<VisitationsOfBranches> findAllCurrentVisitationsInBranch(Long branchId);
+    @Query("SELECT cv FROM VisitationsOfBranches cv WHERE " +
             "cv.branch.id = :branchId AND EXTRACT(DAY FROM cv.dateOfArriving) = EXTRACT(DAY FROM :date)")
-    List<CustomerVisitationsOfBranches> findAVisitationsInBranchByADate(Long branchId, Date date );
+    List<VisitationsOfBranches> findAVisitationsInBranchByADate(Long branchId, Date date );
 }

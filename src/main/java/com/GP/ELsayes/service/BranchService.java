@@ -2,9 +2,8 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
-import com.GP.ELsayes.model.dto.CustomerVisitationsResponse;
+import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -20,8 +19,8 @@ public interface BranchService extends CrudService<BranchRequest, Branch, Branch
 
     public List<Branch> getAllByServiceId(Long serviceId);
     public List<Branch> getAllByOfferId(Long offerId);
-    public List<CustomerVisitationsResponse> getResponseAllCurrentVisitationsInBranch(Long branchId);
-    public List<CustomerVisitationsResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date);
+    public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId);
+    public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date);
 
 
 }

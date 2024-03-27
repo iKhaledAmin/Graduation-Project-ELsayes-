@@ -1,19 +1,14 @@
 package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.*;
-import com.GP.ELsayes.service.ServiceService;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuperBuilder
@@ -65,6 +60,6 @@ public class Branch {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")
-    private List<CustomerVisitationsOfBranches> customerVisitationsOfBranch;
+    private List<VisitationsOfBranches> visitationsOfBranch;
 
 }
