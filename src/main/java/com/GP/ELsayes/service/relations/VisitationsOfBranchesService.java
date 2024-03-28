@@ -8,13 +8,15 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface VisitationsOfBranchesService {
     public VisitationsOfBranches addVisitation(Car car , Branch branch);
     public VisitationsOfBranches endVisitation(Car car, Branch branch);
     VisitationsOfBranches getRecentByCarPlateNumberAndBranchId(String carPlateNumber , Long branchId);
-
     public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId);
     public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId , Date date);
+
+    Optional<VisitationsOfBranches> getCurrentVisitationByCustomerId(Long customerId);
 }

@@ -119,8 +119,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Optional<ServiceEntity> getObjectById(Long serviceId) {
+        return serviceRepo.findById(serviceId);
+    }
+
+    @Override
     public ServiceEntity getById(Long serviceId) {
-        return serviceRepo.findById(serviceId).orElseThrow(
+        return getObjectById(serviceId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId)
         );
     }

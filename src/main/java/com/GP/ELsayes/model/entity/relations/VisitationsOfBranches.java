@@ -19,7 +19,7 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "customer_visitation_of_branches")
+@Table(name = "visitation_of_branches")
 public class VisitationsOfBranches {
 
     @Id

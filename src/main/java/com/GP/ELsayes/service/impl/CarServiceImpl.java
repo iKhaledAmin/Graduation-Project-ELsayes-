@@ -1,6 +1,6 @@
 package com.GP.ELsayes.service.impl;
 
-import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
+import com.GP.ELsayes.model.dto.AddCarRequest;
 import com.GP.ELsayes.model.dto.CarRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.entity.Car;
@@ -49,7 +49,6 @@ public class CarServiceImpl implements CarService {
 
     @SneakyThrows
     public Car update(Car updatedCar){
-        System.out.println("The id   " + updatedCar.getId());
         Optional<Car> existedCar = carRepo.findById(updatedCar.getId());
 
         updatedCar.setId(updatedCar.getId());
@@ -67,7 +66,6 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public CarResponse add(CarRequest carRequest) {
-        //throwExceptionIfCarIsAlreadyExist(carRequest.getCarPlateNumber());
 
         Car car = this.carMapper.toEntity(carRequest);
 
@@ -93,17 +91,22 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
-    public CarResponse addCarToCustomer(AddCarToCustomerRequest addCarToCustomerRequest){
-        Car car = getByCarPlateNumber(addCarToCustomerRequest.getCarPlateNumber());
-        Customer customer = customerService.getById(addCarToCustomerRequest.getCustomerId());
+    public CarResponse addCarToCustomer(AddCarRequest addCarRequest){
+        Optional<Car> car = carRepo.findByCarPlateNumber(addCarRequest.getCarPlateNumber());
+        if(car.isEmpty()){
+            car = Optional.of(new Car());
+            car.get().setCarPlateNumber(addCarRequest.getCarPlateNumber());
+            car = Optional.of(carRepo.save(car.get()));
+        }
+        Customer customer = customerService.getById(addCarRequest.getCustomerId());
 
         throwExceptionIfCustomerAlreadyHasCar(customer.getId());
-        car.setCustomer(customer);
-        car.setCarType(addCarToCustomerRequest.getCarType());
-        car.setModel(addCarToCustomerRequest.getModel());
+        car.get().setCustomer(customer);
+        car.get().setCarType(addCarRequest.getCarType());
+        car.get().setModel(addCarRequest.getModel());
 
-        car = update(car);
-        return carMapper.toResponse(car);
+        car = Optional.ofNullable(update(car.get()));
+        return carMapper.toResponse(car.get());
     }
 
 
@@ -126,10 +129,20 @@ public class CarServiceImpl implements CarService {
     }
 
     @Override
+    public Optional<Car> getObjectById(Long carId) {
+        return carRepo.findById(carId);
+    }
+
+    @Override
     public Car getById(Long carId) {
-        return carRepo.findById(carId).orElseThrow(
+        return getObjectById(carId).orElseThrow(
                 () -> new NoSuchElementException("There is no car with id = " + carId)
         );
+    }
+
+    @Override
+    public CarResponse getResponseById(Long carId) {
+        return carMapper.toResponse(getById(carId));
     }
 
     @Override
@@ -144,8 +157,4 @@ public class CarServiceImpl implements CarService {
     }
 
 
-    @Override
-    public CarResponse getResponseById(Long carId) {
-        return carMapper.toResponse(getById(carId));
-    }
 }

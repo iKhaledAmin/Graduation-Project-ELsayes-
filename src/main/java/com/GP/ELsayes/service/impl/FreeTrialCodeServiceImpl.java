@@ -105,8 +105,13 @@ public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
     }
 
     @Override
+    public Optional<FreeTrialCode> getObjectById(Long codeId) {
+        return freeTrialCodeRepo.findById(codeId);
+    }
+
+    @Override
     public FreeTrialCode getById(Long codeId) {
-        return freeTrialCodeRepo.findById(codeId).orElseThrow(
+        return getObjectById(codeId).orElseThrow(
                 () -> new NoSuchElementException("Invalid code")
         );
     }

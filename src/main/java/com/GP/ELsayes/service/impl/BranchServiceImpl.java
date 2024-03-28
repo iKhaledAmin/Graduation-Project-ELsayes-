@@ -154,8 +154,13 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
+    public Optional<Branch> getObjectById(Long branchId) {
+        return branchRepo.findById(branchId);
+    }
+
+    @Override
     public Branch getById(Long branchId) {
-        return branchRepo.findById(branchId).orElseThrow(
+        return getObjectById(branchId).orElseThrow(
                 () -> new NoSuchElementException("There are no branch with id = " + branchId)
         );
     }

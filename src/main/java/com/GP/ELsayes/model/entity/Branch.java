@@ -62,4 +62,10 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<VisitationsOfBranches> visitationsOfBranch;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "branch")
+    private List<Order> orders;
+
+
+
 }

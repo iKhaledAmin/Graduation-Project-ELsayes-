@@ -147,8 +147,13 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     }
 
     @Override
+    public Optional<Worker> getObjectById(Long workerId) {
+        return workerRepo.findById(workerId);
+    }
+
+    @Override
     public Worker getById(Long workerId) {
-        return workerRepo.findById(workerId).orElseThrow(
+        return getObjectById(workerId).orElseThrow(
                 () -> new NoSuchElementException("There is no worker with id = " + workerId)
         );
     }

@@ -23,6 +23,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 import static java.lang.Double.parseDouble;
 
@@ -119,10 +120,15 @@ public class OwnerServiceImpl
                 .toList();
     }
 
+    @Override
+    public Optional<Owner> getObjectById(Long ownerId) {
+        return ownerRepo.findById(ownerId);
+    }
+
 
     @Override
     public Owner getById(Long ownerId) {
-        return ownerRepo.findById(ownerId).orElseThrow(
+        return getObjectById(ownerId).orElseThrow(
                 () -> new NoSuchElementException("There Are No Owner With Id = " + ownerId)
         );
     }

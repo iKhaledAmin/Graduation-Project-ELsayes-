@@ -166,8 +166,13 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
 
     @Override
+    public Optional<Manager> getObjectById(Long managerId) {
+        return managerRepo.findById(managerId);
+    }
+
+    @Override
     public Manager getById(Long managerId) {
-        return managerRepo.findById(managerId).orElseThrow(
+        return getObjectById(managerId).orElseThrow(
                 () -> new NoSuchElementException("There is no manager with id = " + managerId)
         );
     }

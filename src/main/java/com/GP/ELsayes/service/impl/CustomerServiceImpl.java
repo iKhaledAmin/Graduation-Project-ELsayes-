@@ -1,20 +1,19 @@
 package com.GP.ELsayes.service.impl;
 
-import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
+import com.GP.ELsayes.model.dto.AddCarRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
+import com.GP.ELsayes.model.dto.AddServiceToOrderListRequest;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
-import com.GP.ELsayes.service.CarService;
-import com.GP.ELsayes.service.CustomerService;
-import com.GP.ELsayes.service.FreeTrialCodeService;
-import com.GP.ELsayes.service.UserService;
+import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -23,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
+import java.util.Optional;
 
 //@RequiredArgsConstructor
 @Service
@@ -31,16 +31,23 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     private final CustomerRepo customerRepo;
     private final UserMapper userMapper;
     private final CarService carService;
-
+    private OrderService orderService;
     private final FreeTrialCodeService freeTrialCodeService;
+    private final ServicesOfOrderService servicesOfOrderService;
 
 
-    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo, UserMapper userMapper,@Lazy CarService carService, @Lazy FreeTrialCodeService freeTrialCodeService) {
+    public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
+                               UserMapper userMapper, @Lazy CarService carService,
+                               @Lazy OrderService orderService,
+                               @Lazy FreeTrialCodeService freeTrialCodeService,
+                               @Lazy ServicesOfOrderService servicesOfOrderService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
         this.userMapper = userMapper;
         this.carService = carService;
+        this.orderService = orderService;
         this.freeTrialCodeService = freeTrialCodeService;
+        this.servicesOfOrderService = servicesOfOrderService;
     }
 
 
@@ -102,8 +109,13 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     }
 
     @Override
+    public Optional<Customer> getObjectById(Long customerId) {
+        return customerRepo.findById(customerId);
+    }
+
+    @Override
     public Customer getById(Long customerId) {
-        return customerRepo.findById(customerId).orElseThrow(
+        return getObjectById(customerId).orElseThrow(
                 () -> new NoSuchElementException("There is no customer with id = " + customerId)
         );
     }
@@ -113,9 +125,22 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         return customerMapper.toResponse(getById(customerId));
     }
 
+
     @Override
-    public CarResponse addCarToCustomer(AddCarToCustomerRequest addCarToCustomerRequest){
-        return carService.addCarToCustomer(addCarToCustomerRequest);
+    public CarResponse addCarToCustomer(AddCarRequest addCarRequest){
+        return carService.addCarToCustomer(addCarRequest);
+    }
+
+    @Override
+    public void addServiceToOrderList(AddServiceToOrderListRequest addServiceToOrderListRequest){
+        servicesOfOrderService.addServiceToOrder(
+                addServiceToOrderListRequest.getCustomerId(),
+                addServiceToOrderListRequest.getServiceId()
+        );
+    }
+
+    public void confirmOrder(Long customerId){
+        orderService.confirmOrderByCustomerId(customerId);
     }
 
 }

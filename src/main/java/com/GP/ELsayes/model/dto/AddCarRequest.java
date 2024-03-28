@@ -1,7 +1,6 @@
 package com.GP.ELsayes.model.dto;
 
 import com.GP.ELsayes.model.enums.CarType;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -12,7 +11,7 @@ import java.util.Date;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class AddCarToCustomerRequest {
+public class AddCarRequest {
     @NotNull(message = "Car plate number must not be null")
     private String carPlateNumber;
 

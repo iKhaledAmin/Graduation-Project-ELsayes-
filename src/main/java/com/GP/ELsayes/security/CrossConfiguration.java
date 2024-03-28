@@ -10,7 +10,7 @@ public class CrossConfiguration implements WebMvcConfigurer {
 //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow requests from all origins
+//        configuration.setAllowedOrigins(Arrays.asList("*")); // Allow orders from all origins
 ////        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow specific HTTP methods
 //        configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS")); // Allow specific HTTP methods
 //        configuration.setAllowedHeaders(Arrays.asList("*")); // Allow specific headers
@@ -26,7 +26,7 @@ public class CrossConfiguration implements WebMvcConfigurer {
     //    @Bean
 //    public CorsConfigurationSource corsConfigurationSource() {
 //        CorsConfiguration configuration = new CorsConfiguration();
-//        configuration.addAllowedOrigin("*"); // Allow requests from all origins
+//        configuration.addAllowedOrigin("*"); // Allow orders from all origins
 //        configuration.addAllowedMethod("*"); // Allow all HTTP methods
 //        configuration.addAllowedHeader("*"); // Allow all headers
 //        configuration.setAllowCredentials(true); // Allow cookies, if necessary
@@ -39,7 +39,7 @@ public class CrossConfiguration implements WebMvcConfigurer {
     @Override
     public void addCorsMappings(CorsRegistry registry) {
         registry.addMapping("/**")
-                .allowedOrigins("*") // Allow requests from any origin
+                .allowedOrigins("*") // Allow orders from any origin
                 .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS") // Allow the HTTP methods you need
                 .allowedHeaders("*"); // Allow all headers
     }

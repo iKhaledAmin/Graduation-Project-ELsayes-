@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface CrudService<Request, Entity, Response, ID> {
 
@@ -12,8 +13,12 @@ public interface CrudService<Request, Entity, Response, ID> {
 
     public List<Response> getAll();
 
+    public Optional<Entity> getObjectById(ID id);
     public Entity getById(ID id);
+
     public Response getResponseById(ID id);
+
+
 
 
 }

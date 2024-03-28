@@ -26,6 +26,7 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
+
 @Service
  public class OfferServiceImpl implements OfferService {
 
@@ -157,8 +158,13 @@ import java.util.Optional;
     }
 
     @Override
+    public Optional<Offer> getObjectById(Long offerId) {
+        return offerRepo.findById(offerId);
+    }
+
+    @Override
     public Offer getById(Long offerId) {
-        return offerRepo.findById(offerId).orElseThrow(
+        return getObjectById(offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no offer with id = " + offerId)
         );
     }

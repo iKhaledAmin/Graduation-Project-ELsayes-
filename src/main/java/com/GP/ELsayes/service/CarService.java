@@ -1,6 +1,6 @@
 package com.GP.ELsayes.service;
 
-import com.GP.ELsayes.model.dto.AddCarToCustomerRequest;
+import com.GP.ELsayes.model.dto.AddCarRequest;
 import com.GP.ELsayes.model.dto.CarRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.entity.Car;
@@ -14,6 +14,6 @@ public interface CarService extends CrudService<CarRequest, Car, CarResponse,Lon
     public Car update(Car updatedCar);
     public Car getByCarPlateNumber(String carPlateNumber);
     public Optional<Car> getIfExistByCarPlateNumber(String carPlateNumber);
-    public CarResponse addCarToCustomer(AddCarToCustomerRequest addCarToCustomerRequest);
+    public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
 
 }

@@ -3,18 +3,15 @@ package com.GP.ELsayes.model.entity;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ServiceCategory;
-import com.GP.ELsayes.model.enums.Status;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-import java.time.LocalDateTime;
 import java.util.List;
 
 @SuperBuilder
@@ -55,4 +52,9 @@ public class ServiceEntity {
     @OneToMany(mappedBy = "service")
     private List<ServicesOfOffers> servicesOfOffer ;
 
+    @JsonManagedReference
+    @OneToMany(mappedBy = "service")
+    private List<ServicesOfOrders> servicesOfOrder;
+
 }
+

@@ -117,6 +117,11 @@ public class VisitationsOfBranchesServiceImpl implements VisitationsOfBranchesSe
                 .toList();
     }
 
+    @Override
+    public Optional<VisitationsOfBranches> getCurrentVisitationByCustomerId(Long customerId) {
+        return visitationsOfBranchesRepo.findCurrentVisitationByCustomerId(customerId);
+    }
+
 
     @Override
     public VisitationsOfBranches addVisitation(Car car, Branch branch) {
