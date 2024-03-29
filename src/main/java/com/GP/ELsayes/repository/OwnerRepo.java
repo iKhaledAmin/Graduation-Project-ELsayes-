@@ -13,4 +13,11 @@ public interface OwnerRepo extends JpaRepository<Owner, Long> {
 
     @Query("select o from Owner o join o.ownersOfManagers om where om.manager.id = :managerId")
     Optional<Owner> findByManagerId(Long managerId);
+
+
+
+//    //@Query("select o from Owner o join o.ownersOfRestrictedOwners1 om where om.oldOwner.id IS NULL")
+//    @Query("select o from Owner o where o.id not in" +
+//            " (select om.oldOwner.id from OwnersOfRestrictedOwners om where om.oldOwner is not null)")
+//    Optional<Owner> findTneMainOwner();
 }

@@ -9,6 +9,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
+import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
@@ -25,5 +26,11 @@ public class OwnersOfRestrictedOwnersServiceImpl implements OwnersOfRestrictedOw
         ownersOfRestrictedOwners.setOperationDate(new Date());
 
         return ownersOfRestrictedOwnersRepo.save(ownersOfRestrictedOwners);
+    }
+
+
+    @Override
+    public Optional<OwnersOfRestrictedOwners> findTneMainOwner() {
+        return ownersOfRestrictedOwnersRepo.findTneMainOwner();
     }
 }

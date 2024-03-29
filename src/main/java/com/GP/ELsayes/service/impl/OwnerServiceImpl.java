@@ -1,10 +1,15 @@
 package com.GP.ELsayes.service.impl;
 
 
+import com.GP.ELsayes.model.dto.BranchRequest;
+import com.GP.ELsayes.model.dto.BranchResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
+import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.relations.OwnersOfRestrictedOwners;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
@@ -13,12 +18,15 @@ import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.OwnerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.OwnerRepo;
+import com.GP.ELsayes.service.BranchService;
+import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
 import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.relations.OwnersOfRestrictedOwnersService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,7 +35,7 @@ import java.util.Optional;
 
 import static java.lang.Double.parseDouble;
 
-@RequiredArgsConstructor
+
 @Service
 public class OwnerServiceImpl
         implements UserService , OwnerService {
@@ -35,33 +43,50 @@ public class OwnerServiceImpl
     private final OwnerMapper ownerMapper;
     private final OwnerRepo ownerRepo;
     private final UserMapper userMapper;
+    private final ManagerService managerService;
+    private final BranchService branchService;
     private final OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService;
 
+    public OwnerServiceImpl(OwnerMapper ownerMapper, OwnerRepo ownerRepo, UserMapper userMapper,
+                            ManagerService managerService,@Lazy BranchService branchService,
+                            OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService) {
+        this.ownerMapper = ownerMapper;
+        this.ownerRepo = ownerRepo;
+        this.userMapper = userMapper;
+        this.managerService = managerService;
+        this.branchService = branchService;
+        this.ownersOfRestrictedOwnersService = ownersOfRestrictedOwnersService;
+    }
 
-    private OwnerPermission setPermission(String ownerPercentage){
-        if (parseDouble(ownerPercentage) > 60.0)
-            return OwnerPermission.FULL_PERMISSION;
-        else
-            return OwnerPermission.RESTRICTED;
+    private void throwExceptionIfThereIsAMainOwnerAndOldOwnerIdISNULL(Long oldOwnerId) {
+        Optional<OwnersOfRestrictedOwners> mainOwner = ownersOfRestrictedOwnersService.findTneMainOwner();
+        if(oldOwnerId == null && mainOwner.isPresent())
+            throw new RuntimeException("Please, enter the old owner");
+        if (oldOwnerId != null)
+            getById(oldOwnerId);
     }
 
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {
+        throwExceptionIfThereIsAMainOwnerAndOldOwnerIdISNULL(ownerRequest.getOldOwnerId());
+
+
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
         newOwner.setUserRole(UserRole.OWNER);
         newOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
         newOwner = this.ownerRepo.save(newOwner);
 
-        // this if condition must be removed at production (important note)
-        if(ownerRequest.getOldOwnerId() != null){
-            Owner oldOwner = this.getById(ownerRequest.getOldOwnerId());
-            OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.add(
-                    oldOwner,
-                    newOwner,
-                    OperationType.CREATE
-            );
-
+        Owner oldOwner = null;
+        if (ownerRequest.getOldOwnerId() != null){
+             oldOwner = this.getById(ownerRequest.getOldOwnerId());
         }
+
+        OwnersOfRestrictedOwners ownersOfRestrictedOwners = ownersOfRestrictedOwnersService.add(
+                oldOwner,
+                newOwner,
+                OperationType.CREATE
+        );
+
 
         return this.ownerMapper.toResponse(newOwner);
     }
@@ -145,4 +170,62 @@ public class OwnerServiceImpl
                 () -> new NoSuchElementException("There is no owner whit manager id = " + managerId)
         );
     }
+
+
+
+    @Override
+    public ManagerResponse addManager(ManagerRequest managerRequest){
+        return managerService.add(managerRequest);
+    }
+
+    @Override
+    public ManagerResponse updateManager(ManagerRequest managerRequest, Long managerId){
+        return managerService.update(managerRequest,managerId);
+    }
+
+    @Override
+    public void deleteManager(Long managerId){
+         managerService.delete(managerId);
+    }
+
+    @Override
+    public List<ManagerResponse> getAllManager(){
+        return managerService.getAll();
+    }
+
+    @Override
+    public ManagerResponse getResponseManagerById(Long managerId){
+        return managerService.getResponseById(managerId);
+    }
+
+    @Override
+    public ManagerResponse getResponseManagerByBranchId(Long branchId){
+        return managerService.getResponseByBranchId(branchId);
+    }
+
+    @Override
+    public BranchResponse addBranch(BranchRequest branchRequest){
+        return branchService.add(branchRequest);
+    }
+
+    @Override
+    public BranchResponse updateBranch(BranchRequest branchRequest, Long branchId){
+        return branchService.update(branchRequest,branchId);
+    }
+
+    @Override
+    public void deleteBranch(Long branchId){
+         branchService.delete(branchId);
+    }
+
+    @Override
+    public List<BranchResponse> getAllBranches(){
+        return branchService.getAll();
+    }
+
+    @Override
+    public BranchResponse getBranchResponseById(Long branchId){
+        return branchService.getResponseById(branchId);
+    }
+
 }

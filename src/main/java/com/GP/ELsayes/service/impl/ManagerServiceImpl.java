@@ -18,6 +18,7 @@ import com.GP.ELsayes.service.OwnerService;
 import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.relations.OwnersOfManagersService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 
@@ -27,7 +28,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-@RequiredArgsConstructor
+
 @Service
 public class ManagerServiceImpl implements UserService, ManagerService {
     private final ManagerMapper managerMapper;
@@ -36,7 +37,18 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final OwnersOfManagersService ownersOfManagersService;
-;
+
+    public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepo managerRepo, UserMapper userMapper,
+                              @Lazy BranchService branchService,@Lazy OwnerService ownerService,
+                              OwnersOfManagersService ownersOfManagersService) {
+        this.managerMapper = managerMapper;
+        this.managerRepo = managerRepo;
+        this.userMapper = userMapper;
+        this.branchService = branchService;
+        this.ownerService = ownerService;
+        this.ownersOfManagersService = ownersOfManagersService;
+    }
+
 
 
     @Override
