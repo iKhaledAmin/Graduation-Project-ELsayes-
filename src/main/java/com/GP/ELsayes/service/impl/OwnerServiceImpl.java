@@ -9,6 +9,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
+import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.relations.OwnersOfRestrictedOwners;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -29,6 +30,7 @@ import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
@@ -177,55 +179,60 @@ public class OwnerServiceImpl
     public ManagerResponse addManager(ManagerRequest managerRequest){
         return managerService.add(managerRequest);
     }
-
     @Override
     public ManagerResponse updateManager(ManagerRequest managerRequest, Long managerId){
         return managerService.update(managerRequest,managerId);
     }
-
     @Override
     public void deleteManager(Long managerId){
          managerService.delete(managerId);
     }
-
     @Override
     public List<ManagerResponse> getAllManager(){
         return managerService.getAll();
     }
-
     @Override
     public ManagerResponse getResponseManagerById(Long managerId){
         return managerService.getResponseById(managerId);
     }
-
     @Override
     public ManagerResponse getResponseManagerByBranchId(Long branchId){
         return managerService.getResponseByBranchId(branchId);
     }
 
+
+
+
+
+
+
     @Override
     public BranchResponse addBranch(BranchRequest branchRequest){
         return branchService.add(branchRequest);
     }
-
     @Override
     public BranchResponse updateBranch(BranchRequest branchRequest, Long branchId){
         return branchService.update(branchRequest,branchId);
     }
-
     @Override
     public void deleteBranch(Long branchId){
          branchService.delete(branchId);
     }
-
     @Override
     public List<BranchResponse> getAllBranches(){
         return branchService.getAll();
     }
-
     @Override
     public BranchResponse getBranchResponseById(Long branchId){
         return branchService.getResponseById(branchId);
+    }
+    @Override
+    public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId) {
+        return branchService.getResponseAllCurrentVisitationsInBranch(branchId);
+    }
+    @Override
+    public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
+        return branchService.getResponseAllVisitationsInBranchByADate(branchId,date);
     }
 
 }

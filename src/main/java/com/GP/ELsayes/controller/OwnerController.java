@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 
 import com.GP.ELsayes.model.dto.BranchRequest;
+import com.GP.ELsayes.model.dto.GetVisitationsRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -11,6 +12,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -97,28 +101,37 @@ public class OwnerController {
     public ResponseEntity<?> addBranch(@RequestBody @Valid BranchRequest branchRequest) {
         return new ResponseEntity<>(this.ownerService.addBranch(branchRequest), HttpStatus.CREATED);
     }
-
-
     @PutMapping("/update-branch/{branchId}")
     public ResponseEntity<?> updateBranch(@RequestBody @Valid BranchRequest branchRequest,@PathVariable Long branchId){
         return new ResponseEntity<>(this.ownerService.updateBranch(branchRequest , branchId), HttpStatus.ACCEPTED);
     }
-
     @DeleteMapping("/delete-branch/{branchId}")
     public ResponseEntity<?> deleteBranch(@PathVariable Long branchId){
         this.ownerService.deleteBranch(branchId);
         return new ResponseEntity<>("Deleted successfully", HttpStatus.ACCEPTED);
     }
-
     @GetMapping("get-all-branches")
     ResponseEntity<?> getAllBranches(){
         return new ResponseEntity<>(this.ownerService.getAllBranches(), HttpStatus.OK);
     }
-
     @GetMapping("/get-branch-by-id/{branchId}")
     public ResponseEntity<?> getBranchById(@PathVariable Long branchId){
         return new ResponseEntity<>(this.ownerService.getBranchResponseById(branchId), HttpStatus.OK);
     }
+    @GetMapping("/get-current-customer-in-branch/{branchId}")
+    ResponseEntity<?> getAllCurrentVisitationsInBranch(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.ownerService.getResponseAllCurrentVisitationsInBranch(branchId), HttpStatus.OK);
+    }
+    @GetMapping("/get-visitations-by-date")
+    ResponseEntity<?> getAllVisitationsInBranchByADate(@RequestBody GetVisitationsRequest getVisitationsRequest){
+        Long branchId = getVisitationsRequest.getBranchId();
+        Date date = getVisitationsRequest.getDate();
+        if (date == null) {
+            date = java.sql.Date.valueOf(LocalDate.now());
+        }
+        return new ResponseEntity<>(this.ownerService.getResponseAllVisitationsInBranchByADate(branchId, date), HttpStatus.OK);
+    }
+
 
 
 

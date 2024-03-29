@@ -250,7 +250,7 @@ import java.util.Optional;
     }
 
     @Override
-    public List<OfferResponse> getResponseAllBranchId(Long branchId) {
+    public List<OfferResponse> getResponseAllByBranchId(Long branchId) {
         branchService.getById(branchId);
         return offerRepo.findAllByBranchId(branchId)
                 .stream()

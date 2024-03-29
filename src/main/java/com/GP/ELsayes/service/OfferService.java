@@ -25,7 +25,7 @@ public interface OfferService extends CrudService<OfferRequest, Offer, OfferResp
     public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest);
 
     public List<Offer> getAllByBranchId(Long branchId);
-    public List<OfferResponse> getResponseAllBranchId(Long branchId);
+    public List<OfferResponse> getResponseAllByBranchId(Long branchId);
 
     Optional<Offer> getByServiceIdAndBranchId(Long serviceId, Long branchId);
 }

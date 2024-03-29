@@ -7,9 +7,11 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.M
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
+import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.List;
 
 @Service
@@ -28,5 +30,7 @@ public interface OwnerService extends UserService , CrudService<OwnerRequest , O
     public void deleteBranch(Long branchId);
     public List<BranchResponse> getAllBranches();
     public BranchResponse getBranchResponseById(Long branchId);
+    public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId);
+    public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date);
 
 }
