@@ -1,13 +1,8 @@
 package com.GP.ELsayes.service.relations.impl;
 
-import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
-import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
-import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
-import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.repository.relations.ManagersOfOffersRepo;
 import com.GP.ELsayes.service.relations.ManagersOfOffersService;
@@ -24,17 +19,6 @@ import java.util.NoSuchElementException;
 public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
 
     private final ManagersOfOffersRepo managersOfOffersRepo;
-//    @Override
-//    public ManagersOfOffers add(Manager manager, Offer offer, OperationType operationType) {
-//        ManagersOfOffers managersOfOffers = new ManagersOfOffers();
-//        managersOfOffers.setManager(manager);
-//        managersOfOffers.setOffer(offer);
-//        managersOfOffers.setOperationType(operationType);
-//        managersOfOffers.setOperationDate(new Date());
-//
-//        return this.managersOfOffersRepo.save(managersOfOffers);
-//    }
-
 
     private ManagersOfOffers getByManagerIdAndOfferId(Long managerId , Long offerId) {
         return managersOfOffersRepo.findByManagerIdAndOfferId(managerId,offerId).orElseThrow(

@@ -5,7 +5,6 @@ import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
-import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.permissions.ManagerPermission;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -57,6 +56,7 @@ public class Manager extends Employee {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "manager")
-    private List<WorkersOfBranches> workersOfBranch;
+    private List<Worker> workers;
+
 
 }

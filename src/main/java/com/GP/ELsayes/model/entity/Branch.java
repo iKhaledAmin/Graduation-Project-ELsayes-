@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -45,9 +46,10 @@ public class Branch {
     @OneToMany(mappedBy = "branch")
     private List<OwnersOfBranches> ownersOfBranches;
 
+
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")
-    private List<WorkersOfBranches> WorkersOfBranch;
+    private List<Worker> workers;
 
 
     @JsonManagedReference

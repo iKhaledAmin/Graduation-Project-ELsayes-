@@ -8,9 +8,9 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
-import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
@@ -19,7 +19,6 @@ import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
-import com.GP.ELsayes.service.relations.WorkersOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -39,9 +38,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final  WorkerRepo workerRepo;
     private final UserMapper userMapper;
     private final BranchService branchService;
-    private final CustomerService customerService;
     private final CarService carService;
-    private final WorkersOfBranchesService workersOfBranchesService;
     private final VisitationsOfBranchesService customerVisitationService;
 
 
@@ -61,6 +58,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
         throwExceptionIfBranchNoteHasManager(branch);
 
+
         Worker worker = this.workerMapper.toEntity(workerRequest);
         worker.setUserRole(UserRole.WORKER);
         worker.setWorkerStatus(WorkerStatus.AVAILABLE);
@@ -72,13 +70,10 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             return baseSalary + bonus;
         });
 
-        worker = workerRepo.save(worker);
+        worker.setBranch(branch);
+        worker.setManager(branch.getManager());
 
-        WorkersOfBranches workersOfBranches = workersOfBranchesService.addWorkerToBranch(worker, branch);
-        worker.setWorkersOfBranch(List.of(workersOfBranches));
-
-
-        return this.workerMapper.toResponse(worker);
+        return this.workerMapper.toResponse(workerRepo.save(worker));
     }
 
 
@@ -107,18 +102,15 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             double bonus = Double.parseDouble(emp.getBonus());
             return baseSalary + bonus;
         });
-        updatedWorker = workerRepo.save(updatedWorker);
+
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
-        WorkersOfBranches workersOfBranches = workersOfBranchesService.updateWorkerOfBranch(
-                                            updatedWorker.getId(),
-                                            branch.getId()
-                                            );
-        updatedWorker.setWorkersOfBranch(List.of(workersOfBranches));
+        updatedWorker.setBranch(branch);
+        updatedWorker.setManager(branch.getManager());
 
 
 
-        return this.workerMapper.toResponse(updatedWorker);
+        return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
     }
 
     @Override
