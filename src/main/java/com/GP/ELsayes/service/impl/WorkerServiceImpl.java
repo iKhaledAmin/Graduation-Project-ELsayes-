@@ -13,6 +13,7 @@ import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.entity.relations.WorkersOfBranches;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
+import com.GP.ELsayes.model.enums.roles.WorkerRole;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
@@ -64,6 +65,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         worker.setUserRole(UserRole.WORKER);
         worker.setWorkerStatus(WorkerStatus.AVAILABLE);
         worker.setDateOfEmployment(new Date());
+        worker.setScore("0");
         worker.setTotalSalary(emp -> {
             double baseSalary = Double.parseDouble(emp.getBaseSalary());
             double bonus = Double.parseDouble(emp.getBonus());
@@ -216,6 +218,12 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     public Integer getNumberOfWorkersByBranchId(Long branchId) {
         return workerRepo.getNumberOfWorkersByBranchId(branchId);
     }
+
+    @Override
+    public List<Worker> getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole workerRole) {
+        return workerRepo.findAllAvailableWorkerByWorkerRoleOrderByScore(workerRole);
+    }
+
 
 
 

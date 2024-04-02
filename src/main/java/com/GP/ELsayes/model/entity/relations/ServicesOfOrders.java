@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.enums.ProgressStatus;
+import com.GP.ELsayes.model.enums.ServiceCategory;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -25,6 +26,9 @@ public class ServicesOfOrders {
 
     @Enumerated(EnumType.STRING)
     private ProgressStatus progressStatus;
+
+    @Enumerated(EnumType.STRING)
+    private ServiceCategory serviceCategory;
 
     @JsonBackReference
     @JoinColumn(name = "order_id")

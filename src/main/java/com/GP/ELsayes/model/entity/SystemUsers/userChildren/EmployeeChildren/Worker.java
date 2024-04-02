@@ -36,7 +36,7 @@ public class Worker extends Employee {
     @Enumerated(EnumType.STRING)
     private WorkerStatus workerStatus;
 
-    private String Score;
+    private String score = "0";
 
     @JsonManagedReference
     @OneToMany(mappedBy = "worker")

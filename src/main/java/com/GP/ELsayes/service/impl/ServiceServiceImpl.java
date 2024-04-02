@@ -9,6 +9,7 @@ import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfOffersResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
@@ -16,10 +17,7 @@ import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
-import com.GP.ELsayes.service.BranchService;
-import com.GP.ELsayes.service.ManagerService;
-import com.GP.ELsayes.service.OfferService;
-import com.GP.ELsayes.service.ServiceService;
+import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfOffersService;
@@ -41,6 +39,8 @@ public class ServiceServiceImpl implements ServiceService {
     private final ManagerService managerService;
     private final OfferService offerService;
     private final BranchService branchService;
+    private final OrderService orderService;
+
     private final ManagersOfServicesService managersOfServicesService;
     private final ServicesOfBranchesService servicesOfBranchesService;
     private final ServicesOfOffersService servicesOfOffersService;
@@ -251,6 +251,10 @@ public class ServiceServiceImpl implements ServiceService {
                 .toList();
     }
 
+    @Override
+    public List<ServiceEntity> getAllByOrderId(Long orderId) {
+        return serviceRepo.findAllByOrderId(orderId);
+    }
 
 
 }

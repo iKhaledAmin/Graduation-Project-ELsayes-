@@ -13,6 +13,7 @@ import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 @RequiredArgsConstructor
@@ -60,6 +61,11 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     @Override
     public void confirmAllServiceOfOrder(Long orderId) {
         servicesOfOrderRepo.confirmAllServiceOfOrder(orderId);
+    }
+
+    @Override
+    public List<ServicesOfOrders> getObjectByOrderId(Long orderId) {
+        return servicesOfOrderRepo.findObjectByOrderId(orderId);
     }
 
 }

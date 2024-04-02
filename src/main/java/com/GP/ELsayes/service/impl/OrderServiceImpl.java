@@ -127,6 +127,8 @@ public class OrderServiceImpl implements OrderService {
         unConfirmedOrder.setBranch(visitationsOfBranch.getBranch());
         update(unConfirmedOrder);
         servicesOfOrderService.confirmAllServiceOfOrder(unConfirmedOrder.getId());
+
+
     }
 
 

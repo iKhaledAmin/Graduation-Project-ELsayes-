@@ -16,7 +16,7 @@ import lombok.experimental.SuperBuilder;
 public class WorkerResponse  extends EmployeeResponse {
     private Long id;
     private WorkerRole workerRole;
-    private String Score;
+    private String score;
     private WorkerStatus workerStatus;
     private Long branchId;
     private Long managerId;
