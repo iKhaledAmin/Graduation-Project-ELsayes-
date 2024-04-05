@@ -36,7 +36,7 @@ public class Worker extends Employee {
     @Enumerated(EnumType.STRING)
     private WorkerStatus workerStatus;
 
-    private String score = "0";
+    private String score ;
 
     @ManyToOne
     @JoinColumn(name = "manager_id")
@@ -53,4 +53,5 @@ public class Worker extends Employee {
     @JsonManagedReference
     @OneToMany(mappedBy = "worker")
     private List<ServicesOfOrders> servicesOfOrder;
+
 }

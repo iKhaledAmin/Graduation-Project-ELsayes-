@@ -30,8 +30,8 @@ public class Order {
     @Column(name = "order_id")
     private Long id;
 
-    private Date dateOfOrder;
-    private Date dateOfDone;
+    private Date orderDate;
+    private Date orderFinishDate;
 
     @Builder.Default
     private String totalRequiredTime = "0";

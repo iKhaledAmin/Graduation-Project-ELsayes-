@@ -13,6 +13,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
+import java.util.Date;
+
 @SuperBuilder
 @Data
 @NoArgsConstructor
@@ -26,6 +28,9 @@ public class ServicesOfOrders {
 
     @Enumerated(EnumType.STRING)
     private ProgressStatus progressStatus;
+
+    private Date serviceDate;
+    private Date serviceFinishDate;
 
     @Enumerated(EnumType.STRING)
     private ServiceCategory serviceCategory;
@@ -49,4 +54,8 @@ public class ServicesOfOrders {
     @JoinColumn(name = "service_id")
     @ManyToOne
     private ServiceEntity service;
+
+    public Long getBranchId() {
+        return order.getBranch().getId();
+    }
 }

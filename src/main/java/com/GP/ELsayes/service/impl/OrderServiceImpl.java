@@ -5,8 +5,10 @@ import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.ProgressStatus;
+import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.repository.OrderRepo;
 import com.GP.ELsayes.service.CustomerService;
+import com.GP.ELsayes.service.OrderHandlingService;
 import com.GP.ELsayes.service.OrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
@@ -28,14 +30,17 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerService customerService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final VisitationsOfBranchesService visitationsOfBranchesService;
+    private final OrderHandlingService orderHandlingService;
 
     public OrderServiceImpl(OrderRepo orderRepo, CustomerService customerService,
                             @Lazy ServicesOfOrderService servicesOfOrderService,
-                            VisitationsOfBranchesService visitationsOfBranchesService) {
+                            VisitationsOfBranchesService visitationsOfBranchesService,
+                            @Lazy OrderHandlingService orderHandlingService) {
         this.orderRepo = orderRepo;
         this.customerService = customerService;
         this.servicesOfOrderService = servicesOfOrderService;
         this.visitationsOfBranchesService = visitationsOfBranchesService;
+        this.orderHandlingService = orderHandlingService;
     }
 
 
@@ -78,6 +83,12 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.save(updatedOrder);
     }
 
+    public void updateOrderStatus(Long orderId,ProgressStatus progressStatus){
+        Optional<Order> order = getObjectById(orderId);
+        order.get().setProgressStatus(progressStatus);
+        update(order.get());
+    }
+
     @Override
     public void delete(Long aLong) {
 
@@ -115,6 +126,7 @@ public class OrderServiceImpl implements OrderService {
 
     @Override
     public void confirmOrderByCustomerId(Long customerId) {
+        customerService.getById(customerId);
         VisitationsOfBranches visitationsOfBranch = throwExceptionIfCustomerNotInAnyBranch(customerId);
         throwExceptionIfCustomerHasAnOrderNotFinishYet(customerId);
 
@@ -122,12 +134,13 @@ public class OrderServiceImpl implements OrderService {
                 () -> new NoSuchElementException("Order list is empty,add services to list.")
         );
 
-        unConfirmedOrder.setDateOfOrder(new Date());
+        unConfirmedOrder.setOrderDate(new Date());
         unConfirmedOrder.setProgressStatus(ProgressStatus.WAITING);
         unConfirmedOrder.setBranch(visitationsOfBranch.getBranch());
-        update(unConfirmedOrder);
+        unConfirmedOrder = update(unConfirmedOrder);
         servicesOfOrderService.confirmAllServiceOfOrder(unConfirmedOrder.getId());
 
+        orderHandlingService.saveOrder(unConfirmedOrder.getId());
 
     }
 

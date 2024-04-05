@@ -4,12 +4,17 @@ import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
+import com.GP.ELsayes.model.enums.ProgressStatus;
+import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
 import com.GP.ELsayes.service.OrderHandlingService;
 import com.GP.ELsayes.service.OrderService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.WorkerService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
+import com.GP.ELsayes.utils.WorkerStorage;
+import lombok.AllArgsConstructor;
+import lombok.RequiredArgsConstructor;
 import org.springframework.jms.core.JmsTemplate;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
@@ -18,69 +23,75 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.TimeUnit;
 import java.util.function.Function;
 import java.util.stream.Collectors;
 
 
 @Service
-
+@RequiredArgsConstructor
 public class OrderHandlingServiceImpl implements OrderHandlingService {
 
     private final WorkerService workerService;
     private final OrderService orderService;
-    private ServiceService serviceService;
-
     private final ServicesOfOrderService servicesOfOrderService;
     private final JmsTemplate jmsTemplate;
 
-    // Constructor with JmsTemplate parameter
-    public OrderHandlingServiceImpl(WorkerService workerService, OrderService orderService,
-                                    ServiceService serviceService, ServicesOfOrderService servicesOfOrderService, JmsTemplate jmsTemplate) {
-        this.workerService = workerService;
-        this.orderService = orderService;
-        this.serviceService = serviceService;
-        this.servicesOfOrderService = servicesOfOrderService;
-        this.jmsTemplate = jmsTemplate;
-    }
+    private WorkerStorage workerStorage = new WorkerStorage();
+    private Deque<Order> unServedOrders = new ArrayDeque<>();
+    private Queue<ServicesOfOrders> pendingServices = new LinkedList<>();
+    private HashMap<Long, Worker> availableCleaningWorkers;
+    private HashMap<Long, Worker> availableParkingWorkers ;
+    private HashMap<Long, Worker> availableMaintenanceWorkers ;
 
 
-    private Map<Long, Worker> availableCleaningWorkers;
-    private Map<Long, Worker> availableParkingWorkers ;
-    private Map<Long, Worker> availableMaintenanceWorkers ;
-
-
-    Deque<Order> unServedOrders = new ArrayDeque<>();
-
-
-
-    Deque<ServiceEntity> unServedCleaningService = new ArrayDeque<>();
-    Deque<ServiceEntity> unServedTakeAwayService = new ArrayDeque<>();
-    Deque<ServiceEntity> unServedMaintenanceService = new ArrayDeque<>();
-
-
-
-    private Map<Long, Worker> getAllAvailableCleaningWorkers() {
+    private HashMap<Long, Worker> getAllAvailableCleaningWorkers() {
         List<Worker> workers = workerService.getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole.CLEANING_WORKER);
-        return workers.stream().collect(Collectors.toMap(Worker::getId, Function.identity()));
+        HashMap<Long, Worker> workersMap = new HashMap<>();
+        for (Worker worker : workers) {
+            workersMap.put(worker.getId(), worker);
+        }
+        return workersMap;
     }
-    private Map<Long, Worker> getAllAvailableParkingWorkers() {
+    private HashMap<Long, Worker> getAllAvailableParkingWorkers() {
         List<Worker> workers = workerService.getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole.PARKING_WORKER);
-        return workers.stream().collect(Collectors.toMap(Worker::getId, Function.identity()));
+        HashMap<Long, Worker> workersMap = new HashMap<>();
+        for (Worker worker : workers) {
+            workersMap.put(worker.getId(), worker);
+        }
+        return workersMap;
     }
-    private Map<Long, Worker> getAllAvailableMaintenanceWorkers() {
+    private HashMap<Long, Worker> getAllAvailableMaintenanceWorkers() {
         List<Worker> workers = workerService.getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole.MAINTENANCE_WORKER);
-        return workers.stream().collect(Collectors.toMap(Worker::getId, Function.identity()));
+        HashMap<Long, Worker> workersMap = new HashMap<>();
+        for (Worker worker : workers) {
+            workersMap.put(worker.getId(), worker);
+        }
+        return workersMap;
     }
 
 
-    @Scheduled(fixedRate = 60000) // 60,000 milliseconds = 1 minute
-    private  void  getAllAvailableWorkers(){
+    // Method to store available workers in WorkerStorage
+    private void storeAvailableWorkers() {
+        workerStorage.addWorkersByRole(WorkerRole.CLEANING_WORKER, availableCleaningWorkers);
+        workerStorage.addWorkersByRole(WorkerRole.PARKING_WORKER, availableParkingWorkers);
+        workerStorage.addWorkersByRole(WorkerRole.MAINTENANCE_WORKER, availableMaintenanceWorkers);
+    }
+    @Scheduled(fixedRate = 60000 * 5) // 60,000 milliseconds = 1 minute
+    private void getAllAvailableWorkers() {
         availableCleaningWorkers = getAllAvailableCleaningWorkers();
         availableParkingWorkers = getAllAvailableParkingWorkers();
         availableMaintenanceWorkers = getAllAvailableMaintenanceWorkers();
+        storeAvailableWorkers(); // Store the workers in WorkerStorage
+
+//        System.out.println("availableCleaningWorkers "+availableCleaningWorkers.keySet());
+//        System.out.println("availableParkingWorkers "+availableParkingWorkers.keySet());
+//        System.out.println("availableMaintenanceWorker s"+availableMaintenanceWorkers.keySet());
+//        printPendingServices();
+//        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
     }
-
-
 
     @Override
     public synchronized void saveOrder(Long orderId) {
@@ -88,9 +99,11 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         if (order.isPresent()) {
             // Send the order ID to the queue instead of directly serving the order
             //jmsTemplate.convertAndSend("orderQueue", orderId);
-
+            unServedOrders.addLast(order.get());
             serveOrder(orderId);
+
         }
+
     }
 
 //    // Message listener that processes orders from the queue
@@ -100,60 +113,90 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
 //        serveOrder(orderId);
 //    }
 
-
     private void serveOrder(Long orderId) {
+
         // Logic to serve the order
-        List<ServicesOfOrders> ServicesOfOrder = servicesOfOrderService.getObjectByOrderId(orderId);
-        for (ServicesOfOrders service : ServicesOfOrder){
+        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getObjectByOrderId(orderId);
+        for (ServicesOfOrders service : servicesOfOrder){
             assignServiceToWorker(service);
+        }
+
+    }
+
+    private boolean assignServiceToWorker(ServicesOfOrders servicesOfOrder) {
+        Worker assignedWorker = null;
+
+        // Determine the correct map of available workers based on the service category
+        HashMap<Long, Worker> availableWorkers;
+        switch (servicesOfOrder.getServiceCategory()) {
+            case CLEANING_SERVICE:
+                availableWorkers = availableCleaningWorkers;
+                break;
+            case TAKE_AWAY_SERVICE:
+                availableWorkers = availableParkingWorkers;
+                break;
+            case MAINTENANCE_SERVICE:
+                availableWorkers = availableMaintenanceWorkers;
+                break;
+            default:
+                // Handle other service categories or throw an exception
+                throw new IllegalArgumentException("Invalid service category");
+        }
+        // Find the available worker with the highest score from the selected map
+        if (availableWorkers != null) {
+            assignedWorker = availableWorkers.values().stream()
+                    // Filter workers by matching branch ID
+                    .filter(worker -> worker.getBranch().getId().equals(servicesOfOrder.getBranchId()))
+                    // Sort workers by score in descending order
+                    .sorted(Comparator.comparing((Worker worker) -> Double.parseDouble(worker.getScore())).reversed())
+                    // Get the first worker if present
+                    .findFirst()
+                    .orElse(null);
+        }
+        if (assignedWorker != null) {
+            servicesOfOrder.setWorker(assignedWorker);
+            servicesOfOrderService.setWorkerServiceTask(
+                    servicesOfOrder.getCustomer().getId(),
+                    servicesOfOrder.getService().getId(),
+                    assignedWorker
+            );
+            orderService.updateOrderStatus(
+                    servicesOfOrder.getOrder().getId(), ProgressStatus.ON_WORKING
+            );
+            availableWorkers.remove(assignedWorker.getId());
+            return true;
+        } else {
+            // No available worker found, return false
+            getAllAvailableWorkers();
+            if (pendingServices.contains(servicesOfOrder)){
+                return false;
+            }else {
+                pendingServices.add(servicesOfOrder);
+                return false;
+            }
         }
     }
 
-    private void assignServiceToWorker(ServicesOfOrders servicesOfOrder){
-
-            switch (servicesOfOrder.getServiceCategory()) {
-                case CLEANING_SERVICE:
-                    //
-                    break;
-                case TAKE_AWAY_SERVICE:
-                    //
-                    break;
-                case MAINTENANCE_SERVICE:
-                    //
-                    break;
-                default:
-                    // Handle any unexpected categories
-                    break;
+    @Scheduled(fixedRate = 60000) // Runs every 30 seconds
+    public void processPendingServices() {
+        while (!pendingServices.isEmpty()) {
+            ServicesOfOrders service = pendingServices.peek();
+            // Try to assign a worker to the service
+            boolean assigned = assignServiceToWorker(service);
+            if (assigned) {
+                // If a worker was assigned, remove the service from the queue
+                pendingServices.remove();
+            } else {
+                // If no worker was available, break the loop to try again later
+                break;
             }
-
+        }
     }
 
-
-
-//    void extractServicesOfOrder(Long orderId) {
-//        List<ServiceEntity> servicesOfOrder = serviceService.getAllByOrderId(orderId);
-//        for (ServiceEntity service : servicesOfOrder) {
-//            switch (service.getServiceCategory()) {
-//                case CLEANING_SERVICE:
-//                    unServedCleaningService.addLast(service);
-//                    break;
-//                case TAKE_AWAY_SERVICE:
-//                    unServedTakeAwayService.addLast(service);
-//                    break;
-//                case MAINTENANCE_SERVICE:
-//                    unServedMaintenanceService.addLast(service);
-//                    break;
-//                default:
-//                    // Handle any unexpected categories
-//                    break;
-//            }
-//        }
-//    }
-
-
-
-
-
-
+    public void printPendingServices() {
+        for (ServicesOfOrders service : pendingServices) {
+            System.out.println(Optional.ofNullable(service).get().getService().getId());
+        }
+    }
 
 }

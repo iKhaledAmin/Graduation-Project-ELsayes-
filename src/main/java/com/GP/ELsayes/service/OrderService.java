@@ -3,6 +3,7 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.OrderResponse;
 import com.GP.ELsayes.model.entity.Order;
+import com.GP.ELsayes.model.enums.ProgressStatus;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -27,11 +28,8 @@ public interface OrderService {
 
     public Optional<Order> getUnConfirmedByCustomerId(Long customerId);
 
-    //public Optional<Order> getLastConfirmedByCustomerId(Long customerId);
-
-    //public Optional<Order> getUnConfirmedByServiceId(Long serviceId);
-
     public void confirmOrderByCustomerId(Long customerId);
+    public void updateOrderStatus(Long orderId, ProgressStatus progressStatus);
 
 
 

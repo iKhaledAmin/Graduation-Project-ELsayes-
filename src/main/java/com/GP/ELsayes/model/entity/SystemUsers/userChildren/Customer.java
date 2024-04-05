@@ -41,11 +41,6 @@ public class Customer extends User {
     @OneToOne(mappedBy = "customer", cascade = CascadeType.REMOVE)
     private Car car;
 
-//    @JsonManagedReference
-//    @OneToOne(mappedBy = "customer")
-//    private Order order;
-
-
     @JsonManagedReference
     @OneToMany(mappedBy = "customer")
     private List<VisitationsOfBranches> visitationsOfBranch;
@@ -57,7 +52,5 @@ public class Customer extends User {
     @JsonManagedReference
     @OneToMany(mappedBy = "customer")
     private List<Order> orders;
-
-
 
 }

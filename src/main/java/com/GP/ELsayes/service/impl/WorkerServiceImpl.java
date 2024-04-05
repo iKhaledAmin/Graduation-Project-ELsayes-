@@ -81,6 +81,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     @SneakyThrows
     @Override
     public WorkerResponse update(WorkerRequest workerRequest, Long workerId) {
+
         Worker existedWorker = this.getById(workerId);
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
 
@@ -97,12 +98,13 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
         updatedWorker.setId(workerId);
         BeanUtils.copyProperties(existedWorker,updatedWorker);
+        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
+        updatedWorker.setScore(workerRequest.getScore());
         updatedWorker.setTotalSalary(emp -> {
             double baseSalary = Double.parseDouble(emp.getBaseSalary());
             double bonus = Double.parseDouble(emp.getBonus());
             return baseSalary + bonus;
         });
-
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
         updatedWorker.setBranch(branch);
@@ -111,6 +113,15 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
 
         return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
+    }
+
+    public void updateWorkerStatus(Long workerId,WorkerStatus workerStatus){
+        Optional<Worker> worker = workerRepo.findById(workerId);
+        WorkerRequest workerRequest = workerMapper.toRequest(worker.get());
+        workerRequest.setBranchId(worker.get().getBranch().getId());
+        workerRequest.setScore(worker.get().getScore());
+        workerRequest.setWorkerStatus(workerStatus);
+        update(workerRequest,workerId);
     }
 
     @Override

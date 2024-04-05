@@ -20,4 +20,7 @@ public interface ServicesOfOrderRepo extends JpaRepository<ServicesOfOrders,Long
     void confirmAllServiceOfOrder(Long orderId);
 
     List<ServicesOfOrders> findObjectByOrderId(Long orderId);
+
+    @Query("SELECT so FROM ServicesOfOrders so WHERE so.service.id = :serviceId AND so.customer.id = :customerId")
+    List<ServicesOfOrders> findByServiceIdAndCustomerId(Long serviceId, Long customerId);
 }
