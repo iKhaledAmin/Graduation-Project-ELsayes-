@@ -10,6 +10,7 @@ import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
@@ -18,6 +19,7 @@ import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
@@ -39,6 +41,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final UserMapper userMapper;
     private final BranchService branchService;
     private final CarService carService;
+    private final ServicesOfOrderService servicesOfOrderService;
     private final VisitationsOfBranchesService customerVisitationService;
 
 
@@ -194,18 +197,19 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
 
     @Override
-    public CheckOutResponse checkOut(String carPlateNumber, Long branchId) {
+    public CheckOutResponse checkOut(String carPlateNumber, Long workerId) {
 
         Car car = carService.getByCarPlateNumber(carPlateNumber);
-        Branch branch = branchService.getById(branchId);
+        Optional<Worker> worker = getObjectById(workerId);
+        Optional<Branch> branch = branchService.getObjectById(worker.get().getBranch().getId());
         Optional<Customer> customer = Optional.ofNullable(car.getCustomer());
 
         VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
                 carPlateNumber,
-                branch.getId()
+                branch.get().getId()
         );
 
-        customerVisitationService.endVisitation(car,branch);
+        customerVisitationService.endVisitation(car,branch.get());
 
         CheckOutResponse  checkOutResponse = new CheckOutResponse();
         checkOutResponse.setCarPlateNumber(carPlateNumber);
@@ -215,6 +219,23 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         }
 
         return checkOutResponse;
+    }
+
+    public void finishTask(String carPlateNumber, Long workerId){
+        Car car = carService.getByCarPlateNumber(carPlateNumber);
+        Optional<Worker> worker = getObjectById(workerId);
+        Optional<Branch> branch = branchService.getObjectById(worker.get().getBranch().getId());
+
+        VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
+                carPlateNumber,
+                branch.get().getId()
+        );
+
+        Optional<Customer> customer = Optional.ofNullable(car.getCustomer());
+        if (customer.isEmpty())
+            throw new RuntimeException("This car with plate number = "+ carPlateNumber +" do not follow any of our customer");
+
+        servicesOfOrderService.finishServiceTask(customer.get().getId(),workerId);
     }
 
     @Override

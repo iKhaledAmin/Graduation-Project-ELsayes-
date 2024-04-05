@@ -11,4 +11,6 @@ public interface ServicesOfOrderService {
 
     List<ServicesOfOrders> getObjectByOrderId(Long orderId);
     public void setWorkerServiceTask(Long customerId, Long serviceId, Worker worker);
+
+    void finishServiceTask(Long customerId, Long workerId);
 }

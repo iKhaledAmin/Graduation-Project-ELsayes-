@@ -13,15 +13,15 @@ import com.GP.ELsayes.service.OrderService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.WorkerService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
-import lombok.Data;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
-@RequiredArgsConstructor
+
 @Service
 public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
 
@@ -31,12 +31,30 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     private final ServiceService serviceService;
     private final WorkerService workerService;
 
+    public ServicesOfOrderServiceImpl(ServicesOfOrderRepo servicesOfOrderRepo,
+                                      OrderService orderService,
+                                      CustomerService customerService,
+                                      ServiceService serviceService,
+                                      @Lazy WorkerService workerService) {
+        this.servicesOfOrderRepo = servicesOfOrderRepo;
+        this.orderService = orderService;
+        this.customerService = customerService;
+        this.serviceService = serviceService;
+        this.workerService = workerService;
+    }
+
+
     private void throwExceptionIfServiceHasAlreadyExistedInOrder(Long serviceId , Long orderId){
         Optional<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findByServiceIdAndOrderId(serviceId,orderId);
         if(servicesOfOrder.isEmpty()){
             return;
         }
         throw new RuntimeException("This service with id "+ serviceId +" already existed in this order");
+    }
+
+    private boolean orderIdFinished(Long orderId) {
+        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findObjectByOrderId(orderId);
+        return servicesOfOrder.stream().allMatch(serviceOrder -> serviceOrder.getServiceFinishDate() != null);
     }
 
 
@@ -95,6 +113,32 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
             throw new RuntimeException("No service found for the given serviceId and customerId");
         }
     }
+
+    @Override
+    public void finishServiceTask(Long customerId, Long workerId) {
+        Optional<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findByCustomerIdAndWorkerId(customerId,workerId);
+        // Check if the ServicesOfOrders instance is present
+        if (servicesOfOrder.isPresent()) {
+
+            ServicesOfOrders servicesOfOrders = servicesOfOrder.get();
+
+            servicesOfOrders.setWorker(servicesOfOrders.getWorker());
+            servicesOfOrders.setProgressStatus(ProgressStatus.FINISHED);
+            servicesOfOrders.setServiceDate(servicesOfOrders.getServiceDate());
+            servicesOfOrders.setServiceFinishDate(new Date());
+
+            servicesOfOrderRepo.save(servicesOfOrders);
+
+            if (orderIdFinished(servicesOfOrders.getOrder().getId()))
+                orderService.endTheOrder(servicesOfOrders.getOrder().getId());
+
+        } else {
+            // Handle the case where the ServicesOfOrders instance is not found
+            throw new RuntimeException("No service found for the given serviceId and customerId");
+        }
+
+    }
+
 
     @Override
     public void confirmAllServiceOfOrder(Long orderId) {

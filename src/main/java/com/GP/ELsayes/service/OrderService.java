@@ -30,6 +30,7 @@ public interface OrderService {
 
     public void confirmOrderByCustomerId(Long customerId);
     public void updateOrderStatus(Long orderId, ProgressStatus progressStatus);
+    public void endTheOrder(Long orderId);
 
 
 

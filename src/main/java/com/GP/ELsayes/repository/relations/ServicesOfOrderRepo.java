@@ -23,4 +23,9 @@ public interface ServicesOfOrderRepo extends JpaRepository<ServicesOfOrders,Long
 
     @Query("SELECT so FROM ServicesOfOrders so WHERE so.service.id = :serviceId AND so.customer.id = :customerId")
     List<ServicesOfOrders> findByServiceIdAndCustomerId(Long serviceId, Long customerId);
+
+    @Query("SELECT so FROM ServicesOfOrders so WHERE so.customer.id = :customerId AND so.worker.id = :workerId")
+    Optional<ServicesOfOrders> findByCustomerIdAndWorkerId(Long customerId, Long workerId);
+
+
 }

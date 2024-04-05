@@ -19,7 +19,8 @@ public interface WorkerService extends UserService, CrudService<WorkerRequest, W
 
     public List<WorkerResponse> getAllByBranchId(Long branchId);
     public void recordVisitation(String carPlateNumber , Long branchId);
-    public CheckOutResponse checkOut(String carPlateNumber, Long branchId);
+    public CheckOutResponse checkOut(String carPlateNumber, Long workerId);
+    public void finishTask(String carPlateNumber, Long workerId);
     public  Integer getNumberOfWorkersByBranchId (Long branchId);
     public void updateWorkerStatus(Long workerId, WorkerStatus workerStatus);
 

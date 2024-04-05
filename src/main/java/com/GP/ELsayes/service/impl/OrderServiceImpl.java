@@ -79,6 +79,7 @@ public class OrderServiceImpl implements OrderService {
 
         updatedOrder.setId(existedOrder.getId());
         BeanUtils.copyProperties(existedOrder,updatedOrder);
+        updatedOrder.setOrderFinishDate(order.getOrderFinishDate());
 
         return orderRepo.save(updatedOrder);
     }
@@ -86,6 +87,14 @@ public class OrderServiceImpl implements OrderService {
     public void updateOrderStatus(Long orderId,ProgressStatus progressStatus){
         Optional<Order> order = getObjectById(orderId);
         order.get().setProgressStatus(progressStatus);
+        update(order.get());
+    }
+
+    @Override
+    public void endTheOrder(Long orderId) {
+        Optional<Order> order = getObjectById(orderId);
+        order.get().setProgressStatus(ProgressStatus.FINISHED);
+        order.get().setOrderFinishDate(new Date());
         update(order.get());
     }
 

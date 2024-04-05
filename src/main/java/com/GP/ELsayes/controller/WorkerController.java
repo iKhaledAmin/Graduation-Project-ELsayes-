@@ -1,6 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.CheckOutRequest;
+import com.GP.ELsayes.model.dto.FinishTaskRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -36,7 +37,13 @@ public class WorkerController {
     }
     @PutMapping("/check-out")
     public ResponseEntity<?> checkOut(@RequestBody @Valid CheckOutRequest checkOutRequest){
-        return new ResponseEntity<>(this.workerService.checkOut(checkOutRequest.getCarPlateNumber(),checkOutRequest.getBranchId()), HttpStatus.ACCEPTED);
+        return new ResponseEntity<>(this.workerService.checkOut(checkOutRequest.getCarPlateNumber(),checkOutRequest.getWorkerId()), HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/finish-task")
+    public ResponseEntity<?> finishTask(@RequestBody @Valid FinishTaskRequest finishTaskRequest){
+      this.workerService.finishTask(finishTaskRequest.getCarPlateNumber(),finishTaskRequest.getWorkerId()) ;
+      return new ResponseEntity<>("Finished Successfully",HttpStatus.ACCEPTED);
     }
 
 }

@@ -79,18 +79,18 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         workerStorage.addWorkersByRole(WorkerRole.PARKING_WORKER, availableParkingWorkers);
         workerStorage.addWorkersByRole(WorkerRole.MAINTENANCE_WORKER, availableMaintenanceWorkers);
     }
-    @Scheduled(fixedRate = 60000 * 5) // 60,000 milliseconds = 1 minute
+    @Scheduled(fixedRate = 60000 ) // 60,000 milliseconds = 1 minute
     private void getAllAvailableWorkers() {
         availableCleaningWorkers = getAllAvailableCleaningWorkers();
         availableParkingWorkers = getAllAvailableParkingWorkers();
         availableMaintenanceWorkers = getAllAvailableMaintenanceWorkers();
         storeAvailableWorkers(); // Store the workers in WorkerStorage
 
-//        System.out.println("availableCleaningWorkers "+availableCleaningWorkers.keySet());
-//        System.out.println("availableParkingWorkers "+availableParkingWorkers.keySet());
-//        System.out.println("availableMaintenanceWorker s"+availableMaintenanceWorkers.keySet());
-//        printPendingServices();
-//        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
+        System.out.println("availableCleaningWorkers "+availableCleaningWorkers.keySet());
+        System.out.println("availableParkingWorkers "+availableParkingWorkers.keySet());
+        System.out.println("availableMaintenanceWorker s"+availableMaintenanceWorkers.keySet());
+        printPendingServices();
+        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
     }
 
     @Override
@@ -177,7 +177,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         }
     }
 
-    @Scheduled(fixedRate = 60000) // Runs every 30 seconds
+    @Scheduled(fixedRate = 20000) // Runs every 1m
     public void processPendingServices() {
         while (!pendingServices.isEmpty()) {
             ServicesOfOrders service = pendingServices.peek();
