@@ -37,4 +37,6 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
     public List<ServiceEntity> getAllByOrderId(Long orderId);
 
 
+    ServiceResponse toResponse(ServiceEntity service);
 }
+

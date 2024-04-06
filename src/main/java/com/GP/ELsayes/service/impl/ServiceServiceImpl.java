@@ -256,5 +256,10 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findAllByOrderId(orderId);
     }
 
+    @Override
+    public ServiceResponse toResponse(ServiceEntity service) {
+        return serviceMapper.toResponse(service);
+    }
+
 
 }
