@@ -139,6 +139,10 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         );
     }
 
+    public void deleteServiceFromOrderList(Long serviceId){
+        servicesOfOrderService.deleteServiceFromOrderList(serviceId);
+    }
+
     public void confirmOrder(Long customerId){
         orderService.confirmOrderByCustomerId(customerId);
     }

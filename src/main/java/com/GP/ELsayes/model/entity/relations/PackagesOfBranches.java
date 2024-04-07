@@ -19,15 +19,15 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "offer_of_branches")
-public class OffersOfBranches {
+@Table(name = "packages_of_branches")
+public class PackagesOfBranches {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonBackReference
-    @JoinColumn(name = "offer_id")
+    @JoinColumn(name = "package_id")
     @ManyToOne
     private Package aPackage;
 
@@ -38,6 +38,6 @@ public class OffersOfBranches {
     private Branch branch;
 
     @Enumerated(EnumType.STRING)
-    private Status offerStatus;
+    private Status packageStatus;
     private Date addingDate;
 }

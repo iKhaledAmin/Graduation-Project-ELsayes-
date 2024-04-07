@@ -1,6 +1,5 @@
 package com.GP.ELsayes.model.dto;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
@@ -10,7 +9,8 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferRequest {
+public class PackageRequest {
+
 
     @NotNull(message = "Name must not be null")
     @NotEmpty(message = "Name must not be empty")
@@ -22,7 +22,7 @@ public class OfferRequest {
 
     @NotNull(message = "Image must not be null")
     @NotEmpty(message = "Image must not be empty")
-    private String offerImageURL;
+    private String packageImageURL;
 
     @NotNull(message = "Percentage of discount must not be null")
     @NotEmpty(message = "Percentage of discount must not be empty")
@@ -30,11 +30,14 @@ public class OfferRequest {
 
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
-    private String actualOfferPrice;
-    private String actualOfferRequiredTime;
+    private String currentPackagePrice;
+    private String currentPackageRequiredTime;
 
     @NotNull(message = "Manager id must not be null")
     private Long managerId;
+
+
+
 
 
 }

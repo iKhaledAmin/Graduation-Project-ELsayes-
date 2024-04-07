@@ -11,19 +11,24 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OfferResponse {
+public class PackageResponse {
 
     private Long id;
     private String name;
     private String description;
-    private String offerImageURL;
+    private String packageImageURL;
     @JsonIgnore
     private String percentageOfDiscount;
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
-    private String actualOfferPrice;
-    private Status offerStatus;
+    private String currentPackagePrice;
+    private Status packageStatus;
     private String profit;
+
+
+
+
+
 
 
 }

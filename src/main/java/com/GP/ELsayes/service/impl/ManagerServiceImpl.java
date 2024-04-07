@@ -1,6 +1,6 @@
 package com.GP.ELsayes.service.impl;
-import com.GP.ELsayes.model.dto.OfferRequest;
-import com.GP.ELsayes.model.dto.OfferResponse;
+import com.GP.ELsayes.model.dto.PackageRequest;
+import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
@@ -42,13 +42,13 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     private final OwnerService ownerService;
     private final ServiceService serviceService;
     private final WorkerService workerService;
-    private final OfferService offerService;
+    private final PackageService packageService;
     private final OwnersOfManagersService ownersOfManagersService;
 
     public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepo managerRepo, UserMapper userMapper,
                               @Lazy BranchService branchService, @Lazy OwnerService ownerService,
                               @Lazy ServiceService serviceService, @Lazy WorkerService workerService,
-                              @Lazy OfferService offerService, OwnersOfManagersService ownersOfManagersService) {
+                              @Lazy PackageService packageService, OwnersOfManagersService ownersOfManagersService) {
         this.managerMapper = managerMapper;
         this.managerRepo = managerRepo;
         this.userMapper = userMapper;
@@ -56,7 +56,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         this.ownerService = ownerService;
         this.serviceService = serviceService;
         this.workerService = workerService;
-        this.offerService = offerService;
+        this.packageService = packageService;
         this.ownersOfManagersService = ownersOfManagersService;
     }
 
@@ -202,7 +202,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
     @Override
     public Manager getByOfferId(long offerId) {
-        return managerRepo.findByOfferId(offerId).orElseThrow(
+        return managerRepo.findByPackageId(offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no manager for offer with id = " + offerId)
         );
     }
@@ -275,8 +275,8 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         return serviceService.deactivateServiceInBranch(servicesOfBranchesRequest);
     }
     @Override
-    public ServicesOfOffersResponse addServiceToOffer(ServicesOfOffersRequest servicesOfOffersRequest){
-        return serviceService.addServiceToOffer(servicesOfOffersRequest);
+    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest){
+        return serviceService.addServiceToOffer(servicesOfPackageRequest);
     }
     @Override
     public List<ServiceEntity> getAllServicesByBranchId(Long branchId){
@@ -287,40 +287,40 @@ public class ManagerServiceImpl implements UserService, ManagerService {
 
 
     @Override
-    public OfferResponse addOffer(OfferRequest offerRequest){
-        return offerService.add(offerRequest);
+    public PackageResponse addOffer(PackageRequest packageRequest){
+        return packageService.add(packageRequest);
     }
     @Override
-    public OfferResponse updateOffer(OfferRequest offerRequest, Long offerId){
-        return offerService.update(offerRequest,offerId);
+    public PackageResponse updateOffer(PackageRequest packageRequest, Long offerId){
+        return packageService.update(packageRequest,offerId);
     }
     @Override
     public void deleteOffer(Long offerId){
-        offerService.delete(offerId);
+        packageService.delete(offerId);
     }
     @Override
-    public List<OfferResponse> getAllOffers(){
-        return offerService.getAll();
+    public List<PackageResponse> getAllOffers(){
+        return packageService.getAll();
     }
     @Override
-    public OfferResponse getOfferResponseById(Long offerId){
-        return offerService.getResponseById(offerId);
+    public PackageResponse getOfferResponseById(Long offerId){
+        return packageService.getResponseById(offerId);
     }
     @Override
-    public OffersOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest){
-        return offerService.addOfferToBranch(offersOfBranchesRequest);
+    public PackageOfBranchesResponse addOfferToBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+        return packageService.addPackageToBranch(packageOfBranchesRequest);
     }
     @Override
-    public OffersOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest){
-        return offerService.activateOfferInBranch(offersOfBranchesRequest);
+    public PackageOfBranchesResponse activateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+        return packageService.activatePackageInBranch(packageOfBranchesRequest);
     }
     @Override
-    public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest){
-        return offerService.deactivateOfferInBranch(offersOfBranchesRequest);
+    public PackageOfBranchesResponse deactivateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+        return packageService.deactivatePackageInBranch(packageOfBranchesRequest);
     }
     @Override
-    public List<OfferResponse> getAllOfferResponseByBranchId(Long branchId){
-        return offerService.getResponseAllByBranchId(branchId);
+    public List<PackageResponse> getAllOfferResponseByBranchId(Long branchId){
+        return packageService.getResponseAllByBranchId(branchId);
     }
 
 }

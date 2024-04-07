@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.List;
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
@@ -148,6 +149,16 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     @Override
     public List<ServicesOfOrders> getObjectByOrderId(Long orderId) {
         return servicesOfOrderRepo.findObjectByOrderId(orderId);
+    }
+
+    public void deleteServiceFromOrderList(Long serviceId){
+        ServicesOfOrders servicesOfOrder = servicesOfOrderRepo.findById(serviceId).orElseThrow(
+                () -> new NoSuchElementException("There is no service with id = " + serviceId)
+        );
+        if (servicesOfOrder.getProgressStatus() != ProgressStatus.UN_CONFIRMED){
+            throw new RuntimeException("Order is confirmed, you can not delete");
+        }
+        servicesOfOrderRepo.deleteById(serviceId);
     }
 
 }

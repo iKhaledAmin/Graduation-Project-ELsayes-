@@ -2,14 +2,14 @@ package com.GP.ELsayes.service.relations.impl;
 
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.relations.ServicesOfBranchesMapper;
 import com.GP.ELsayes.repository.relations.ServicesOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
-import com.GP.ELsayes.service.OfferService;
+import com.GP.ELsayes.service.PackageService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import jakarta.persistence.EntityNotFoundException;
@@ -28,16 +28,16 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
     private static ServicesOfBranchesRepo servicesOfBranchesRepo = null;
     private final ServiceService serviceService;
     private final BranchService branchService;
-    private final OfferService offerService;
+    private final PackageService packageService;
     private final ServicesOfBranchesMapper servicesOfBranchesMapper;
-    private final ServicesOfOffersServiceImpl servicesOfOffersService;
+    private final ServicesOfPackagesServiceImpl servicesOfOffersService;
 
 
-    public ServicesOfBranchesServiceImpl(ServicesOfBranchesRepo servicesOfBranchesRepo, @Lazy ServiceService serviceService, BranchService branchService,@Lazy OfferService offerService, ServicesOfBranchesMapper servicesOfBranchesMapper, @Lazy ServicesOfOffersServiceImpl servicesOfOffersService) {
+    public ServicesOfBranchesServiceImpl(ServicesOfBranchesRepo servicesOfBranchesRepo, @Lazy ServiceService serviceService, BranchService branchService, @Lazy PackageService packageService, ServicesOfBranchesMapper servicesOfBranchesMapper, @Lazy ServicesOfPackagesServiceImpl servicesOfOffersService) {
         this.servicesOfBranchesRepo = servicesOfBranchesRepo;
         this.serviceService = serviceService;
         this.branchService = branchService;
-        this.offerService = offerService;
+        this.packageService = packageService;
         this.servicesOfBranchesMapper = servicesOfBranchesMapper;
         this.servicesOfOffersService = servicesOfOffersService;
     }
@@ -124,9 +124,9 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         servicesOfBranches.setServiceStatus(Status.UNAVAILABLE);
         servicesOfBranchesRepo.save(servicesOfBranches);
 
-        Optional<Offer> offerOptional = offerService.getByServiceIdAndBranchId(serviceId, branchId);
+        Optional<Package> offerOptional = packageService.getByServiceIdAndBranchId(serviceId, branchId);
         if (offerOptional.isPresent()) {
-            servicesOfOffersService.handleAvailabilityOfOfferInAllBranches(offerOptional.get().getId(), serviceId);
+            servicesOfOffersService.handleAvailabilityOfPackageInAllBranches(offerOptional.get().getId(), serviceId);
         }
 
         return servicesOfBranchesMapper.toResponse(servicesOfBranches);

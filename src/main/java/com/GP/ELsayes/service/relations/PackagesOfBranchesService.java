@@ -9,13 +9,13 @@ import org.springframework.stereotype.Service;
 import java.util.List;
 
 @Service
-public interface OffersOfBranchesService {
-    PackagesOfBranches getByOfferIdAndBranchId(Long offerId, Long branchId);
-    public List<ServiceEntity> getAllOfferServicesNotAvailableInBranch(Long offerId, Long branchId);
-    PackageOfBranchesResponse addOfferToBranch(Long offerId , Long branchId);
-    PackageOfBranchesResponse activateOfferInBranch(Long offerId , Long branchId);
-    PackageOfBranchesResponse deactivateOfferInBranch(Long offerId , Long branchId);
+public interface PackagesOfBranchesService {
+    PackagesOfBranches getByPackageIdAndBranchId(Long packageId, Long branchId);
+    public List<ServiceEntity> getAllPackageServicesNotAvailableInBranch(Long packageId, Long branchId);
+    PackageOfBranchesResponse addPackageToBranch(Long packageId , Long branchId);
+    PackageOfBranchesResponse activatePackageInBranch(Long packageId , Long branchId);
+    PackageOfBranchesResponse deactivatePackageInBranch(Long packageId , Long branchId);
 
-    PackagesOfBranches update(PackagesOfBranches offersOfBranch);
+    PackagesOfBranches update(PackagesOfBranches  packagesOfBranch);
 }
 

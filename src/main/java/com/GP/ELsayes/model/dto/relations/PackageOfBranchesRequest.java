@@ -8,9 +8,9 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OffersOfBranchesRequest {
+public class PackageOfBranchesRequest {
     @NotNull(message = "Offer id must not be null")
-    private Long offerId;
+    private Long packageId;
 
     @NotNull(message = "Branch id must not be null")
     private Long branchId;

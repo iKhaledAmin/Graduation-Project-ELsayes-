@@ -1,13 +1,12 @@
 package com.GP.ELsayes.controller;
 
-import com.GP.ELsayes.model.dto.OfferRequest;
+import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.ServiceRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
-import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
-import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackageRequest;
 import com.GP.ELsayes.service.ManagerService;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -94,8 +93,8 @@ private ManagerService managerService;
     }
 
     @PostMapping("/add-service-to-offer")
-    public ResponseEntity<?> addServiceToOffer(@RequestBody @Valid ServicesOfOffersRequest servicesOfOffersRequest) {
-        return new ResponseEntity<>(this.managerService.addServiceToOffer(servicesOfOffersRequest), HttpStatus.CREATED);
+    public ResponseEntity<?> addServiceToOffer(@RequestBody @Valid ServicesOfPackageRequest servicesOfPackageRequest) {
+        return new ResponseEntity<>(this.managerService.addServiceToOffer(servicesOfPackageRequest), HttpStatus.CREATED);
     }
 
     @GetMapping("/get-all-service-by-branch-id/{branchId}")
@@ -108,18 +107,18 @@ private ManagerService managerService;
 
 
     @PostMapping("/add-offer")
-    public ResponseEntity<?> addOffer(@RequestBody @Valid OfferRequest offerRequest) {
-        return new ResponseEntity<>(this.managerService.addOffer(offerRequest), HttpStatus.CREATED);
+    public ResponseEntity<?> addOffer(@RequestBody @Valid PackageRequest packageRequest) {
+        return new ResponseEntity<>(this.managerService.addOffer(packageRequest), HttpStatus.CREATED);
     }
-    @PutMapping("/update-offer/{offerId}")
-    public ResponseEntity<?> updateOffer(@RequestBody @Valid OfferRequest offerRequest,@PathVariable Long offerId){
-        return new ResponseEntity<>(this.managerService.updateOffer(offerRequest , offerId), HttpStatus.ACCEPTED);
+    @PutMapping("/update-offer/{packageId}")
+    public ResponseEntity<?> updateOffer(@RequestBody @Valid PackageRequest packageRequest, @PathVariable Long offerId){
+        return new ResponseEntity<>(this.managerService.updateOffer(packageRequest, offerId), HttpStatus.ACCEPTED);
     }
-    @GetMapping("/get-offer-by-id/{offerId}")
+    @GetMapping("/get-offer-by-id/{packageId}")
     public ResponseEntity<?> getOfferById(@PathVariable Long offerId){
         return new ResponseEntity<>(this.managerService.getOfferResponseById(offerId),HttpStatus.OK);
     }
-    @DeleteMapping("/delete-offer/{offerId}")
+    @DeleteMapping("/delete-offer/{packageId}")
     public ResponseEntity<?> deleteOffer(@PathVariable Long offerId){
         this.managerService.deleteOffer(offerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
@@ -129,16 +128,16 @@ private ManagerService managerService;
         return new ResponseEntity<>(this.managerService.getAllOffers(), HttpStatus.OK);
     }
     @PostMapping("/add-offer-to-branch")
-    public ResponseEntity<?> addOfferToBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest) {
-        return new ResponseEntity<>(this.managerService.addOfferToBranch(offersOfBranchesRequest), HttpStatus.CREATED);
+    public ResponseEntity<?> addOfferToBranch(@RequestBody @Valid PackageOfBranchesRequest packageOfBranchesRequest) {
+        return new ResponseEntity<>(this.managerService.addOfferToBranch(packageOfBranchesRequest), HttpStatus.CREATED);
     }
     @PutMapping("/activate-offer-in-branch")
-    public ResponseEntity<?> activateServiceInBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest){
-        return new ResponseEntity<>(this.managerService.activateOfferInBranch(offersOfBranchesRequest), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> activateServiceInBranch(@RequestBody @Valid PackageOfBranchesRequest packageOfBranchesRequest){
+        return new ResponseEntity<>(this.managerService.activateOfferInBranch(packageOfBranchesRequest), HttpStatus.ACCEPTED);
     }
     @PutMapping("/deactivate-offer-in-branch")
-    public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid OffersOfBranchesRequest offersOfBranchesRequest){
-        return new ResponseEntity<>(this.managerService.deactivateOfferInBranch(offersOfBranchesRequest), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> deactivateServiceInBranch(@RequestBody @Valid PackageOfBranchesRequest packageOfBranchesRequest){
+        return new ResponseEntity<>(this.managerService.deactivateOfferInBranch(packageOfBranchesRequest), HttpStatus.ACCEPTED);
     }
     @GetMapping("/get-all-offer-by-branch-id/{branchId}")
     public ResponseEntity<?> getAllOffersByBranchId(@PathVariable Long branchId){

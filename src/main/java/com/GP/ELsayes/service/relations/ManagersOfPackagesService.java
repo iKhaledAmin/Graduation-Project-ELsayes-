@@ -7,7 +7,7 @@ import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ManagersOfOffersService {
-    ManagersOfPackages addManagerToOffer(Manager manager , Package aPackage);
-    ManagersOfPackages updateManagerToOffer(Long managerId , Long offerId);
+public interface ManagersOfPackagesService {
+    ManagersOfPackages addManagerToPackage(Manager manager , Package aPackage);
+    ManagersOfPackages updateManagerToPackage(Long managerId , Long offerId);
 }

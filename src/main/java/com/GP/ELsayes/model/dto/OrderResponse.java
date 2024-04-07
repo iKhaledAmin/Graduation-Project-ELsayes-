@@ -9,9 +9,9 @@ import java.util.List;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class OrderDetailsResponse {
+public class OrderResponse {
 
-    private List<ServiceOfOrderResponse> services;
-    private List<OfferOfOrderResponse> offers;
+    private List<ServicesOfOrderResponse> services;
+    private List<PackagesOfOrderResponse> packages;
 
 }

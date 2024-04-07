@@ -2,7 +2,7 @@ package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.relations.ServicesOfBranches;
-import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
+import com.GP.ELsayes.model.entity.relations.ServicesOfPackage;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ServiceCategory;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -50,7 +50,7 @@ public class ServiceEntity {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "service")
-    private List<ServicesOfOffers> servicesOfOffer ;
+    private List<ServicesOfPackage> servicesOfPackage ;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "service")

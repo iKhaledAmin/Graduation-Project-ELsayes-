@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServiceOfOrderResponse {
+public class ServicesOfOrderResponse {
     private Long id;
     private String name;
     private String price;

@@ -7,16 +7,16 @@ import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface OfferMapper {
-    OfferMapper INSTANCE = Mappers.getMapper(OfferMapper.class);
+public interface PackageMapper {
+    PackageMapper INSTANCE = Mappers.getMapper(PackageMapper.class);
 
     Package toEntity(PackageRequest request);
 
 //    default Status mapOfferStatus(Offer offer) {
-//        return offer.getOffersOfBranch().isEmpty() ? null : offer.getOffersOfBranch().get(0).getOfferStatus();
+//        return offer.getOffersOfBranch().isEmpty() ? null : offer.getOffersOfBranch().get(0).getPackageStatus();
 //    }
 //
-//    @Mapping(target = "offerStatus", expression = "java(mapOfferStatus(entity))")
+//    @Mapping(target = "packageStatus", expression = "java(mapOfferStatus(entity))")
     PackageResponse toResponse(Package entity);
 
 }

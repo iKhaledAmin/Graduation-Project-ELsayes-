@@ -1,5 +1,6 @@
 package com.GP.ELsayes.model.entity.relations;
 
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
@@ -54,6 +55,11 @@ public class ServicesOfOrders {
     @JoinColumn(name = "service_id")
     @ManyToOne
     private ServiceEntity service;
+
+    @JsonBackReference
+    @JoinColumn(name = "offer_id")
+    @ManyToOne
+    private Package aPackage;
 
     public Long getBranchId() {
         return order.getBranch().getId();

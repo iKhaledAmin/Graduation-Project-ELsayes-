@@ -8,11 +8,12 @@ import lombok.NoArgsConstructor;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class ServicesOfOffersRequest {
+public class ServicesOfPackageRequest {
 
     @NotNull(message = "Service id must not be null")
     private Long serviceId;
 
-    @NotNull(message = "Offer id must not be null")
-    private Long OfferId;
+    @NotNull(message = "Package id must not be null")
+    private Long PackageId;
 }
+

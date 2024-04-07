@@ -13,7 +13,7 @@ import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.PackageService;
 import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.relations.PackagesOfBranchesService;
-import com.GP.ELsayes.service.relations.ServicesOfOffersService;
+import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -25,7 +25,7 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
-public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
+public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService {
 
     private final ServicesOfPackagesRepo servicesOfPackagesRepo;
     private final ServicesOfOffersMapper servicesOfOffersMapper;
@@ -37,7 +37,7 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
 
 
 
-    public ServicesOfOffersServiceImpl(ServicesOfPackagesRepo servicesOfPackagesRepo, ServicesOfOffersMapper servicesOfOffersMapper, @Lazy ServiceService serviceService, @Lazy PackageService packageService, BranchService branchService, PackagesOfBranchesService servicesOfBranchesService) {
+    public ServicesOfPackagesServiceImpl(ServicesOfPackagesRepo servicesOfPackagesRepo, ServicesOfOffersMapper servicesOfOffersMapper, @Lazy ServiceService serviceService, @Lazy PackageService packageService, BranchService branchService, PackagesOfBranchesService servicesOfBranchesService) {
         this.servicesOfPackagesRepo = servicesOfPackagesRepo;
         this.servicesOfOffersMapper = servicesOfOffersMapper;
         this.serviceService = serviceService;
@@ -54,13 +54,13 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
     }
 
     @Override
-    public void handleAvailabilityOfOfferInAllBranches(Long offerId , Long serviceId){
-        List<Branch> branches = branchService.getAllByOfferId(offerId);
+    public void handleAvailabilityOfPackageInAllBranches(Long packageId, Long serviceId){
+        List<Branch> branches = branchService.getAllByOfferId(packageId);
 
         branches.forEach(branch -> {
             if(serviceService.isAvailableInBranch(serviceId , branch.getId()) == false){
                 PackagesOfBranches offersOfBranch = new PackagesOfBranches();
-                offersOfBranch = servicesOfBranchesService.getByPackageIdAndBranchId(offerId ,branch.getId());
+                offersOfBranch = servicesOfBranchesService.getByPackageIdAndBranchId(packageId,branch.getId());
                 offersOfBranch.setPackageStatus(Status.UNAVAILABLE);
                 servicesOfBranchesService.update(offersOfBranch);
             }
@@ -93,11 +93,11 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
     }
 
     @Override
-    public ServicesOfPackagesResponse addServiceToOffer(Long serviceId, Long offerId) {
-        throwExceptionIfServiceHasAlreadyExistedInOffer(serviceId,offerId);
+    public ServicesOfPackagesResponse addServiceToPackage(Long serviceId, Long packageId) {
+        throwExceptionIfServiceHasAlreadyExistedInOffer(serviceId, packageId);
 
         ServiceEntity service = serviceService.getById(serviceId);
-        Package aPackage = packageService.getById(offerId);
+        Package aPackage = packageService.getById(packageId);
 
         ServicesOfPackage servicesOfOffer = new ServicesOfPackage();
         servicesOfOffer.setService(service);
@@ -105,7 +105,7 @@ public class ServicesOfOffersServiceImpl implements ServicesOfOffersService {
         servicesOfOffer.setAddingDate(new Date());
         servicesOfPackagesRepo.save(servicesOfOffer);
 
-        handleAvailabilityOfOfferInAllBranches(offerId,serviceId);
+        handleAvailabilityOfPackageInAllBranches(packageId,serviceId);
 
         return servicesOfOffersMapper.toResponse(servicesOfOffer);
     }

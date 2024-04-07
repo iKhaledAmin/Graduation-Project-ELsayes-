@@ -20,8 +20,8 @@ import java.util.Date;
 @AllArgsConstructor
 
 @Entity
-@Table(name = "managers_of_offers")
-public class ManagersOfOffers {
+@Table(name = "managers_of_package")
+public class ManagersOfPackages {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
@@ -29,7 +29,7 @@ public class ManagersOfOffers {
 
     @JsonBackReference
     @ManyToOne
-    @JoinColumn(name = "offer_id")
+    @JoinColumn(name = "package_id")
     private Package aPackage;
 
     @JsonBackReference

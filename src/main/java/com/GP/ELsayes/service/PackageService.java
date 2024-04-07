@@ -2,27 +2,27 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
-import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Package;
 
 import java.util.List;
 import java.util.Optional;
 
-public interface OfferService extends CrudService<PackageRequest, Package, PackageResponse,Long> {
+public interface PackageService extends CrudService<PackageRequest, Package, PackageResponse,Long> {
 
-    public List<PackageResponse> getResponseAllOffersIncludeService(Long serviceId);
+    public List<PackageResponse> getResponseAllPackagesIncludeService(Long serviceId);
 
-    boolean isAvailableInBranch(Long offerId, Long branchId) ;
+    boolean isAvailableInBranch(Long packageId, Long branchId) ;
     public List<Package> getAllByServiceId(Long serviceId);
-    public String calculateOriginalTotalRequiredTime(Long offerId);
-    public String calculateOriginalTotalPrice(Long offerId);
-    public double calculateAmountOfDiscount(Long offerId, String percentageOfDiscount);
-    public String calculateActualOfferPrice(Long offerId , String percentageOfDiscount);
+    public String calculateOriginalTotalRequiredTime(Long packageId);
+    public String calculateOriginalTotalPrice(Long packageId);
+    public double calculateAmountOfDiscount(Long packageId, String percentageOfDiscount);
+    public String calculateActualPackagePrice(Long packageId , String percentageOfDiscount);
 
-    public PackageOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest);
-    public PackageOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest);
-    public PackageOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest);
+    public PackageOfBranchesResponse addPackageToBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse activatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
 
     public List<Package> getAllByBranchId(Long branchId);
     public List<PackageResponse> getResponseAllByBranchId(Long branchId);

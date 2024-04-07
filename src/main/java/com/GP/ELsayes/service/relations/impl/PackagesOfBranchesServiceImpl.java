@@ -6,12 +6,12 @@ import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.relations.PackagesOfBranches;
 import com.GP.ELsayes.model.enums.Status;
-import com.GP.ELsayes.model.mapper.relations.OffersOfBranchesMapper;
-import com.GP.ELsayes.repository.relations.OffersOfBranchesRepo;
+import com.GP.ELsayes.model.mapper.relations.PackagesOfBranchesMapper;
+import com.GP.ELsayes.repository.relations.PackagesOfBranchesRepo;
 import com.GP.ELsayes.service.BranchService;
-import com.GP.ELsayes.service.OfferService;
+import com.GP.ELsayes.service.PackageService;
 import com.GP.ELsayes.service.ServiceService;
-import com.GP.ELsayes.service.relations.OffersOfBranchesService;
+import com.GP.ELsayes.service.relations.PackagesOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -20,88 +20,88 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 @Service
-public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
+public class PackagesOfBranchesServiceImpl implements PackagesOfBranchesService {
 
-    private final OffersOfBranchesRepo offersOfBranchesRepo;
-    private final OffersOfBranchesMapper offersOfBranchesMapper;
-    private final OfferService offerService;
+    private final PackagesOfBranchesRepo packagesOfBranchesRepo;
+    private final PackagesOfBranchesMapper packagesOfBranchesMapper;
+    private final PackageService packageService;
     private final BranchService branchService;
     private final ServiceService serviceService;
 
 
-    public OffersOfBranchesServiceImpl(OffersOfBranchesRepo offersOfBranchesRepo, OffersOfBranchesMapper offersOfBranchesMapper,
-                                        OfferService offerService, BranchService branchService, @Lazy ServiceService serviceService
+    public PackagesOfBranchesServiceImpl(PackagesOfBranchesRepo packagesOfBranchesRepo, PackagesOfBranchesMapper packagesOfBranchesMapper,
+                                         PackageService packageService, BranchService branchService, @Lazy ServiceService serviceService
     ) {
-        this.offersOfBranchesRepo = offersOfBranchesRepo;
-        this.offersOfBranchesMapper = offersOfBranchesMapper;
-        this.offerService = offerService;
+        this.packagesOfBranchesRepo = packagesOfBranchesRepo;
+        this.packagesOfBranchesMapper = packagesOfBranchesMapper;
+        this.packageService = packageService;
         this.branchService = branchService;
         this.serviceService = serviceService;
     }
 
 
 
-    public PackagesOfBranches getByOfferIdAndBranchId(Long offerId , Long branchId) {
-        return offersOfBranchesRepo.findByPackageIdAndBranchId(offerId,branchId).orElseThrow(
-                () -> new NoSuchElementException("There is no offer with id = " + offerId + " in this branch")
+    public PackagesOfBranches getByPackageIdAndBranchId(Long packageId , Long branchId) {
+        return packagesOfBranchesRepo.findByPackageIdAndBranchId(packageId,branchId).orElseThrow(
+                () -> new NoSuchElementException("There is no package with id = " + packageId + " in this branch")
         );
     }
 
-    private void throwExceptionIfOfferHasAlreadyExistedInBranch(Long offerId , Long branchId){
-        Optional<PackagesOfBranches> offersOfBranch = offersOfBranchesRepo.findByPackageIdAndBranchId(offerId,branchId);
-        if(offersOfBranch.isEmpty()){
+    private void throwExceptionIfPackageHasAlreadyExistedInBranch(Long packageId , Long branchId){
+        Optional<PackagesOfBranches> packagesOfBranch = packagesOfBranchesRepo.findByPackageIdAndBranchId(packageId,branchId);
+        if(packagesOfBranch.isEmpty()){
             return;
         }
-        throw new RuntimeException("This offer with id "+ offersOfBranch.get().getAPackage().getId() +" already existed in this branch");
+        throw new RuntimeException("This package with id "+ packagesOfBranch.get().getAPackage().getId() +" already existed in this branch");
     }
 
     @Override
-    public List<ServiceEntity> getAllOfferServicesNotAvailableInBranch(Long offerId, Long branchId) {
+    public List<ServiceEntity> getAllPackageServicesNotAvailableInBranch(Long packageId, Long branchId) {
         List<ServiceEntity> servicesOfBranch = serviceService.getAllAvailableInBranch(branchId);
-        List<ServiceEntity> servicesOfOffer = serviceService.getAllByOfferId(offerId);
+        List<ServiceEntity> servicesOfPackage = serviceService.getAllByPackageId(packageId);
 
-        List<ServiceEntity> allOfferServicesNotExistInBranch = new ArrayList<>(servicesOfOffer);
+        List<ServiceEntity> allPackageServicesNotExistInBranch = new ArrayList<>(servicesOfPackage);
         // Remove all services from allOfferServicesNotExistInBranch included in servicesOfBranch
-        allOfferServicesNotExistInBranch.removeAll(servicesOfBranch);
+        allPackageServicesNotExistInBranch.removeAll(servicesOfBranch);
 
-        return allOfferServicesNotExistInBranch;
+        return allPackageServicesNotExistInBranch;
     }
 
 
-    private void throwExceptionIfNotAllServicesOfOfferExistInBranch(Long offerId , Long branchId){
-        List<ServiceEntity> allOfferServicesNotExistInBranch = getAllOfferServicesNotAvailableInBranch(offerId,branchId);
-        if(allOfferServicesNotExistInBranch.isEmpty()){
+    private void throwExceptionIfNotAllServicesOfPackageExistInBranch(Long packageId , Long branchId){
+        List<ServiceEntity> allPackageServicesNotExistInBranch = getAllPackageServicesNotAvailableInBranch(packageId,branchId);
+        if(allPackageServicesNotExistInBranch.isEmpty()){
             return;
         }
-        throw new RuntimeException("Failed,This offer include service not available in this branch ,Services:"
-                  + allOfferServicesNotExistInBranch.stream().map(service -> service.getId()).toList()
+        throw new RuntimeException("Failed,This package include service not available in this branch ,Services:"
+                  + allPackageServicesNotExistInBranch.stream().map(service -> service.getId()).toList()
         );
     }
 
     @Override
     @SneakyThrows
-    public PackagesOfBranches update(PackagesOfBranches offersOfBranch){
+    public PackagesOfBranches update(PackagesOfBranches packagesOfBranch){
 
-        PackagesOfBranches updatedOffersOfBranch = offersOfBranch;
-        PackagesOfBranches existedOffersOfBranch = this.getByOfferIdAndBranchId(
-                offersOfBranch.getAPackage().getId(),
-                offersOfBranch.getBranch().getId()
+        PackagesOfBranches updatedOffersOfBranch = packagesOfBranch;
+        PackagesOfBranches existedOffersOfBranch = this.getByPackageIdAndBranchId(
+                packagesOfBranch.getAPackage().getId(),
+                packagesOfBranch.getBranch().getId()
         );
 
 
         updatedOffersOfBranch.setId(existedOffersOfBranch.getId());
         BeanUtils.copyProperties(updatedOffersOfBranch,existedOffersOfBranch);
 
-        return offersOfBranchesRepo.save(updatedOffersOfBranch);
+        return packagesOfBranchesRepo.save(updatedOffersOfBranch);
     }
 
     @Override
-    public PackageOfBranchesResponse addOfferToBranch(Long offerId, Long branchId) {
-        throwExceptionIfOfferHasAlreadyExistedInBranch(offerId,branchId);
-        throwExceptionIfNotAllServicesOfOfferExistInBranch(offerId,branchId);
+    public PackageOfBranchesResponse addPackageToBranch(Long packageId, Long branchId) {
+        throwExceptionIfPackageHasAlreadyExistedInBranch(packageId,branchId);
+        throwExceptionIfNotAllServicesOfPackageExistInBranch(packageId,branchId);
 
 
-        Package aPackage = offerService.getById(offerId);
+        Package aPackage = packageService.getById(packageId);
         Branch branch = branchService.getById(branchId);
 
         PackagesOfBranches packagesOfBranches = new PackagesOfBranches();
@@ -109,38 +109,38 @@ public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
         packagesOfBranches.setBranch(branch);
         packagesOfBranches.setPackageStatus(Status.UNAVAILABLE);
         packagesOfBranches.setAddingDate(new Date());
-        offersOfBranchesRepo.save(packagesOfBranches);
+        packagesOfBranchesRepo.save(packagesOfBranches);
 
-        return offersOfBranchesMapper.toResponse(packagesOfBranches);
+        return packagesOfBranchesMapper.toResponse(packagesOfBranches);
     }
 
     @Override
-    public PackageOfBranchesResponse activateOfferInBranch(Long offerId, Long branchId) {
-        throwExceptionIfNotAllServicesOfOfferExistInBranch(offerId,branchId);
+    public PackageOfBranchesResponse activatePackageInBranch(Long packageId, Long branchId) {
+        throwExceptionIfNotAllServicesOfPackageExistInBranch(packageId,branchId);
 
-        PackagesOfBranches offersOfBranch = getByOfferIdAndBranchId(
-                offerId,
+        PackagesOfBranches packagesOfBranch = getByPackageIdAndBranchId(
+                packageId,
                 branchId
         );
 
-        offersOfBranch.setPackageStatus(Status.AVAILABLE);
-        offersOfBranchesRepo.save(offersOfBranch);
+        packagesOfBranch.setPackageStatus(Status.AVAILABLE);
+        packagesOfBranchesRepo.save(packagesOfBranch);
 
 
-        return offersOfBranchesMapper.toResponse(offersOfBranch);
+        return packagesOfBranchesMapper.toResponse(packagesOfBranch);
     }
 
     @Override
-    public PackageOfBranchesResponse deactivateOfferInBranch(Long offerId, Long branchId) {
-        PackagesOfBranches packagesOfBranches = getByOfferIdAndBranchId(
-                offerId,
+    public PackageOfBranchesResponse deactivatePackageInBranch(Long packageId, Long branchId) {
+        PackagesOfBranches packagesOfBranches = getByPackageIdAndBranchId(
+                packageId,
                 branchId
         );
 
         packagesOfBranches.setPackageStatus(Status.UNAVAILABLE);
-        offersOfBranchesRepo.save(packagesOfBranches);
+        packagesOfBranchesRepo.save(packagesOfBranches);
 
 
-        return offersOfBranchesMapper.toResponse(packagesOfBranches);
+        return packagesOfBranchesMapper.toResponse(packagesOfBranches);
     }
 }

@@ -8,9 +8,10 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ServicesOfOffersRepo extends JpaRepository<ServicesOfPackage,Long> {
+public interface ServicesOfPackagesRepo extends JpaRepository<ServicesOfPackage,Long> {
 
-    @Query("SELECT service FROM ServicesOfPackage service WHERE service.service.id = :serviceId AND service.aPackage.id = :packageId")
+    @Query("SELECT service FROM ServicesOfPackage service WHERE" +
+            " service.service.id = :serviceId AND service.aPackage.id = :packageId")
     Optional<ServicesOfPackage> findByServiceIdAndPackageId(Long serviceId, Long packageId);
 
 }

@@ -4,8 +4,8 @@ import com.GP.ELsayes.model.dto.relations.ServicesOfPackagesResponse;
 import org.springframework.stereotype.Service;
 
 @Service
-public interface ServicesOfOffersService {
-    public void handleAvailabilityOfOfferInAllBranches(Long offerId , Long serviceId);
-    ServicesOfPackagesResponse addServiceToOffer(Long serviceId , Long offerId);
+public interface ServicesOfPackagesService {
+    public void handleAvailabilityOfPackageInAllBranches(Long packageId , Long serviceId);
+    ServicesOfPackagesResponse addServiceToPackage(Long serviceId , Long packageId);
 
 }

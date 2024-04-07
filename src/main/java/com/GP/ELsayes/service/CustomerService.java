@@ -13,4 +13,5 @@ public interface CustomerService extends  UserService, CrudService<CustomerReque
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
     public void addServiceToOrderList(AddServiceToOrderListRequest addServiceToOrderListRequest);
     public void confirmOrder(Long customerId);
+    public void deleteServiceFromOrderList(Long serviceId);
 }

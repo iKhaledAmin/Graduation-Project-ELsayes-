@@ -8,7 +8,7 @@ import org.mapstruct.Mapping;
 import org.mapstruct.factory.Mappers;
 
 @Mapper(componentModel = "spring")
-public interface OffersOfBranchesMapper {
+public interface PackagesOfBranchesMapper {
     PackagesOfBranches INSTANCE = Mappers.getMapper(PackagesOfBranches.class);
 
     //@Mapping(target = "packageName" , source = "entity.aPackage.name")

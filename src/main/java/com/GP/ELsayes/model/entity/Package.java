@@ -1,8 +1,8 @@
 package com.GP.ELsayes.model.entity;
 
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
-import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
-import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
+import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
+import com.GP.ELsayes.model.entity.relations.PackagesOfBranches;
+import com.GP.ELsayes.model.entity.relations.ServicesOfPackage;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -20,40 +20,40 @@ import java.util.List;
 
 
 @Entity
-@Table(name = "offer")
-public class Offer {
+@Table(name = "package")
+public class Package {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "offer_id")
+    @Column(name = "package_id")
     private Long id;
 
     private String name;
     private String description;
-    private String offerImageURL;
+    private String packageImageURL;
     private String percentageOfDiscount;
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
-    private String actualOfferPrice;
+    private String currentPackagePrice;
     private String profit;
-    //private String actualOfferRequiredTime;
+    //private String currentPackageRequiredTime;
 
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer",cascade = CascadeType.REMOVE)
-    private List<ManagersOfOffers> managersOfOffer;
+    @OneToMany(mappedBy = "aPackage",cascade = CascadeType.REMOVE)
+    private List<ManagersOfPackages> managersOfPackage;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer" )
-    private List<ServicesOfOffers> servicesOfOffer ;
+    @OneToMany(mappedBy = "aPackage" )
+    private List<ServicesOfPackage> servicesOfPackage ;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
-    private List<OffersOfBranches> offersOfBranch;
+    @OneToMany(mappedBy = "aPackage" ,cascade = CascadeType.REMOVE)
+    private List<PackagesOfBranches> packagesOfBranch;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "offer" )
+    @OneToMany(mappedBy = "aPackage" )
     private List<ServicesOfOrders> servicesOfOrder ;
 }
 

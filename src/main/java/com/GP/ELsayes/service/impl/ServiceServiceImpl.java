@@ -1,15 +1,14 @@
 package com.GP.ELsayes.service.impl;
 
-import com.GP.ELsayes.model.dto.OfferRequest;
+import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
-import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
-import com.GP.ELsayes.model.dto.relations.ServicesOfOffersResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackageRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackagesResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
-import com.GP.ELsayes.model.entity.Order;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
@@ -20,7 +19,7 @@ import com.GP.ELsayes.repository.ServiceRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
-import com.GP.ELsayes.service.relations.ServicesOfOffersService;
+import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -37,18 +36,18 @@ public class ServiceServiceImpl implements ServiceService {
     private final ServiceRepo serviceRepo;
     private final ServiceMapper serviceMapper;
     private final ManagerService managerService;
-    private final OfferService offerService;
+    private final PackageService packageService;
     private final BranchService branchService;
     private final OrderService orderService;
 
     private final ManagersOfServicesService managersOfServicesService;
     private final ServicesOfBranchesService servicesOfBranchesService;
-    private final ServicesOfOffersService servicesOfOffersService;
+    private final ServicesOfPackagesService servicesOfpackagesService;
 
 
     void throwExceptionIfServiceStillIncludedInOffer(Long serviceId){
-        List<Offer> offers = offerService.getAllByServiceId(serviceId);
-        if(offers.isEmpty())
+        List<Package> aPackages = packageService.getAllByServiceId(serviceId);
+        if(aPackages.isEmpty())
             return;
         throw new RuntimeException("This service with id = "+ serviceId +" still included in offer, you can not delete it");
 
@@ -219,33 +218,33 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServicesOfOffersResponse addServiceToOffer(ServicesOfOffersRequest servicesOfOffersRequest) {
+    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest) {
 
-        Offer offer = offerService.getById(servicesOfOffersRequest.getOfferId());
+        Package aPackage = packageService.getById(servicesOfPackageRequest.getPackageId());
 
-        ServicesOfOffersResponse servicesOfOffersResponse = servicesOfOffersService.addServiceToOffer(
-                servicesOfOffersRequest.getServiceId(),
-                servicesOfOffersRequest.getOfferId()
+        ServicesOfPackagesResponse servicesOfPackagesResponse = servicesOfpackagesService.addServiceToPackage(
+                servicesOfPackageRequest.getServiceId(),
+                servicesOfPackageRequest.getServiceId()
         );
 
-        OfferRequest offerRequest = new OfferRequest();
-        offerRequest.setPercentageOfDiscount(offer.getPercentageOfDiscount());
-        offerRequest.setManagerId(managerService.getByOfferId(offer.getId()).getId());
-        offerService.update(offerRequest, offer.getId());
+        PackageRequest packageRequest = new PackageRequest();
+        packageRequest.setPercentageOfDiscount(aPackage.getPercentageOfDiscount());
+        packageRequest.setManagerId(managerService.getByOfferId(aPackage.getId()).getId());
+        packageService.update(packageRequest, aPackage.getId());
 
-        return servicesOfOffersResponse;
+        return servicesOfPackagesResponse;
     }
 
     @Override
-    public List<ServiceEntity> getAllByOfferId(Long offerId) {
-        Offer offer = offerService.getById(offerId);
-        return serviceRepo.findAllByOfferId(offerId);
+    public List<ServiceEntity> getAllByPackageId(Long offerId) {
+        Package aPackage = packageService.getById(offerId);
+        return serviceRepo.findAllByPackageId(offerId);
     }
 
     @Override
     public List<ServiceResponse> getResponseAllByOfferId(Long offerId) {
-        Offer offer = offerService.getById(offerId);
-        return serviceRepo.findAllByOfferId(offerId)
+        Package aPackage = packageService.getById(offerId);
+        return serviceRepo.findAllByPackageId(offerId)
                 .stream()
                 .map(service ->  serviceMapper.toResponse(service))
                 .toList();

@@ -1,7 +1,7 @@
 package com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren;
 
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Employee;
@@ -52,7 +52,7 @@ public class Manager extends Employee {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "manager")
-    private List<ManagersOfOffers> managersOfOffer;
+    private List<ManagersOfPackages> managersOfPackage;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "manager")

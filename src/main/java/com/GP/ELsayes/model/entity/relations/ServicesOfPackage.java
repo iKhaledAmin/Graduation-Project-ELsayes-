@@ -19,8 +19,8 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "services_of_offers")
-public class ServicesOfOffers {
+@Table(name = "services_of_package")
+public class ServicesOfPackage {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -34,7 +34,7 @@ public class ServicesOfOffers {
     @JsonBackReference
     @JoinColumn(name = "package_id")
     @ManyToOne
-    private Package Package;
+    private Package aPackage;
 
     Date addingDate;
 

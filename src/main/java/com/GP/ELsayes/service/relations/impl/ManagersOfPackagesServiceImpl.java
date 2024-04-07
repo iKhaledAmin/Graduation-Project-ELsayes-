@@ -5,7 +5,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Man
 import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.repository.relations.ManagersOfOffersRepo;
-import com.GP.ELsayes.service.relations.ManagersOfOffersService;
+import com.GP.ELsayes.service.relations.ManagersOfPackagesService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -16,7 +16,7 @@ import java.util.NoSuchElementException;
 
 @RequiredArgsConstructor
 @Service
-public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
+public class ManagersOfPackagesServiceImpl implements ManagersOfPackagesService {
 
     private final ManagersOfOffersRepo managersOfOffersRepo;
 
@@ -54,7 +54,7 @@ public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
 
 
     @Override
-    public ManagersOfPackages addManagerToOffer(Manager manager, Package aPackage) {
+    public ManagersOfPackages addManagerToPackage(Manager manager, Package aPackage) {
         return add(
                 manager,
                 aPackage,
@@ -63,7 +63,7 @@ public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
     }
 
     @Override
-    public ManagersOfPackages updateManagerToOffer(Long managerId, Long offerId) {
+    public ManagersOfPackages updateManagerToPackage(Long managerId, Long offerId) {
         ManagersOfPackages updatedManagersOfOffer = getByManagerIdAndOfferId(
                 managerId,
                 offerId

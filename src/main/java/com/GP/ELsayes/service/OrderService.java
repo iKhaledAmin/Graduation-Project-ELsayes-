@@ -24,7 +24,7 @@ public interface OrderService {
 
     public Order getById(Long orderId);
 
-    public OrderResponse getResponseById(Long orderId) ;
+    public OrderResponse getResponseById(Long orderId);
 
     public Optional<Order> getUnConfirmedByCustomerId(Long customerId);
 

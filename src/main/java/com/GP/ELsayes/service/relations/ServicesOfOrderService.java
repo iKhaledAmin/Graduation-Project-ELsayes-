@@ -13,4 +13,5 @@ public interface ServicesOfOrderService {
     public void setWorkerServiceTask(Long customerId, Long serviceId, Worker worker);
 
     void finishServiceTask(Long customerId, Long workerId);
+    public void deleteServiceFromOrderList(Long serviceId);
 }

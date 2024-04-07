@@ -60,6 +60,11 @@ public class CustomerController {
         return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
     }
 
+    @DeleteMapping("/delete-service-from-order-lis/{serviceId}")
+    public ResponseEntity<?> deleteServiceFromOrderList(@PathVariable Long serviceId){
+        this.customerService.deleteServiceFromOrderList(serviceId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
 
     @PutMapping("/confirm-order/{customerId}")
     public ResponseEntity<?> confirmOrder(@PathVariable Long customerId){

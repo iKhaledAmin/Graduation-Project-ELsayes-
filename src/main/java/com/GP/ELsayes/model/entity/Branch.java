@@ -58,7 +58,7 @@ public class Branch {
 
     @JsonManagedReference
     @OneToMany(mappedBy = "branch" ,cascade = CascadeType.REMOVE)
-    private List<OffersOfBranches> offerOfBranch ;
+    private List<PackagesOfBranches> packagesOfBranch ;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "branch")

@@ -4,8 +4,8 @@ import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.ServicesOfBranchesResponse;
-import com.GP.ELsayes.model.dto.relations.ServicesOfOffersRequest;
-import com.GP.ELsayes.model.dto.relations.ServicesOfOffersResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackageRequest;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackagesResponse;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import org.springframework.stereotype.Service;
 
@@ -29,9 +29,9 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
 
 
 
-    public ServicesOfOffersResponse addServiceToOffer(ServicesOfOffersRequest servicesOfOffersRequest);
+    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest);
 
-    public List<ServiceEntity> getAllByOfferId(Long offerId);
+    public List<ServiceEntity> getAllByPackageId(Long offerId);
     public List<ServiceResponse> getResponseAllByOfferId(Long offerId);
 
     public List<ServiceEntity> getAllByOrderId(Long orderId);

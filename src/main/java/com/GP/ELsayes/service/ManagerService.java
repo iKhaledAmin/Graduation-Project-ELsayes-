@@ -1,7 +1,7 @@
 package com.GP.ELsayes.service;
 
-import com.GP.ELsayes.model.dto.OfferRequest;
-import com.GP.ELsayes.model.dto.OfferResponse;
+import com.GP.ELsayes.model.dto.PackageRequest;
+import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
@@ -42,20 +42,20 @@ public interface ManagerService extends UserService , CrudService<ManagerRequest
     public ServicesOfBranchesResponse addServiceToBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
-    public ServicesOfOffersResponse addServiceToOffer(ServicesOfOffersRequest servicesOfOffersRequest);
+    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest);
     public List<ServiceEntity> getAllServicesByBranchId(Long branchId);
 
 
 
-    public OfferResponse addOffer(OfferRequest offerRequest);
-    public OfferResponse updateOffer(OfferRequest offerRequest, Long offerId);
+    public PackageResponse addOffer(PackageRequest packageRequest);
+    public PackageResponse updateOffer(PackageRequest packageRequest, Long offerId);
     public void deleteOffer(Long offerId);
-    public List<OfferResponse> getAllOffers();
-    public OfferResponse getOfferResponseById(Long offerId);
-    public OffersOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest);
-    public OffersOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest);
-    public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest);
-    public List<OfferResponse> getAllOfferResponseByBranchId(Long branchId);
+    public List<PackageResponse> getAllOffers();
+    public PackageResponse getOfferResponseById(Long offerId);
+    public PackageOfBranchesResponse addOfferToBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse activateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse deactivateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public List<PackageResponse> getAllOfferResponseByBranchId(Long branchId);
 
 
 }

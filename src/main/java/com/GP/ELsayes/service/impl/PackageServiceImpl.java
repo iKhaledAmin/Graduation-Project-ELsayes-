@@ -2,21 +2,21 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
-import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
+import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import com.GP.ELsayes.model.enums.Status;
-import com.GP.ELsayes.model.mapper.OfferMapper;
+import com.GP.ELsayes.model.mapper.PackageMapper;
 import com.GP.ELsayes.repository.PackageRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
-import com.GP.ELsayes.service.OfferService;
+import com.GP.ELsayes.service.PackageService;
 import com.GP.ELsayes.service.ServiceService;
-import com.GP.ELsayes.service.relations.ManagersOfOffersService;
-import com.GP.ELsayes.service.relations.OffersOfBranchesService;
+import com.GP.ELsayes.service.relations.ManagersOfPackagesService;
+import com.GP.ELsayes.service.relations.PackagesOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -28,41 +28,41 @@ import java.util.Optional;
 
 
 @Service
- public class OfferServiceImpl implements OfferService {
+ public class PackageServiceImpl implements PackageService {
 
     private final PackageRepo packageRepo;
-    private final OfferMapper offerMapper;
+    private final PackageMapper packageMapper;
     private final ManagerService managerService;
     private final ServiceService serviceService;
     private final BranchService branchService;
-    private final ManagersOfOffersService managersOfOffersService;
-    private final OffersOfBranchesService offersOfBranchesService;
+    private final ManagersOfPackagesService managersOfPackagesService;
+    private final PackagesOfBranchesService packagesOfBranchesService;
 
 
-    public OfferServiceImpl(PackageRepo packageRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, BranchService branchService, ManagersOfOffersService managersOfOffersService, @Lazy OffersOfBranchesService offersOfBranchesService) {
+    public PackageServiceImpl(PackageRepo packageRepo, PackageMapper packageMapper, ManagerService managerService, @Lazy ServiceService serviceService, BranchService branchService, ManagersOfPackagesService managersOfPackagesService, @Lazy PackagesOfBranchesService packagesOfBranchesService) {
         this.packageRepo = packageRepo;
-        this.offerMapper = offerMapper;
+        this.packageMapper = packageMapper;
         this.managerService = managerService;
         this.serviceService = serviceService;
         this.branchService = branchService;
-        this.managersOfOffersService = managersOfOffersService;
-        this.offersOfBranchesService = offersOfBranchesService;
+        this.managersOfPackagesService = managersOfPackagesService;
+        this.packagesOfBranchesService = packagesOfBranchesService;
     }
 
-    void throwExceptionIfNotAllServicesOfOfferAvailableInBranch(Long offerId , Long branchId){
+    void throwExceptionIfNotAllServicesOfPackageAvailableInBranch(Long packageId , Long branchId){
 
-        List<ServiceEntity> servicesOfOffer = serviceService.getAllByOfferId(offerId);
+        List<ServiceEntity> servicesOfPackage = serviceService.getAllByPackageId(packageId);
         List<ServiceEntity> servicesAvailableInBranch = serviceService.getAllAvailableInBranch(branchId);
 
-        if(servicesAvailableInBranch.containsAll(servicesOfOffer))
+        if(servicesAvailableInBranch.containsAll(servicesOfPackage))
             return;
-        throw new RuntimeException("Offer with id : " + offerId + " include services not available in this branch");
+        throw new RuntimeException("Package with id : " + packageId + " include services not available in this branch");
 
     }
 
     @Override
-    public String calculateOriginalTotalRequiredTime(Long offerId){
-        List<ServiceEntity> serviceList = serviceService.getAllByOfferId(offerId);
+    public String calculateOriginalTotalRequiredTime(Long packageId){
+        List<ServiceEntity> serviceList = serviceService.getAllByPackageId(packageId);
         double sum = serviceList.stream()
                 .filter(service -> service != null)
                 .mapToDouble(service -> Double.parseDouble(service.getRequiredTime()))
@@ -71,8 +71,8 @@ import java.util.Optional;
     }
 
     @Override
-    public String calculateOriginalTotalPrice(Long offerId){
-        List<ServiceEntity> serviceList = serviceService.getAllByOfferId(offerId);
+    public String calculateOriginalTotalPrice(Long packageId){
+        List<ServiceEntity> serviceList = serviceService.getAllByPackageId(packageId);
         double sum = serviceList.stream()
                 .filter(service -> service != null)
                 .mapToDouble(service -> Double.parseDouble(service.getPrice()))
@@ -81,8 +81,8 @@ import java.util.Optional;
     }
 
     @Override
-    public double calculateAmountOfDiscount(Long offerId , String percentageOfDiscount) {
-        double originalTotalPrice = Double.parseDouble(calculateOriginalTotalPrice(offerId));
+    public double calculateAmountOfDiscount(Long packageId, String percentageOfDiscount) {
+        double originalTotalPrice = Double.parseDouble(calculateOriginalTotalPrice(packageId));
         double discountFactor = Double.parseDouble(percentageOfDiscount) / 100.0;
 
         double amountOfDiscount = discountFactor *  originalTotalPrice;
@@ -91,9 +91,9 @@ import java.util.Optional;
     }
 
     @Override
-    public String calculateActualOfferPrice(Long offerId, String percentageOfDiscount) {
-        double amountOfDiscount = calculateAmountOfDiscount(offerId,percentageOfDiscount);
-        double originalTotalPrice = Double.parseDouble(calculateOriginalTotalPrice(offerId));
+    public String calculateActualPackagePrice(Long packageId, String percentageOfDiscount) {
+        double amountOfDiscount = calculateAmountOfDiscount(packageId,percentageOfDiscount);
+        double originalTotalPrice = Double.parseDouble(calculateOriginalTotalPrice(packageId));
 
 
         return String.valueOf(originalTotalPrice - amountOfDiscount);
@@ -101,30 +101,30 @@ import java.util.Optional;
 
     @Override
     public PackageResponse add(PackageRequest packageRequest) {
-        Package aPackage = this.offerMapper.toEntity(packageRequest);
+        Package aPackage = this.packageMapper.toEntity(packageRequest);
 
         aPackage = this.packageRepo.save(aPackage);
 
         Manager manager = managerService.getById(packageRequest.getManagerId());
-        ManagersOfPackages managersOfPackages = managersOfOffersService.addManagerToOffer(
+        ManagersOfPackages managersOfPackages = managersOfPackagesService.addManagerToPackage(
                 manager,
                 aPackage
         );
 
-        return this.offerMapper.toResponse(aPackage);
+        return this.packageMapper.toResponse(aPackage);
     }
 
     @SneakyThrows
     @Override
-    public PackageResponse update(PackageRequest packageRequest, Long offerId) {
-        Package existedPackage = this.getById(offerId);
-        Package updatedPackage = this.offerMapper.toEntity(packageRequest);
+    public PackageResponse update(PackageRequest packageRequest, Long packageId) {
+        Package existedPackage = this.getById(packageId);
+        Package updatedPackage = this.packageMapper.toEntity(packageRequest);
 
-        String originalTotalPrice = calculateOriginalTotalPrice(offerId);
-        String originalTotalRequiredTime = calculateOriginalTotalRequiredTime(offerId);
-        String currentPackagePrice = calculateActualOfferPrice(offerId, updatedPackage.getPercentageOfDiscount());
+        String originalTotalPrice = calculateOriginalTotalPrice(packageId);
+        String originalTotalRequiredTime = calculateOriginalTotalRequiredTime(packageId);
+        String currentPackagePrice = calculateActualPackagePrice(packageId, updatedPackage.getPercentageOfDiscount());
 
-        updatedPackage.setId(offerId);
+        updatedPackage.setId(packageId);
         BeanUtils.copyProperties(updatedPackage, existedPackage);
         updatedPackage.setPercentageOfDiscount(packageRequest.getPercentageOfDiscount());
         updatedPackage.setOriginalTotalPrice(originalTotalPrice);
@@ -134,44 +134,44 @@ import java.util.Optional;
         updatedPackage = packageRepo.save(updatedPackage);
 
         Manager manager = managerService.getById(packageRequest.getManagerId());
-        ManagersOfPackages managersOfPackages = managersOfOffersService.updateManagerToOffer(
+        ManagersOfPackages managersOfPackages = managersOfPackagesService.updateManagerToPackage(
                 manager.getId(),
                 updatedPackage.getId()
         );
 
-        return this.offerMapper.toResponse(updatedPackage);
+        return this.packageMapper.toResponse(updatedPackage);
     }
 
 
     @Override
-    public void delete(Long offerId) {
-        this.getById(offerId);
-        packageRepo.deleteById(offerId);
+    public void delete(Long packageId) {
+        this.getById(packageId);
+        packageRepo.deleteById(packageId);
     }
 
     @Override
     public List<PackageResponse> getAll() {
         return packageRepo.findAll()
                 .stream()
-                .map(offer ->  offerMapper.toResponse(offer))
+                .map(aPackage ->  packageMapper.toResponse(aPackage))
                 .toList();
     }
 
     @Override
-    public Optional<Package> getObjectById(Long offerId) {
-        return packageRepo.findById(offerId);
+    public Optional<Package> getObjectById(Long packageId) {
+        return packageRepo.findById(packageId);
     }
 
     @Override
-    public Package getById(Long offerId) {
-        return getObjectById(offerId).orElseThrow(
-                () -> new NoSuchElementException("There is no offer with id = " + offerId)
+    public Package getById(Long packageId) {
+        return getObjectById(packageId).orElseThrow(
+                () -> new NoSuchElementException("There is no package with id = " + packageId)
         );
     }
 
     @Override
-    public PackageResponse getResponseById(Long offerId) {
-        return offerMapper.toResponse(getById(offerId));
+    public PackageResponse getResponseById(Long packageId) {
+        return packageMapper.toResponse(getById(packageId));
     }
 
     @Override
@@ -182,17 +182,17 @@ import java.util.Optional;
 
 
     @Override
-    public List<PackageResponse> getResponseAllOffersIncludeService(Long serviceId) {
+    public List<PackageResponse> getResponseAllPackagesIncludeService(Long serviceId) {
         return packageRepo.findAllByServiceId(serviceId)
                 .stream()
-                .map(offer ->  offerMapper.toResponse(offer))
+                .map(offer ->  packageMapper.toResponse(offer))
                 .toList();
     }
 
     @Override
-    public boolean isAvailableInBranch(Long offerId, Long branchId) {
-        Optional<Package> offer = packageRepo.findByPackageIdAndBranchIdIfAvailable(offerId, branchId);
-        if(offer.isEmpty()){
+    public boolean isAvailableInBranch(Long packageId, Long branchId) {
+        Optional<Package> aPackage = packageRepo.findByPackageIdAndBranchIdIfAvailable(packageId, branchId);
+        if(aPackage.isEmpty()){
             return false;
         }
         return true;
@@ -200,44 +200,44 @@ import java.util.Optional;
 
 
     @Override
-    public PackageOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
-            offersOfBranchesRequest.getOfferId(),
-            offersOfBranchesRequest.getBranchId()
+    public PackageOfBranchesResponse addPackageToBranch(PackageOfBranchesRequest packageOfBranchesRequest) {
+        throwExceptionIfNotAllServicesOfPackageAvailableInBranch(
+            packageOfBranchesRequest.getPackageId(),
+            packageOfBranchesRequest.getBranchId()
         );
 
-        return offersOfBranchesService.addOfferToBranch(
-                offersOfBranchesRequest.getOfferId(),
-                offersOfBranchesRequest.getBranchId()
+        return packagesOfBranchesService.addPackageToBranch(
+                packageOfBranchesRequest.getPackageId(),
+                packageOfBranchesRequest.getBranchId()
         );
     }
 
     @Override
-    public PackageOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
-                offersOfBranchesRequest.getOfferId(),
-                offersOfBranchesRequest.getBranchId()
+    public PackageOfBranchesResponse activatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest) {
+        throwExceptionIfNotAllServicesOfPackageAvailableInBranch(
+                packageOfBranchesRequest.getPackageId(),
+                packageOfBranchesRequest.getBranchId()
         );
 
-        PackageOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.activateOfferInBranch(
-                offersOfBranchesRequest.getOfferId(),
-                offersOfBranchesRequest.getBranchId()
+        PackageOfBranchesResponse servicesOfBranchesResponse = packagesOfBranchesService.activatePackageInBranch(
+                packageOfBranchesRequest.getPackageId(),
+                packageOfBranchesRequest.getBranchId()
         );
 
-        boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
+        boolean isAvailable = isAvailableInBranch(  packageOfBranchesRequest.getPackageId(), packageOfBranchesRequest.getBranchId());
         servicesOfBranchesResponse.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
 
         return servicesOfBranchesResponse;
     }
 
     @Override
-    public PackageOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        PackageOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.deactivateOfferInBranch(
-                offersOfBranchesRequest.getOfferId(),
-                offersOfBranchesRequest.getBranchId()
+    public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest) {
+        PackageOfBranchesResponse servicesOfBranchesResponse = packagesOfBranchesService.deactivatePackageInBranch(
+                packageOfBranchesRequest.getPackageId(),
+                packageOfBranchesRequest.getBranchId()
         );
 
-        boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
+        boolean isAvailable = isAvailableInBranch(  packageOfBranchesRequest.getPackageId(), packageOfBranchesRequest.getBranchId());
         servicesOfBranchesResponse.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
 
         return servicesOfBranchesResponse;
@@ -255,9 +255,9 @@ import java.util.Optional;
         return packageRepo.findAllByBranchId(branchId)
                 .stream()
                 .map(service -> {
-                    PackageResponse response = offerMapper.toResponse(service);
+                    PackageResponse response = packageMapper.toResponse(service);
                     boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
-                    response.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+                    response.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
                     return response;
                 })
                 .toList();

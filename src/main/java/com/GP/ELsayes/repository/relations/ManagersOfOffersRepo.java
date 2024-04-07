@@ -1,6 +1,6 @@
 package com.GP.ELsayes.repository.relations;
 
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -8,8 +8,8 @@ import org.springframework.stereotype.Repository;
 import java.util.Optional;
 
 @Repository
-public interface ManagersOfOffersRepo extends JpaRepository<ManagersOfOffers,Long> {
-    @Query("SELECT mo FROM ManagersOfOffers mo WHERE mo.manager.id = :managerId AND mo.offer.id = :offerId")
-    Optional<ManagersOfOffers>findByManagerIdAndOfferId(Long managerId, Long offerId);
+public interface ManagersOfOffersRepo extends JpaRepository<ManagersOfPackages,Long> {
+    @Query("SELECT mop FROM ManagersOfPackages mop WHERE mop.manager.id = :managerId AND mop.aPackage.id = :packageId")
+    Optional<ManagersOfPackages> findByManagerIdAndPackageId(Long managerId, Long packageId);
 }
 

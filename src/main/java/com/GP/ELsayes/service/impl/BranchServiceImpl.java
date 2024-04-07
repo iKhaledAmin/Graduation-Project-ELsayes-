@@ -4,7 +4,7 @@ import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
 import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.relations.OwnersOfBranches;
@@ -38,14 +38,14 @@ public class BranchServiceImpl implements BranchService {
     private final ManagerService managerService;
     private final OwnersOfBranchesService ownersOfBranchesService;
 
-    private final OfferService offerService;
+    private final PackageService packageService;
     private final ServiceService serviceService;
     private final VisitationsOfBranchesService customerVisitationsService;
 
 
     public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService,
                              @Lazy WorkerService workerService, @Lazy ManagerService managerService,
-                             OwnersOfBranchesService ownersOfBranchesService, @Lazy OfferService offerService,
+                             OwnersOfBranchesService ownersOfBranchesService, @Lazy PackageService packageService,
                              @Lazy ServiceService serviceService,@Lazy VisitationsOfBranchesService customerVisitationsService) {
         this.branchMapper = branchMapper;
         this.branchRepo = branchRepo;
@@ -53,7 +53,7 @@ public class BranchServiceImpl implements BranchService {
         this.workerService = workerService;
         this.managerService = managerService;
         this.ownersOfBranchesService = ownersOfBranchesService;
-        this.offerService = offerService;
+        this.packageService = packageService;
         this.serviceService = serviceService;
         this.customerVisitationsService = customerVisitationsService;
     }
@@ -197,8 +197,8 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public List<Branch> getAllByOfferId(Long offerId) {
-        Offer offer = offerService.getById(offerId);
-        return branchRepo.findAllByOfferId(offerId);
+        Package aPackage = packageService.getById(offerId);
+        return branchRepo.findAllByPackageId(offerId);
     }
 
     @Override
