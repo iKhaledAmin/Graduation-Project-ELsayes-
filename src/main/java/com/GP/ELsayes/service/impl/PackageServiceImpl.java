@@ -1,16 +1,16 @@
 package com.GP.ELsayes.service.impl;
 
-import com.GP.ELsayes.model.dto.OfferRequest;
-import com.GP.ELsayes.model.dto.OfferResponse;
+import com.GP.ELsayes.model.dto.PackageRequest;
+import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.relations.OffersOfBranchesRequest;
-import com.GP.ELsayes.model.dto.relations.OffersOfBranchesResponse;
-import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.OfferMapper;
-import com.GP.ELsayes.repository.OfferRepo;
+import com.GP.ELsayes.repository.PackageRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OfferService;
@@ -30,7 +30,7 @@ import java.util.Optional;
 @Service
  public class OfferServiceImpl implements OfferService {
 
-    private final OfferRepo offerRepo;
+    private final PackageRepo packageRepo;
     private final OfferMapper offerMapper;
     private final ManagerService managerService;
     private final ServiceService serviceService;
@@ -39,8 +39,8 @@ import java.util.Optional;
     private final OffersOfBranchesService offersOfBranchesService;
 
 
-    public OfferServiceImpl(OfferRepo offerRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, BranchService branchService, ManagersOfOffersService managersOfOffersService, @Lazy OffersOfBranchesService offersOfBranchesService) {
-        this.offerRepo = offerRepo;
+    public OfferServiceImpl(PackageRepo packageRepo, OfferMapper offerMapper, ManagerService managerService, @Lazy ServiceService serviceService, BranchService branchService, ManagersOfOffersService managersOfOffersService, @Lazy OffersOfBranchesService offersOfBranchesService) {
+        this.packageRepo = packageRepo;
         this.offerMapper = offerMapper;
         this.managerService = managerService;
         this.serviceService = serviceService;
@@ -100,90 +100,90 @@ import java.util.Optional;
     }
 
     @Override
-    public OfferResponse add(OfferRequest offerRequest) {
-        Offer offer = this.offerMapper.toEntity(offerRequest);
+    public PackageResponse add(PackageRequest packageRequest) {
+        Package aPackage = this.offerMapper.toEntity(packageRequest);
 
-        offer = this.offerRepo.save(offer);
+        aPackage = this.packageRepo.save(aPackage);
 
-        Manager manager = managerService.getById(offerRequest.getManagerId());
-        ManagersOfOffers managersOfOffers = managersOfOffersService.addManagerToOffer(
+        Manager manager = managerService.getById(packageRequest.getManagerId());
+        ManagersOfPackages managersOfPackages = managersOfOffersService.addManagerToOffer(
                 manager,
-                offer
+                aPackage
         );
 
-        return this.offerMapper.toResponse(offer);
+        return this.offerMapper.toResponse(aPackage);
     }
 
     @SneakyThrows
     @Override
-    public OfferResponse update(OfferRequest offerRequest, Long offerId) {
-        Offer existedOffer = this.getById(offerId);
-        Offer updatedOffer = this.offerMapper.toEntity(offerRequest);
+    public PackageResponse update(PackageRequest packageRequest, Long offerId) {
+        Package existedPackage = this.getById(offerId);
+        Package updatedPackage = this.offerMapper.toEntity(packageRequest);
 
         String originalTotalPrice = calculateOriginalTotalPrice(offerId);
         String originalTotalRequiredTime = calculateOriginalTotalRequiredTime(offerId);
-        String actualOfferPrice = calculateActualOfferPrice(offerId, updatedOffer.getPercentageOfDiscount());
+        String currentPackagePrice = calculateActualOfferPrice(offerId, updatedPackage.getPercentageOfDiscount());
 
-        updatedOffer.setId(offerId);
-        BeanUtils.copyProperties(updatedOffer,existedOffer);
-        updatedOffer.setPercentageOfDiscount(offerRequest.getPercentageOfDiscount());
-        updatedOffer.setOriginalTotalPrice(originalTotalPrice);
-        updatedOffer.setOriginalTotalRequiredTime(originalTotalRequiredTime);
-        updatedOffer.setActualOfferPrice(actualOfferPrice);
+        updatedPackage.setId(offerId);
+        BeanUtils.copyProperties(updatedPackage, existedPackage);
+        updatedPackage.setPercentageOfDiscount(packageRequest.getPercentageOfDiscount());
+        updatedPackage.setOriginalTotalPrice(originalTotalPrice);
+        updatedPackage.setOriginalTotalRequiredTime(originalTotalRequiredTime);
+        updatedPackage.setCurrentPackagePrice(currentPackagePrice);
 
-        updatedOffer = offerRepo.save(updatedOffer);
+        updatedPackage = packageRepo.save(updatedPackage);
 
-        Manager manager = managerService.getById(offerRequest.getManagerId());
-        ManagersOfOffers managersOfOffers = managersOfOffersService.updateManagerToOffer(
+        Manager manager = managerService.getById(packageRequest.getManagerId());
+        ManagersOfPackages managersOfPackages = managersOfOffersService.updateManagerToOffer(
                 manager.getId(),
-                updatedOffer.getId()
+                updatedPackage.getId()
         );
 
-        return this.offerMapper.toResponse(updatedOffer);
+        return this.offerMapper.toResponse(updatedPackage);
     }
 
 
     @Override
     public void delete(Long offerId) {
         this.getById(offerId);
-        offerRepo.deleteById(offerId);
+        packageRepo.deleteById(offerId);
     }
 
     @Override
-    public List<OfferResponse> getAll() {
-        return offerRepo.findAll()
+    public List<PackageResponse> getAll() {
+        return packageRepo.findAll()
                 .stream()
                 .map(offer ->  offerMapper.toResponse(offer))
                 .toList();
     }
 
     @Override
-    public Optional<Offer> getObjectById(Long offerId) {
-        return offerRepo.findById(offerId);
+    public Optional<Package> getObjectById(Long offerId) {
+        return packageRepo.findById(offerId);
     }
 
     @Override
-    public Offer getById(Long offerId) {
+    public Package getById(Long offerId) {
         return getObjectById(offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no offer with id = " + offerId)
         );
     }
 
     @Override
-    public OfferResponse getResponseById(Long offerId) {
+    public PackageResponse getResponseById(Long offerId) {
         return offerMapper.toResponse(getById(offerId));
     }
 
     @Override
-    public List<Offer> getAllByServiceId(Long serviceId) {
-        return offerRepo.findAllByServiceId(serviceId);
+    public List<Package> getAllByServiceId(Long serviceId) {
+        return packageRepo.findAllByServiceId(serviceId);
     }
 
 
 
     @Override
-    public List<OfferResponse> getResponseAllOffersIncludeService(Long serviceId) {
-        return offerRepo.findAllByServiceId(serviceId)
+    public List<PackageResponse> getResponseAllOffersIncludeService(Long serviceId) {
+        return packageRepo.findAllByServiceId(serviceId)
                 .stream()
                 .map(offer ->  offerMapper.toResponse(offer))
                 .toList();
@@ -191,7 +191,7 @@ import java.util.Optional;
 
     @Override
     public boolean isAvailableInBranch(Long offerId, Long branchId) {
-        Optional<Offer> offer = offerRepo.findByOfferIdAndBranchIdIfAvailable(offerId, branchId);
+        Optional<Package> offer = packageRepo.findByPackageIdAndBranchIdIfAvailable(offerId, branchId);
         if(offer.isEmpty()){
             return false;
         }
@@ -200,7 +200,7 @@ import java.util.Optional;
 
 
     @Override
-    public OffersOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+    public PackageOfBranchesResponse addOfferToBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
         throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
             offersOfBranchesRequest.getOfferId(),
             offersOfBranchesRequest.getBranchId()
@@ -213,49 +213,49 @@ import java.util.Optional;
     }
 
     @Override
-    public OffersOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+    public PackageOfBranchesResponse activateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
         throwExceptionIfNotAllServicesOfOfferAvailableInBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
         );
 
-        OffersOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.activateOfferInBranch(
+        PackageOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.activateOfferInBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
         );
 
         boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
-        servicesOfBranchesResponse.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+        servicesOfBranchesResponse.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
 
         return servicesOfBranchesResponse;
     }
 
     @Override
-    public OffersOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
-        OffersOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.deactivateOfferInBranch(
+    public PackageOfBranchesResponse deactivateOfferInBranch(OffersOfBranchesRequest offersOfBranchesRequest) {
+        PackageOfBranchesResponse servicesOfBranchesResponse = offersOfBranchesService.deactivateOfferInBranch(
                 offersOfBranchesRequest.getOfferId(),
                 offersOfBranchesRequest.getBranchId()
         );
 
         boolean isAvailable = isAvailableInBranch(  offersOfBranchesRequest.getOfferId(), offersOfBranchesRequest.getBranchId());
-        servicesOfBranchesResponse.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+        servicesOfBranchesResponse.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
 
         return servicesOfBranchesResponse;
     }
 
     @Override
-    public List<Offer> getAllByBranchId(Long branchId) {
+    public List<Package> getAllByBranchId(Long branchId) {
         branchService.getById(branchId);
-        return offerRepo.findAllByBranchId(branchId);
+        return packageRepo.findAllByBranchId(branchId);
     }
 
     @Override
-    public List<OfferResponse> getResponseAllByBranchId(Long branchId) {
+    public List<PackageResponse> getResponseAllByBranchId(Long branchId) {
         branchService.getById(branchId);
-        return offerRepo.findAllByBranchId(branchId)
+        return packageRepo.findAllByBranchId(branchId)
                 .stream()
                 .map(service -> {
-                    OfferResponse response = offerMapper.toResponse(service);
+                    PackageResponse response = offerMapper.toResponse(service);
                     boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
                     response.setOfferStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
                     return response;
@@ -264,10 +264,10 @@ import java.util.Optional;
     }
 
     @Override
-    public Optional<Offer> getByServiceIdAndBranchId(Long serviceId, Long branchId) {
+    public Optional<Package> getByServiceIdAndBranchId(Long serviceId, Long branchId) {
         serviceService.getById(serviceId);
         branchService.getById(branchId);
-        return offerRepo.findByServiceIdAndBranchId(serviceId,branchId);
+        return packageRepo.findByServiceIdAndBranchId(serviceId,branchId);
     }
 
 

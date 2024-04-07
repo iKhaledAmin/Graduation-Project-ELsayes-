@@ -3,6 +3,7 @@ package com.GP.ELsayes.model.entity;
 import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
 import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOffers;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -50,6 +51,10 @@ public class Offer {
     @JsonManagedReference
     @OneToMany(mappedBy = "offer" ,cascade = CascadeType.REMOVE)
     private List<OffersOfBranches> offersOfBranch;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "offer" )
+    private List<ServicesOfOrders> servicesOfOrder ;
 }
 
 

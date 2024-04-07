@@ -1,7 +1,6 @@
 package com.GP.ELsayes.model.entity.relations;
 
-import com.GP.ELsayes.model.entity.Offer;
-import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -31,7 +30,7 @@ public class ManagersOfOffers {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "offer_id")
-    private Offer offer;
+    private Package aPackage;
 
     @JsonBackReference
     @ManyToOne

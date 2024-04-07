@@ -1,15 +1,14 @@
 package com.GP.ELsayes.model.entity.relations;
 
-import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
-import com.GP.ELsayes.model.enums.Status;
+
+import com.GP.ELsayes.model.entity.Package;
+import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
-import org.aspectj.internal.lang.annotation.ajcPrivileged;
 
 import java.util.Date;
 
@@ -20,25 +19,23 @@ import java.util.Date;
 
 
 @Entity
-@Table(name = "offer_of_branches")
-public class OffersOfBranches {
+@Table(name = "services_of_offers")
+public class ServicesOfOffers {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
     @JsonBackReference
-    @JoinColumn(name = "offer_id")
+    @JoinColumn(name = "service_id")
     @ManyToOne
-    private Offer offer;
-
+    private ServiceEntity service;
 
     @JsonBackReference
-    @JoinColumn(name = "branch_id")
+    @JoinColumn(name = "package_id")
     @ManyToOne
-    private Branch branch;
+    private Package Package;
 
-    @Enumerated(EnumType.STRING)
-    private Status offerStatus;
-    private Date addingDate;
+    Date addingDate;
+
 }

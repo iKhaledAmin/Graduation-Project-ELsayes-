@@ -1,8 +1,8 @@
 package com.GP.ELsayes.service.relations.impl;
 
-import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
-import com.GP.ELsayes.model.entity.relations.ManagersOfOffers;
+import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
 import com.GP.ELsayes.model.enums.OperationType;
 import com.GP.ELsayes.repository.relations.ManagersOfOffersRepo;
 import com.GP.ELsayes.service.relations.ManagersOfOffersService;
@@ -20,16 +20,16 @@ public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
 
     private final ManagersOfOffersRepo managersOfOffersRepo;
 
-    private ManagersOfOffers getByManagerIdAndOfferId(Long managerId , Long offerId) {
-        return managersOfOffersRepo.findByManagerIdAndOfferId(managerId,offerId).orElseThrow(
+    private ManagersOfPackages getByManagerIdAndOfferId(Long managerId , Long offerId) {
+        return managersOfOffersRepo.findByManagerIdAndPackageId(managerId,offerId).orElseThrow(
                 () -> new NoSuchElementException("There is no offer with id = " + offerId + " managed by this manager")
         );
     }
-    private ManagersOfOffers add(Manager manager, Offer offer, OperationType operationType) {
+    private ManagersOfPackages add(Manager manager, Package aPackage, OperationType operationType) {
 
-        ManagersOfOffers managersOfOffer = new ManagersOfOffers();
+        ManagersOfPackages managersOfOffer = new ManagersOfPackages();
         managersOfOffer.setManager(manager);
-        managersOfOffer.setOffer(offer);
+        managersOfOffer.setAPackage(aPackage);
         managersOfOffer.setOperationType(operationType);
         managersOfOffer.setOperationDate(new Date());
 
@@ -37,12 +37,12 @@ public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
     }
 
     @SneakyThrows
-    private ManagersOfOffers update(ManagersOfOffers managersOfOffers){
+    private ManagersOfPackages update(ManagersOfPackages managersOfPackages){
 
-        ManagersOfOffers updatedManagersOfOffer = managersOfOffers;
-        ManagersOfOffers existedManagersOfOffer = getByManagerIdAndOfferId(
-                managersOfOffers.getManager().getId(),
-                managersOfOffers.getOffer().getId()
+        ManagersOfPackages updatedManagersOfOffer = managersOfPackages;
+        ManagersOfPackages existedManagersOfOffer = getByManagerIdAndOfferId(
+                managersOfPackages.getManager().getId(),
+                managersOfPackages.getAPackage().getId()
         );
 
         BeanUtils.copyProperties(updatedManagersOfOffer,existedManagersOfOffer);
@@ -54,17 +54,17 @@ public class ManagersOfOffersServiceImpl implements ManagersOfOffersService {
 
 
     @Override
-    public ManagersOfOffers addManagerToOffer(Manager manager, Offer offer) {
+    public ManagersOfPackages addManagerToOffer(Manager manager, Package aPackage) {
         return add(
                 manager,
-                offer,
+                aPackage,
                 OperationType.CREATE
         );
     }
 
     @Override
-    public ManagersOfOffers updateManagerToOffer(Long managerId, Long offerId) {
-        ManagersOfOffers updatedManagersOfOffer = getByManagerIdAndOfferId(
+    public ManagersOfPackages updateManagerToOffer(Long managerId, Long offerId) {
+        ManagersOfPackages updatedManagersOfOffer = getByManagerIdAndOfferId(
                 managerId,
                 offerId
         );

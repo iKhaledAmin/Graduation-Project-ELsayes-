@@ -1,10 +1,10 @@
 package com.GP.ELsayes.service.relations.impl;
 
-import com.GP.ELsayes.model.dto.relations.OffersOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.Offer;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
-import com.GP.ELsayes.model.entity.relations.OffersOfBranches;
+import com.GP.ELsayes.model.entity.relations.PackagesOfBranches;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.relations.OffersOfBranchesMapper;
 import com.GP.ELsayes.repository.relations.OffersOfBranchesRepo;
@@ -41,18 +41,18 @@ public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
 
 
 
-    public OffersOfBranches getByOfferIdAndBranchId(Long offerId , Long branchId) {
-        return offersOfBranchesRepo.findByOfferIdAndBranchId(offerId,branchId).orElseThrow(
+    public PackagesOfBranches getByOfferIdAndBranchId(Long offerId , Long branchId) {
+        return offersOfBranchesRepo.findByPackageIdAndBranchId(offerId,branchId).orElseThrow(
                 () -> new NoSuchElementException("There is no offer with id = " + offerId + " in this branch")
         );
     }
 
     private void throwExceptionIfOfferHasAlreadyExistedInBranch(Long offerId , Long branchId){
-        Optional<OffersOfBranches> offersOfBranch = offersOfBranchesRepo.findByOfferIdAndBranchId(offerId,branchId);
+        Optional<PackagesOfBranches> offersOfBranch = offersOfBranchesRepo.findByPackageIdAndBranchId(offerId,branchId);
         if(offersOfBranch.isEmpty()){
             return;
         }
-        throw new RuntimeException("This offer with id "+ offersOfBranch.get().getOffer().getId() +" already existed in this branch");
+        throw new RuntimeException("This offer with id "+ offersOfBranch.get().getAPackage().getId() +" already existed in this branch");
     }
 
     @Override
@@ -80,11 +80,11 @@ public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
 
     @Override
     @SneakyThrows
-    public OffersOfBranches update(OffersOfBranches offersOfBranch){
+    public PackagesOfBranches update(PackagesOfBranches offersOfBranch){
 
-        OffersOfBranches updatedOffersOfBranch = offersOfBranch;
-        OffersOfBranches existedOffersOfBranch = this.getByOfferIdAndBranchId(
-                offersOfBranch.getOffer().getId(),
+        PackagesOfBranches updatedOffersOfBranch = offersOfBranch;
+        PackagesOfBranches existedOffersOfBranch = this.getByOfferIdAndBranchId(
+                offersOfBranch.getAPackage().getId(),
                 offersOfBranch.getBranch().getId()
         );
 
@@ -96,34 +96,34 @@ public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
     }
 
     @Override
-    public OffersOfBranchesResponse addOfferToBranch(Long offerId, Long branchId) {
+    public PackageOfBranchesResponse addOfferToBranch(Long offerId, Long branchId) {
         throwExceptionIfOfferHasAlreadyExistedInBranch(offerId,branchId);
         throwExceptionIfNotAllServicesOfOfferExistInBranch(offerId,branchId);
 
 
-        Offer offer = offerService.getById(offerId);
+        Package aPackage = offerService.getById(offerId);
         Branch branch = branchService.getById(branchId);
 
-        OffersOfBranches offersOfBranches = new OffersOfBranches();
-        offersOfBranches.setOffer(offer);
-        offersOfBranches.setBranch(branch);
-        offersOfBranches.setOfferStatus(Status.UNAVAILABLE);
-        offersOfBranches.setAddingDate(new Date());
-        offersOfBranchesRepo.save(offersOfBranches);
+        PackagesOfBranches packagesOfBranches = new PackagesOfBranches();
+        packagesOfBranches.setAPackage(aPackage);
+        packagesOfBranches.setBranch(branch);
+        packagesOfBranches.setPackageStatus(Status.UNAVAILABLE);
+        packagesOfBranches.setAddingDate(new Date());
+        offersOfBranchesRepo.save(packagesOfBranches);
 
-        return offersOfBranchesMapper.toResponse(offersOfBranches);
+        return offersOfBranchesMapper.toResponse(packagesOfBranches);
     }
 
     @Override
-    public OffersOfBranchesResponse activateOfferInBranch(Long offerId, Long branchId) {
+    public PackageOfBranchesResponse activateOfferInBranch(Long offerId, Long branchId) {
         throwExceptionIfNotAllServicesOfOfferExistInBranch(offerId,branchId);
 
-        OffersOfBranches offersOfBranch = getByOfferIdAndBranchId(
+        PackagesOfBranches offersOfBranch = getByOfferIdAndBranchId(
                 offerId,
                 branchId
         );
 
-        offersOfBranch.setOfferStatus(Status.AVAILABLE);
+        offersOfBranch.setPackageStatus(Status.AVAILABLE);
         offersOfBranchesRepo.save(offersOfBranch);
 
 
@@ -131,16 +131,16 @@ public class OffersOfBranchesServiceImpl implements OffersOfBranchesService {
     }
 
     @Override
-    public OffersOfBranchesResponse deactivateOfferInBranch(Long offerId, Long branchId) {
-        OffersOfBranches offersOfBranches = getByOfferIdAndBranchId(
+    public PackageOfBranchesResponse deactivateOfferInBranch(Long offerId, Long branchId) {
+        PackagesOfBranches packagesOfBranches = getByOfferIdAndBranchId(
                 offerId,
                 branchId
         );
 
-        offersOfBranches.setOfferStatus(Status.UNAVAILABLE);
-        offersOfBranchesRepo.save(offersOfBranches);
+        packagesOfBranches.setPackageStatus(Status.UNAVAILABLE);
+        offersOfBranchesRepo.save(packagesOfBranches);
 
 
-        return offersOfBranchesMapper.toResponse(offersOfBranches);
+        return offersOfBranchesMapper.toResponse(packagesOfBranches);
     }
 }
