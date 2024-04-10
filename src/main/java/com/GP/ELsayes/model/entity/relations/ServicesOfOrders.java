@@ -1,6 +1,5 @@
 package com.GP.ELsayes.model.entity.relations;
 
-import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
@@ -30,8 +29,8 @@ public class ServicesOfOrders {
     @Enumerated(EnumType.STRING)
     private ProgressStatus progressStatus;
 
-    private Date serviceDate;
-    private Date serviceFinishDate;
+    private Date startWorkingDate;
+    private Date finishWorkingDate;
 
     @Enumerated(EnumType.STRING)
     private ServiceCategory serviceCategory;
@@ -57,9 +56,9 @@ public class ServicesOfOrders {
     private ServiceEntity service;
 
     @JsonBackReference
-    @JoinColumn(name = "offer_id")
+    @JoinColumn(name = "package_order_id")
     @ManyToOne
-    private Package aPackage;
+    private PackagesOfOrder packagesOfOrder;
 
     public Long getBranchId() {
         return order.getBranch().getId();

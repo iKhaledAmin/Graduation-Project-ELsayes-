@@ -14,6 +14,6 @@ public class ServicesOfPackageRequest {
     private Long serviceId;
 
     @NotNull(message = "Package id must not be null")
-    private Long PackageId;
+    private Long packageId;
 }
 

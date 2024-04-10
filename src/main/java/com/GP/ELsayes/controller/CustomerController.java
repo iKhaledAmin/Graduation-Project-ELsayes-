@@ -1,6 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.AddCarRequest;
+import com.GP.ELsayes.model.dto.AddPackageToOrderListRequest;
 import com.GP.ELsayes.model.dto.AddServiceToOrderListRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -63,6 +64,18 @@ public class CustomerController {
     @DeleteMapping("/delete-service-from-order-lis/{serviceId}")
     public ResponseEntity<?> deleteServiceFromOrderList(@PathVariable Long serviceId){
         this.customerService.deleteServiceFromOrderList(serviceId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
+
+    @PutMapping("/add-package-to-order-list")
+    public ResponseEntity<?> addPackageToOrderList(@RequestBody @Valid AddPackageToOrderListRequest addPackageToOrderListRequest){
+        this.customerService.addPackageToOrderList(addPackageToOrderListRequest);
+        return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/delete-package-from-order-lis/{packageId}")
+    public ResponseEntity<?> deletePackageFromOrderList(@PathVariable Long packageId){
+        this.customerService.deletePackageFromOrderList(packageId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
 

@@ -4,16 +4,14 @@ import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.repository.relations.ServicesOfOrderRepo;
-import com.GP.ELsayes.service.CustomerService;
-import com.GP.ELsayes.service.OrderService;
-import com.GP.ELsayes.service.ServiceService;
-import com.GP.ELsayes.service.WorkerService;
+import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -31,17 +29,23 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     private final CustomerService customerService;
     private final ServiceService serviceService;
     private final WorkerService workerService;
+    private final PackagesOfOrderService packagesOfOrderService;
+
+
+
 
     public ServicesOfOrderServiceImpl(ServicesOfOrderRepo servicesOfOrderRepo,
                                       OrderService orderService,
                                       CustomerService customerService,
                                       ServiceService serviceService,
-                                      @Lazy WorkerService workerService) {
+                                      @Lazy WorkerService workerService,
+                                      @Lazy PackagesOfOrderService packagesOfOrderService){
         this.servicesOfOrderRepo = servicesOfOrderRepo;
         this.orderService = orderService;
         this.customerService = customerService;
         this.serviceService = serviceService;
         this.workerService = workerService;
+        this.packagesOfOrderService = packagesOfOrderService;
     }
 
 
@@ -53,9 +57,14 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         throw new RuntimeException("This service with id "+ serviceId +" already existed in this order");
     }
 
-    private boolean orderIdFinished(Long orderId) {
+    private boolean checkIfOrderIsFinished(Long orderId) {
         List<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findObjectByOrderId(orderId);
-        return servicesOfOrder.stream().allMatch(serviceOrder -> serviceOrder.getServiceFinishDate() != null);
+        return servicesOfOrder.stream().allMatch(serviceOrder -> serviceOrder.getFinishWorkingDate() != null);
+    }
+
+    private boolean checkIfAllServicesOfOrderPackageIsFinished(Long orderId, Long packageOfOrderId) {
+        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findObjectByOrderIdAndPackageOfOrderId(orderId,packageOfOrderId);
+        return servicesOfOrder.stream().allMatch(serviceOrder -> serviceOrder.getFinishWorkingDate() != null);
     }
 
 
@@ -68,28 +77,37 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     }
 
 
+
     @Override
-    public void addServiceToOrder(Long customerId, Long serviceId) {
-        Customer customer = customerService.getObjectById(customerId).get();
-        ServiceEntity service = serviceService.getObjectById(serviceId).get();
+    public void addServiceToOrder(Long customerId, Long serviceId ,Boolean inPackage) {
+        Customer customer = customerService.getById(customerId);
+        ServiceEntity service = serviceService.getById(serviceId);
 
-        Optional<Order> unConfirmedOrder = orderService.getUnConfirmedByCustomerId(customerId);
-        if(unConfirmedOrder.isEmpty()){
-            unConfirmedOrder = Optional.ofNullable(orderService.add(customerId));
-        }
-        throwExceptionIfServiceHasAlreadyExistedInOrder(serviceId,unConfirmedOrder.get().getId());
+        Order unConfirmedOrder = orderService.getUnConfirmedByCustomerId(customerId)
+                .orElseGet(() -> orderService.add(customerId));
 
-        ServicesOfOrders servicesOfOrders = new ServicesOfOrders();
-        servicesOfOrders.setProgressStatus(ProgressStatus.UN_CONFIRMED);
-        servicesOfOrders.setOrder(unConfirmedOrder.get());
-        servicesOfOrders.setCustomer(customer);
-        servicesOfOrders.setService(service);
-        servicesOfOrders.setServiceCategory(service.getServiceCategory());
-        servicesOfOrderRepo.save(servicesOfOrders);
-        
-        unConfirmedOrder.get().incrementRequiredTime(service.getRequiredTime());
-        unConfirmedOrder.get().incrementTotalPrice(service.getPrice());
-        orderService.update(unConfirmedOrder.get());
+        throwExceptionIfServiceHasAlreadyExistedInOrder(serviceId, unConfirmedOrder.getId());
+
+        ServicesOfOrders servicesOfOrder = new ServicesOfOrders();
+        servicesOfOrder.setProgressStatus(ProgressStatus.UN_CONFIRMED);
+        servicesOfOrder.setOrder(unConfirmedOrder);
+        servicesOfOrder.setCustomer(customer);
+        servicesOfOrder.setService(service);
+        servicesOfOrder.setServiceCategory(service.getServiceCategory());
+
+        if (inPackage == true)
+            packagesOfOrderService.getByCustomerIdAndOrderId(customer.getId(), unConfirmedOrder.getId())
+                    .ifPresent(servicesOfOrder::setPackagesOfOrder);
+
+        servicesOfOrderRepo.save(servicesOfOrder);
+
+        unConfirmedOrder.incrementRequiredTime(service.getRequiredTime());
+        unConfirmedOrder.incrementTotalPrice(service.getPrice());
+        orderService.update(unConfirmedOrder);
+    }
+
+    public void addServiceToOrder(Long customerId, Long serviceId ){
+        addServiceToOrder(customerId,serviceId,false);
     }
 
 
@@ -104,11 +122,12 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
             // Set the worker
             servicesOfOrders.setWorker(worker);
             servicesOfOrders.setProgressStatus(ProgressStatus.ON_WORKING);
-            servicesOfOrders.setServiceDate(new Date());
+            servicesOfOrders.setStartWorkingDate(new Date());
 
             // Save the updated ServicesOfOrders instance
             servicesOfOrderRepo.save(servicesOfOrders);
             workerService.updateWorkerStatus(worker.getId(), WorkerStatus.UN_AVAILABLE);
+            packagesOfOrderService.updateStatusOfAllOrderPackage(servicesOfOrder.get().getOrder().getId(),ProgressStatus.ON_WORKING);
         } else {
             // Handle the case where the ServicesOfOrders instance is not found
             throw new RuntimeException("No service found for the given serviceId and customerId");
@@ -117,27 +136,28 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
 
     @Override
     public void finishServiceTask(Long customerId, Long workerId) {
-        Optional<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findByCustomerIdAndWorkerId(customerId,workerId);
-        // Check if the ServicesOfOrders instance is present
-        if (servicesOfOrder.isPresent()) {
+        ServicesOfOrders servicesOfOrders = servicesOfOrderRepo.findByCustomerIdAndWorkerId(customerId, workerId)
+                .orElseThrow(() -> new RuntimeException("Worker with id = " + workerId +
+                        " does not work on any services for this car."));
 
-            ServicesOfOrders servicesOfOrders = servicesOfOrder.get();
+        servicesOfOrders.setProgressStatus(ProgressStatus.FINISHED);
+        servicesOfOrders.setFinishWorkingDate(new Date());
+        servicesOfOrderRepo.save(servicesOfOrders);
 
-            servicesOfOrders.setWorker(servicesOfOrders.getWorker());
-            servicesOfOrders.setProgressStatus(ProgressStatus.FINISHED);
-            servicesOfOrders.setServiceDate(servicesOfOrders.getServiceDate());
-            servicesOfOrders.setServiceFinishDate(new Date());
-
-            servicesOfOrderRepo.save(servicesOfOrders);
-
-            if (orderIdFinished(servicesOfOrders.getOrder().getId()))
-                orderService.endTheOrder(servicesOfOrders.getOrder().getId());
-
-        } else {
-            // Handle the case where the ServicesOfOrders instance is not found
-            throw new RuntimeException("No service found for the given serviceId and customerId");
+        Long orderId = servicesOfOrders.getOrder().getId();
+        if (checkIfOrderIsFinished(orderId)) {
+            orderService.endTheOrder(orderId);
         }
 
+        PackagesOfOrder packageOfOrder = servicesOfOrders.getPackagesOfOrder();
+        if (packageOfOrder != null && checkIfAllServicesOfOrderPackageIsFinished(orderId, packageOfOrder.getId())) {
+            packagesOfOrderService.updateStatusOfAllOrderPackage(orderId, ProgressStatus.FINISHED);
+        }
+    }
+
+    @Override
+    public List<ServicesOfOrders> getAllUnConfirmedByPackageOfOrderId(Long packageOfOrderId) {
+        return servicesOfOrderRepo.findAllUnConfirmedByPackageOrderId(packageOfOrderId);
     }
 
 
@@ -151,14 +171,14 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         return servicesOfOrderRepo.findObjectByOrderId(orderId);
     }
 
-    public void deleteServiceFromOrderList(Long serviceId){
-        ServicesOfOrders servicesOfOrder = servicesOfOrderRepo.findById(serviceId).orElseThrow(
-                () -> new NoSuchElementException("There is no service with id = " + serviceId)
+    public void deleteServiceFromOrderList(Long serviceOfOrderId){
+        ServicesOfOrders servicesOfOrder = servicesOfOrderRepo.findById(serviceOfOrderId).orElseThrow(
+                () -> new NoSuchElementException("There is no service with id = " + serviceOfOrderId)
         );
         if (servicesOfOrder.getProgressStatus() != ProgressStatus.UN_CONFIRMED){
             throw new RuntimeException("Order is confirmed, you can not delete");
         }
-        servicesOfOrderRepo.deleteById(serviceId);
+        servicesOfOrderRepo.deleteById(serviceOfOrderId);
     }
 
 }

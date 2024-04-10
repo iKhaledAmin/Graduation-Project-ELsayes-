@@ -11,6 +11,7 @@ import com.GP.ELsayes.service.CustomerService;
 import com.GP.ELsayes.service.OrderHandlingService;
 import com.GP.ELsayes.service.OrderService;
 import com.GP.ELsayes.service.ServiceService;
+import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import lombok.SneakyThrows;
@@ -28,17 +29,20 @@ public class OrderServiceImpl implements OrderService {
     private final CustomerService customerService;
     private final ServiceService serviceService;
     private final ServicesOfOrderService servicesOfOrderService;
+    private final PackagesOfOrderService packagesOfOrderService;
     private final VisitationsOfBranchesService visitationsOfBranchesService;
     private final OrderHandlingService orderHandlingService;
 
-    public OrderServiceImpl(OrderRepo orderRepo,@Lazy CustomerService customerService,
-                            @Lazy ServiceService serviceService,@Lazy ServicesOfOrderService servicesOfOrderService,
+    public OrderServiceImpl(OrderRepo orderRepo, @Lazy CustomerService customerService,
+                            @Lazy ServiceService serviceService, @Lazy ServicesOfOrderService servicesOfOrderService,
+                            @Lazy PackagesOfOrderService packagesOfOrderService,
                             VisitationsOfBranchesService visitationsOfBranchesService,
                             @Lazy OrderHandlingService orderHandlingService) {
         this.orderRepo = orderRepo;
         this.customerService = customerService;
         this.serviceService = serviceService;
         this.servicesOfOrderService = servicesOfOrderService;
+        this.packagesOfOrderService = packagesOfOrderService;
         this.visitationsOfBranchesService = visitationsOfBranchesService;
         this.orderHandlingService = orderHandlingService;
     }
@@ -179,6 +183,7 @@ public class OrderServiceImpl implements OrderService {
         unConfirmedOrder.setBranch(visitationsOfBranch.getBranch());
         unConfirmedOrder = update(unConfirmedOrder);
         servicesOfOrderService.confirmAllServiceOfOrder(unConfirmedOrder.getId());
+        packagesOfOrderService.confirmAllPackagesOfOrder(unConfirmedOrder.getId());
 
         orderHandlingService.saveOrder(unConfirmedOrder.getId());
 

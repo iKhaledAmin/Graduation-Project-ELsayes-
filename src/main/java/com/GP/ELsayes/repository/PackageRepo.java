@@ -34,6 +34,6 @@ public interface PackageRepo extends JpaRepository<Package,Long> {
 //    @Query("SELECT o FROM Package o JOIN o.servicesOfPackage so JOIN o.packagesOfBranch ob WHERE so.service.id = :serviceId AND ob.branch.id = :branchId")
 //   Optional<Package>  findByServiceIdAndBranchId(Long serviceId, Long branchId);
 //
-//    @Query("select o from Package o join o.packagesOfBranch ob where ob.packageStatus = 'AVAILABLE' and ob.aPackage.id = :packageId and ob.branch.id = :branchId")
+//    @Query("select o from Package o join o.packagesOfBranch ob where ob.packageStatus = 'AVAILABLE' and ob.packagesOfOrder.id = :packageId and ob.branch.id = :branchId")
 //    Optional<Package> findByOfferIdAndBranchIdIfAvailable(Long packageId, Long branchId);
 }

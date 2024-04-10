@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.FreeTrialCode;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
+import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -48,6 +49,10 @@ public class Customer extends User {
     @JsonManagedReference
     @OneToMany(mappedBy = "customer")
     private List<ServicesOfOrders> servicesOfOrder;
+
+    @JsonManagedReference
+    @OneToMany(mappedBy = "customer")
+    private List<PackagesOfOrder> packagesOfOrder;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "customer")

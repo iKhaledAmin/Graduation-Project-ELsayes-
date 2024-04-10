@@ -42,20 +42,20 @@ public interface ManagerService extends UserService , CrudService<ManagerRequest
     public ServicesOfBranchesResponse addServiceToBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
-    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest);
+    public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest);
     public List<ServiceEntity> getAllServicesByBranchId(Long branchId);
 
 
 
-    public PackageResponse addOffer(PackageRequest packageRequest);
-    public PackageResponse updateOffer(PackageRequest packageRequest, Long offerId);
-    public void deleteOffer(Long offerId);
-    public List<PackageResponse> getAllOffers();
-    public PackageResponse getOfferResponseById(Long offerId);
-    public PackageOfBranchesResponse addOfferToBranch(PackageOfBranchesRequest packageOfBranchesRequest);
-    public PackageOfBranchesResponse activateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
-    public PackageOfBranchesResponse deactivateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
-    public List<PackageResponse> getAllOfferResponseByBranchId(Long branchId);
+    public PackageResponse addPackage(PackageRequest packageRequest);
+    public PackageResponse updatePackage(PackageRequest packageRequest, Long offerId);
+    public void deletePackage(Long offerId);
+    public List<PackageResponse> getAllPackages();
+    public PackageResponse getPackageResponseById(Long offerId);
+    public PackageOfBranchesResponse addPackageToBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse activatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
+    public List<PackageResponse> getAllPackageResponseByBranchId(Long branchId);
 
 
 }

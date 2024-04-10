@@ -275,8 +275,8 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         return serviceService.deactivateServiceInBranch(servicesOfBranchesRequest);
     }
     @Override
-    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest){
-        return serviceService.addServiceToOffer(servicesOfPackageRequest);
+    public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest){
+        return serviceService.addServiceToPackage(servicesOfPackageRequest);
     }
     @Override
     public List<ServiceEntity> getAllServicesByBranchId(Long branchId){
@@ -287,39 +287,39 @@ public class ManagerServiceImpl implements UserService, ManagerService {
 
 
     @Override
-    public PackageResponse addOffer(PackageRequest packageRequest){
+    public PackageResponse addPackage(PackageRequest packageRequest){
         return packageService.add(packageRequest);
     }
     @Override
-    public PackageResponse updateOffer(PackageRequest packageRequest, Long offerId){
+    public PackageResponse updatePackage(PackageRequest packageRequest, Long offerId){
         return packageService.update(packageRequest,offerId);
     }
     @Override
-    public void deleteOffer(Long offerId){
+    public void deletePackage(Long offerId){
         packageService.delete(offerId);
     }
     @Override
-    public List<PackageResponse> getAllOffers(){
+    public List<PackageResponse> getAllPackages(){
         return packageService.getAll();
     }
     @Override
-    public PackageResponse getOfferResponseById(Long offerId){
+    public PackageResponse getPackageResponseById(Long offerId){
         return packageService.getResponseById(offerId);
     }
     @Override
-    public PackageOfBranchesResponse addOfferToBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+    public PackageOfBranchesResponse addPackageToBranch(PackageOfBranchesRequest packageOfBranchesRequest){
         return packageService.addPackageToBranch(packageOfBranchesRequest);
     }
     @Override
-    public PackageOfBranchesResponse activateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+    public PackageOfBranchesResponse activatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
         return packageService.activatePackageInBranch(packageOfBranchesRequest);
     }
     @Override
-    public PackageOfBranchesResponse deactivateOfferInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
+    public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest){
         return packageService.deactivatePackageInBranch(packageOfBranchesRequest);
     }
     @Override
-    public List<PackageResponse> getAllOfferResponseByBranchId(Long branchId){
+    public List<PackageResponse> getAllPackageResponseByBranchId(Long branchId){
         return packageService.getResponseAllByBranchId(branchId);
     }
 

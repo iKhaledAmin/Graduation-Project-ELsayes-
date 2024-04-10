@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.AddCarRequest;
+import com.GP.ELsayes.model.dto.AddPackageToOrderListRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
@@ -13,6 +14,7 @@ import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
 import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -34,13 +36,15 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     private OrderService orderService;
     private final FreeTrialCodeService freeTrialCodeService;
     private final ServicesOfOrderService servicesOfOrderService;
+    private final PackagesOfOrderService packagesOfOrderService;
 
 
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
                                UserMapper userMapper, @Lazy CarService carService,
                                @Lazy OrderService orderService,
                                @Lazy FreeTrialCodeService freeTrialCodeService,
-                               @Lazy ServicesOfOrderService servicesOfOrderService) {
+                               @Lazy ServicesOfOrderService servicesOfOrderService,
+                               @Lazy PackagesOfOrderService packagesOfOrderService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
         this.userMapper = userMapper;
@@ -48,6 +52,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         this.orderService = orderService;
         this.freeTrialCodeService = freeTrialCodeService;
         this.servicesOfOrderService = servicesOfOrderService;
+        this.packagesOfOrderService = packagesOfOrderService;
     }
 
 
@@ -139,8 +144,22 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         );
     }
 
-    public void deleteServiceFromOrderList(Long serviceId){
-        servicesOfOrderService.deleteServiceFromOrderList(serviceId);
+    @Override
+    public void deleteServiceFromOrderList(Long serviceOfOrderId){
+        servicesOfOrderService.deleteServiceFromOrderList(serviceOfOrderId);
+    }
+
+    @Override
+    public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest) {
+        packagesOfOrderService.addPackageToOrder(
+                addPackageToOrderListRequest.getCustomerId(),
+                addPackageToOrderListRequest.getPackageId()
+                );
+    }
+
+    @Override
+    public void deletePackageFromOrderList(Long packageOfOrderId){
+        packagesOfOrderService.deletePackageFromOrderList(packageOfOrderId);
     }
 
     public void confirmOrder(Long customerId){

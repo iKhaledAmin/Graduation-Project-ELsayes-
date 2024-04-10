@@ -29,7 +29,7 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
 
 
 
-    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest);
+    public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest);
 
     public List<ServiceEntity> getAllByPackageId(Long offerId);
     public List<ServiceResponse> getResponseAllByOfferId(Long offerId);

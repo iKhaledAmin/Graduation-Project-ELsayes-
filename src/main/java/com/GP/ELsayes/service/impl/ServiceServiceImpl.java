@@ -218,13 +218,13 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public ServicesOfPackagesResponse addServiceToOffer(ServicesOfPackageRequest servicesOfPackageRequest) {
+    public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest) {
 
         Package aPackage = packageService.getById(servicesOfPackageRequest.getPackageId());
 
         ServicesOfPackagesResponse servicesOfPackagesResponse = servicesOfpackagesService.addServiceToPackage(
                 servicesOfPackageRequest.getServiceId(),
-                servicesOfPackageRequest.getServiceId()
+                servicesOfPackageRequest.getPackageId()
         );
 
         PackageRequest packageRequest = new PackageRequest();

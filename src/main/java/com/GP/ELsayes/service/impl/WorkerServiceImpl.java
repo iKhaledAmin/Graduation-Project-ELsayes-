@@ -118,6 +118,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
     }
 
+    @Override
     public void updateWorkerStatus(Long workerId,WorkerStatus workerStatus){
         Optional<Worker> worker = workerRepo.findById(workerId);
         WorkerRequest workerRequest = workerMapper.toRequest(worker.get());
@@ -223,8 +224,8 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
     public void finishTask(String carPlateNumber, Long workerId){
         Car car = carService.getByCarPlateNumber(carPlateNumber);
-        Optional<Worker> worker = getObjectById(workerId);
-        Optional<Branch> branch = branchService.getObjectById(worker.get().getBranch().getId());
+        Worker worker = getById(workerId);
+        Optional<Branch> branch = branchService.getObjectById(worker.getBranch().getId());
 
         VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
                 carPlateNumber,

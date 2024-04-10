@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface ServicesOfOffersMapper {
     @Mapping(target = "serviceName" , source = "entity.service.name")
-   // @Mapping(target = "packageName" , source = "entity.aPackage.name")
+   // @Mapping(target = "packageName" , source = "entity.packagesOfOrder.name")
     ServicesOfPackagesResponse toResponse(ServicesOfPackage entity);
 }

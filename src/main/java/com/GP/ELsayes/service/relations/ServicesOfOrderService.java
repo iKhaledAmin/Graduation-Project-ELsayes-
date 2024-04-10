@@ -6,12 +6,15 @@ import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import java.util.List;
 
 public interface ServicesOfOrderService {
-    void addServiceToOrder(Long customerId,Long ServiceId);
+    public void addServiceToOrder(Long customerId, Long serviceId ,Boolean inPackage);
+    public void addServiceToOrder(Long customerId, Long serviceId );
+    public void deleteServiceFromOrderList(Long serviceOfOrderId);
     void confirmAllServiceOfOrder(Long orderId);
 
     List<ServicesOfOrders> getObjectByOrderId(Long orderId);
     public void setWorkerServiceTask(Long customerId, Long serviceId, Worker worker);
 
     void finishServiceTask(Long customerId, Long workerId);
-    public void deleteServiceFromOrderList(Long serviceId);
+
+    List<ServicesOfOrders> getAllUnConfirmedByPackageOfOrderId(Long packageOfOrderId);
 }

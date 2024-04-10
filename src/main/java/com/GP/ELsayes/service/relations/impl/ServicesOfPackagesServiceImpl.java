@@ -47,9 +47,9 @@ public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService 
         this.servicesOfBranchesService = servicesOfBranchesService;
     }
 
-    private ServicesOfPackage getByServiceIdAndBranchId(Long serviceId , Long offerId) {
-        return servicesOfPackagesRepo.findByServiceIdAndPackageId(serviceId,offerId).orElseThrow(
-                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this offer")
+    private ServicesOfPackage getByServiceIdAndBranchId(Long serviceId , Long packageId) {
+        return servicesOfPackagesRepo.findByServiceIdAndPackageId(serviceId,packageId).orElseThrow(
+                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this package")
         );
     }
 
@@ -59,55 +59,55 @@ public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService 
 
         branches.forEach(branch -> {
             if(serviceService.isAvailableInBranch(serviceId , branch.getId()) == false){
-                PackagesOfBranches offersOfBranch = new PackagesOfBranches();
-                offersOfBranch = servicesOfBranchesService.getByPackageIdAndBranchId(packageId,branch.getId());
-                offersOfBranch.setPackageStatus(Status.UNAVAILABLE);
-                servicesOfBranchesService.update(offersOfBranch);
+                PackagesOfBranches packagesOfBranch = new PackagesOfBranches();
+                packagesOfBranch = servicesOfBranchesService.getByPackageIdAndBranchId(packageId,branch.getId());
+                packagesOfBranch.setPackageStatus(Status.UNAVAILABLE);
+                servicesOfBranchesService.update(packagesOfBranch);
             }
         });
     }
 
 
-    private void throwExceptionIfServiceHasAlreadyExistedInOffer(Long serviceId , Long offerId){
-        Optional<ServicesOfPackage> servicesOfOffer = servicesOfPackagesRepo.findByServiceIdAndPackageId(serviceId,offerId);
-        if(servicesOfOffer.isEmpty()){
+    private void throwExceptionIfServiceHasAlreadyExistedInPackage(Long serviceId , Long packageId){
+        Optional<ServicesOfPackage> servicesOfPackage = servicesOfPackagesRepo.findByServiceIdAndPackageId(serviceId,packageId);
+        if(servicesOfPackage.isEmpty()){
             return;
         }
-        throw new RuntimeException("This service with id "+ servicesOfOffer.get().getService().getId() +" already existed in this offer");
+        throw new RuntimeException("This service with id "+ servicesOfPackage.get().getService().getId() +" already existed in this package");
     }
 
     @SneakyThrows
-    private ServicesOfPackage update(ServicesOfPackage servicesOfOffer){
+    private ServicesOfPackage update(ServicesOfPackage servicesOfPackage){
 
-        ServicesOfPackage updatedServicesOfOffer = servicesOfOffer;
-        ServicesOfPackage existedServicesOfOffer = this.getByServiceIdAndBranchId(
-                servicesOfOffer.getService().getId(),
-                servicesOfOffer.getAPackage().getId()
+        ServicesOfPackage updatedServicesOfPackage = servicesOfPackage;
+        ServicesOfPackage existedServicesOfPackage = this.getByServiceIdAndBranchId(
+                servicesOfPackage.getService().getId(),
+                servicesOfPackage.getAPackage().getId()
         );
 
 
-        updatedServicesOfOffer.setId(existedServicesOfOffer.getId());
-        BeanUtils.copyProperties(updatedServicesOfOffer,existedServicesOfOffer);
+        updatedServicesOfPackage.setId(existedServicesOfPackage.getId());
+        BeanUtils.copyProperties(updatedServicesOfPackage,existedServicesOfPackage);
 
-        return servicesOfPackagesRepo.save(updatedServicesOfOffer);
+        return servicesOfPackagesRepo.save(updatedServicesOfPackage);
     }
 
     @Override
     public ServicesOfPackagesResponse addServiceToPackage(Long serviceId, Long packageId) {
-        throwExceptionIfServiceHasAlreadyExistedInOffer(serviceId, packageId);
+        throwExceptionIfServiceHasAlreadyExistedInPackage(serviceId, packageId);
 
         ServiceEntity service = serviceService.getById(serviceId);
         Package aPackage = packageService.getById(packageId);
 
-        ServicesOfPackage servicesOfOffer = new ServicesOfPackage();
-        servicesOfOffer.setService(service);
-        servicesOfOffer.setAPackage(aPackage);
-        servicesOfOffer.setAddingDate(new Date());
-        servicesOfPackagesRepo.save(servicesOfOffer);
+        ServicesOfPackage servicesOfPackage = new ServicesOfPackage();
+        servicesOfPackage.setService(service);
+        servicesOfPackage.setAPackage(aPackage);
+        servicesOfPackage.setAddingDate(new Date());
+        servicesOfPackagesRepo.save(servicesOfPackage);
 
         handleAvailabilityOfPackageInAllBranches(packageId,serviceId);
 
-        return servicesOfOffersMapper.toResponse(servicesOfOffer);
+        return servicesOfOffersMapper.toResponse(servicesOfPackage);
     }
 
 

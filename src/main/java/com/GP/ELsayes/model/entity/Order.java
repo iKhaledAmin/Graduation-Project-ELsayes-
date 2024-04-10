@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.entity;
 
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
@@ -55,6 +56,9 @@ public class Order {
     @JsonManagedReference
     @OneToMany(mappedBy = "order")
     private List<ServicesOfOrders> servicesOfOrder;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "order")
+    private List<PackagesOfOrder> packagesOfOrder;
 
 
     public void incrementRequiredTime(String serviceTime){

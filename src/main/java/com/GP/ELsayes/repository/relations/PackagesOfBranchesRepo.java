@@ -10,7 +10,7 @@ import java.util.Optional;
 @Repository
 public interface PackagesOfBranchesRepo extends JpaRepository<PackagesOfBranches,Long> {
 
-   // @Query("SELECT OoB FROM PackagesOfBranches OoB WHERE OoB.aPackage.id = :packageId AND OoB.branch.id = :branchId")
+   // @Query("SELECT OoB FROM PackagesOfBranches OoB WHERE OoB.packagesOfOrder.id = :packageId AND OoB.branch.id = :branchId")
     @Query("SELECT packageBranch FROM PackagesOfBranches packageBranch WHERE" +
             " packageBranch.aPackage.id = :packageId AND packageBranch.branch.id = :branchId")
     Optional<PackagesOfBranches> findByPackageIdAndBranchId(Long packageId, Long branchId);

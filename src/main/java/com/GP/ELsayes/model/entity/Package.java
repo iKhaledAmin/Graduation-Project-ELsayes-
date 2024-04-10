@@ -1,9 +1,6 @@
 package com.GP.ELsayes.model.entity;
 
-import com.GP.ELsayes.model.entity.relations.ManagersOfPackages;
-import com.GP.ELsayes.model.entity.relations.PackagesOfBranches;
-import com.GP.ELsayes.model.entity.relations.ServicesOfPackage;
-import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
+import com.GP.ELsayes.model.entity.relations.*;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
@@ -49,12 +46,13 @@ public class Package {
     private List<ServicesOfPackage> servicesOfPackage ;
 
     @JsonManagedReference
+    @OneToMany(mappedBy = "aPackage" )
+    private List<PackagesOfOrder> packagesOfOrder ;
+
+    @JsonManagedReference
     @OneToMany(mappedBy = "aPackage" ,cascade = CascadeType.REMOVE)
     private List<PackagesOfBranches> packagesOfBranch;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "aPackage" )
-    private List<ServicesOfOrders> servicesOfOrder ;
 }
 
 

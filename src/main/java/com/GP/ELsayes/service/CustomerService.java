@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.AddCarRequest;
+import com.GP.ELsayes.model.dto.AddPackageToOrderListRequest;
 import com.GP.ELsayes.model.dto.AddServiceToOrderListRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
@@ -12,6 +13,9 @@ import org.springframework.stereotype.Service;
 public interface CustomerService extends  UserService, CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
     public void addServiceToOrderList(AddServiceToOrderListRequest addServiceToOrderListRequest);
-    public void confirmOrder(Long customerId);
     public void deleteServiceFromOrderList(Long serviceId);
+    public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest);
+    public void deletePackageFromOrderList(Long packageOfOrderId);
+    public void confirmOrder(Long customerId);
+
 }
