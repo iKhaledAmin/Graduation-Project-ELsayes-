@@ -30,7 +30,7 @@ public class ManagersOfPackages {
     @JsonBackReference
     @ManyToOne
     @JoinColumn(name = "package_id")
-    private Package aPackage;
+    private Package packageEntity;
 
     @JsonBackReference
     @ManyToOne

@@ -1,6 +1,8 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.OrderResponse;
+import com.GP.ELsayes.model.dto.PackagesOfOrderResponse;
+import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
@@ -102,14 +104,11 @@ public class OrderServiceImpl implements OrderService {
         update(order.get());
     }
 
+
+
     @Override
     public void delete(Long aLong) {
 
-    }
-
-    @Override
-    public List<OrderResponse> getAll() {
-        return null;
     }
 
     @Override
@@ -125,16 +124,22 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse getResponseById(Long orderId) {
-       //return offerMapper.toResponse(getById(orderId);
-        return null;
-    }
-    
-    @Override
     public Optional<Order> getUnConfirmedByCustomerId(Long customerId) {
         return orderRepo.findUnConfirmedByCustomerId(customerId);
     }
 
+    @Override
+    public OrderResponse getUnConfirmedOrderByCustomerId(Long customerId) {
+        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getAllUnConfirmedByCustomerId(customerId);
+        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getAllUnConfirmedByCustomerId(customerId);
+
+        return new OrderResponse(servicesOfOrder,packagesOfOrder);
+    }
+
+    @Override
+    public  List<ServicesOfOrderResponse> getConfirmedOrderByCustomerId(Long customerId){
+        return servicesOfOrderService.getAllConfirmedByCustomerId(customerId);
+    }
 
     public List<ServiceEntity> findServicesNotInBranch(Long orderId,Long branchId){
 

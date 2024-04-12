@@ -7,7 +7,7 @@ import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.relations.PackagesOfBranches;
 import com.GP.ELsayes.model.entity.relations.ServicesOfPackage;
 import com.GP.ELsayes.model.enums.Status;
-import com.GP.ELsayes.model.mapper.relations.ServicesOfOffersMapper;
+import com.GP.ELsayes.model.mapper.relations.ServicesOfPackagesMapper;
 import com.GP.ELsayes.repository.relations.ServicesOfPackagesRepo;
 import com.GP.ELsayes.service.BranchService;
 import com.GP.ELsayes.service.PackageService;
@@ -28,7 +28,7 @@ import java.util.Optional;
 public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService {
 
     private final ServicesOfPackagesRepo servicesOfPackagesRepo;
-    private final ServicesOfOffersMapper servicesOfOffersMapper;
+    private final ServicesOfPackagesMapper servicesOfPackagesMapper;
     private final ServiceService serviceService;
     private final PackageService packageService;
 
@@ -37,9 +37,9 @@ public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService 
 
 
 
-    public ServicesOfPackagesServiceImpl(ServicesOfPackagesRepo servicesOfPackagesRepo, ServicesOfOffersMapper servicesOfOffersMapper, @Lazy ServiceService serviceService, @Lazy PackageService packageService, BranchService branchService, PackagesOfBranchesService servicesOfBranchesService) {
+    public ServicesOfPackagesServiceImpl(ServicesOfPackagesRepo servicesOfPackagesRepo, ServicesOfPackagesMapper servicesOfPackagesMapper, @Lazy ServiceService serviceService, @Lazy PackageService packageService, BranchService branchService, PackagesOfBranchesService servicesOfBranchesService) {
         this.servicesOfPackagesRepo = servicesOfPackagesRepo;
-        this.servicesOfOffersMapper = servicesOfOffersMapper;
+        this.servicesOfPackagesMapper = servicesOfPackagesMapper;
         this.serviceService = serviceService;
         this.packageService = packageService;
         this.branchService = branchService;
@@ -82,7 +82,7 @@ public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService 
         ServicesOfPackage updatedServicesOfPackage = servicesOfPackage;
         ServicesOfPackage existedServicesOfPackage = this.getByServiceIdAndBranchId(
                 servicesOfPackage.getService().getId(),
-                servicesOfPackage.getAPackage().getId()
+                servicesOfPackage.getPackageEntity().getId()
         );
 
 
@@ -101,13 +101,13 @@ public class ServicesOfPackagesServiceImpl implements ServicesOfPackagesService 
 
         ServicesOfPackage servicesOfPackage = new ServicesOfPackage();
         servicesOfPackage.setService(service);
-        servicesOfPackage.setAPackage(aPackage);
+        servicesOfPackage.setPackageEntity(aPackage);
         servicesOfPackage.setAddingDate(new Date());
         servicesOfPackagesRepo.save(servicesOfPackage);
 
         handleAvailabilityOfPackageInAllBranches(packageId,serviceId);
 
-        return servicesOfOffersMapper.toResponse(servicesOfPackage);
+        return servicesOfPackagesMapper.toResponse(servicesOfPackage);
     }
 
 

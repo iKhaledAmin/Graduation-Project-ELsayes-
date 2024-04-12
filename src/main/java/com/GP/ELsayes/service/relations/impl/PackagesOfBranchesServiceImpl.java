@@ -52,7 +52,7 @@ public class PackagesOfBranchesServiceImpl implements PackagesOfBranchesService 
         if(packagesOfBranch.isEmpty()){
             return;
         }
-        throw new RuntimeException("This package with id "+ packagesOfBranch.get().getAPackage().getId() +" already existed in this branch");
+        throw new RuntimeException("This package with id "+ packagesOfBranch.get().getPackageEntity().getId() +" already existed in this branch");
     }
 
     @Override
@@ -84,7 +84,7 @@ public class PackagesOfBranchesServiceImpl implements PackagesOfBranchesService 
 
         PackagesOfBranches updatedOffersOfBranch = packagesOfBranch;
         PackagesOfBranches existedOffersOfBranch = this.getByPackageIdAndBranchId(
-                packagesOfBranch.getAPackage().getId(),
+                packagesOfBranch.getPackageEntity().getId(),
                 packagesOfBranch.getBranch().getId()
         );
 
@@ -105,7 +105,7 @@ public class PackagesOfBranchesServiceImpl implements PackagesOfBranchesService 
         Branch branch = branchService.getById(branchId);
 
         PackagesOfBranches packagesOfBranches = new PackagesOfBranches();
-        packagesOfBranches.setAPackage(aPackage);
+        packagesOfBranches.setPackageEntity(aPackage);
         packagesOfBranches.setBranch(branch);
         packagesOfBranches.setPackageStatus(Status.UNAVAILABLE);
         packagesOfBranches.setAddingDate(new Date());

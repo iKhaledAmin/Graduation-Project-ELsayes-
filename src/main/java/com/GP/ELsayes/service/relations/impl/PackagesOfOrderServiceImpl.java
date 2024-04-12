@@ -1,5 +1,6 @@
 package com.GP.ELsayes.service.relations.impl;
 
+import com.GP.ELsayes.model.dto.PackagesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
@@ -7,6 +8,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ProgressStatus;
+import com.GP.ELsayes.model.mapper.relations.PackagesOfOrderMapper;
 import com.GP.ELsayes.repository.relations.PackagesOfOrderRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.PackagesOfOrderService;
@@ -26,6 +28,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
     private final CustomerService customerService;
     private final PackageService packageService;
     private final PackagesOfOrderRepo packagesOfOrderRepo;
+    private final PackagesOfOrderMapper packagesOfOrderMapper;
     private final ServiceService serviceService;
     private final ServicesOfOrderService servicesOfOrderService;
 
@@ -42,6 +45,14 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
     @Override
     public Optional<PackagesOfOrder> getByCustomerIdAndOrderId(Long customerId, Long orderId) {
         return packagesOfOrderRepo.findByCustomerIdAndOrderId(customerId,orderId);
+    }
+
+    @Override
+    public List<PackagesOfOrderResponse> getAllUnConfirmedByCustomerId(Long customerId) {
+        return packagesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
+                .stream()
+                .map(packagesOfOrder ->  packagesOfOrderMapper.toResponse(packagesOfOrder))
+                .toList();
     }
 
     @Override
@@ -62,7 +73,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
         packagesOfOrder.setProgressStatus(ProgressStatus.UN_CONFIRMED);
         packagesOfOrder.setOrder(unConfirmedOrder.get());
         packagesOfOrder.setCustomer(customer);
-        packagesOfOrder.setAPackage(aPackage);
+        packagesOfOrder.setPackageEntity(aPackage);
         packagesOfOrderRepo.save(packagesOfOrder);
 
         List<ServiceEntity> packageServices = serviceService.getAllByPackageId(packageId);

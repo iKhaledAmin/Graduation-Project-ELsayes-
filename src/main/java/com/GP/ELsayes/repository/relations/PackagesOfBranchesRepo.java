@@ -12,7 +12,7 @@ public interface PackagesOfBranchesRepo extends JpaRepository<PackagesOfBranches
 
    // @Query("SELECT OoB FROM PackagesOfBranches OoB WHERE OoB.packagesOfOrder.id = :packageId AND OoB.branch.id = :branchId")
     @Query("SELECT packageBranch FROM PackagesOfBranches packageBranch WHERE" +
-            " packageBranch.aPackage.id = :packageId AND packageBranch.branch.id = :branchId")
+            " packageBranch.packageEntity.id = :packageId AND packageBranch.branch.id = :branchId")
     Optional<PackagesOfBranches> findByPackageIdAndBranchId(Long packageId, Long branchId);
 
 }

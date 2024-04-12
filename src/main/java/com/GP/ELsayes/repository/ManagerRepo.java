@@ -13,7 +13,7 @@ public interface ManagerRepo extends JpaRepository<Manager,Long> {
     @Query("SELECT manager FROM Manager manager WHERE manager.branch.id = :branchId")
     Optional<Manager> findByBranchId(Long branchId);
 
-    @Query("SELECT manager FROM Manager manager JOIN manager.managersOfPackage mo WHERE mo.aPackage.id = :packageId")
+    @Query("SELECT manager FROM Manager manager JOIN manager.managersOfPackage mo WHERE mo.packageEntity.id = :packageId")
     Optional<Manager> findByPackageId(Long packageId);
 
 }

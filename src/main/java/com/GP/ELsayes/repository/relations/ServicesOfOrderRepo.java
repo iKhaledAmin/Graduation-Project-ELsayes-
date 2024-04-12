@@ -25,8 +25,6 @@ public interface ServicesOfOrderRepo extends JpaRepository<ServicesOfOrders,Long
     List<ServicesOfOrders> findByServiceIdAndCustomerId(Long serviceId, Long customerId);
 
     @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus = 'ON_WORKING' AND so.customer.id = :customerId AND so.worker.id = :workerId ")
-//    @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus = 'ON_WORKING' AND so.customer.id = :customerId" +
-//            " AND so.worker.id = :workerId AND so.packagesOfOrder IS NOT NULL")
     Optional<ServicesOfOrders> findByCustomerIdAndWorkerId(Long customerId, Long workerId);
 
 
@@ -36,4 +34,13 @@ public interface ServicesOfOrderRepo extends JpaRepository<ServicesOfOrders,Long
     @Query("SELECT so FROM ServicesOfOrders so WHERE so.packagesOfOrder.id = :packageOfOrderId " +
             "AND so.order.id = :orderId AND so.packagesOfOrder IS NOT NULL")
     List<ServicesOfOrders> findObjectByOrderIdAndPackageOfOrderId(Long orderId, Long packageOfOrderId);
+
+
+    @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus = 'UN_CONFIRMED' " +
+            "AND so.packagesOfOrder.id is null AND so.customer.id = :customerId")
+    List<ServicesOfOrders> findAllUnConfirmedByCustomerId(Long customerId);
+
+    @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus <> 'UN_CONFIRMED' " +
+            "AND so.customer.id = :customerId")
+    List<ServicesOfOrders> findAllConfirmedByCustomerId(Long customerId);
 }

@@ -29,7 +29,7 @@ public class ManagersOfPackagesServiceImpl implements ManagersOfPackagesService 
 
         ManagersOfPackages managersOfOffer = new ManagersOfPackages();
         managersOfOffer.setManager(manager);
-        managersOfOffer.setAPackage(aPackage);
+        managersOfOffer.setPackageEntity(aPackage);
         managersOfOffer.setOperationType(operationType);
         managersOfOffer.setOperationDate(new Date());
 
@@ -42,7 +42,7 @@ public class ManagersOfPackagesServiceImpl implements ManagersOfPackagesService 
         ManagersOfPackages updatedManagersOfOffer = managersOfPackages;
         ManagersOfPackages existedManagersOfOffer = getByManagerIdAndOfferId(
                 managersOfPackages.getManager().getId(),
-                managersOfPackages.getAPackage().getId()
+                managersOfPackages.getPackageEntity().getId()
         );
 
         BeanUtils.copyProperties(updatedManagersOfOffer,existedManagersOfOffer);

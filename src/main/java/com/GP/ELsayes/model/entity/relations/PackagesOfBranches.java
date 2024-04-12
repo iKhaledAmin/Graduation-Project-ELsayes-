@@ -29,7 +29,7 @@ public class PackagesOfBranches {
     @JsonBackReference
     @JoinColumn(name = "package_id")
     @ManyToOne
-    private Package aPackage;
+    private Package packageEntity;
 
 
     @JsonBackReference

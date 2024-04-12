@@ -38,19 +38,20 @@ public class Package {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "aPackage",cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "packageEntity",cascade = CascadeType.REMOVE)
     private List<ManagersOfPackages> managersOfPackage;
 
+
     @JsonManagedReference
-    @OneToMany(mappedBy = "aPackage" )
+    @OneToMany(mappedBy = "packageEntity")
     private List<ServicesOfPackage> servicesOfPackage ;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "aPackage" )
+    @OneToMany(mappedBy = "packageEntity" )
     private List<PackagesOfOrder> packagesOfOrder ;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "aPackage" ,cascade = CascadeType.REMOVE)
+    @OneToMany(mappedBy = "packageEntity" ,cascade = CascadeType.REMOVE)
     private List<PackagesOfBranches> packagesOfBranch;
 
 }

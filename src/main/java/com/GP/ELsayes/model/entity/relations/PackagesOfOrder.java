@@ -41,7 +41,7 @@ public class PackagesOfOrder {
     @JsonBackReference
     @JoinColumn(name = "package_id")
     @ManyToOne
-    private Package aPackage;
+    private Package packageEntity;
 
     @JsonManagedReference
     @OneToMany(mappedBy = "packagesOfOrder" )

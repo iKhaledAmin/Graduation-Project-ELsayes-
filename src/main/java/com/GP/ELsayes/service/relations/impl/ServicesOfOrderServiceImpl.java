@@ -1,5 +1,6 @@
 package com.GP.ELsayes.service.relations.impl;
 
+import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
@@ -8,6 +9,7 @@ import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.WorkerStatus;
+import com.GP.ELsayes.model.mapper.relations.ServicesOfOrderMapper;
 import com.GP.ELsayes.repository.relations.ServicesOfOrderRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.PackagesOfOrderService;
@@ -30,6 +32,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     private final ServiceService serviceService;
     private final WorkerService workerService;
     private final PackagesOfOrderService packagesOfOrderService;
+    private final ServicesOfOrderMapper servicesOfOrderMapper;
 
 
 
@@ -39,13 +42,15 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
                                       CustomerService customerService,
                                       ServiceService serviceService,
                                       @Lazy WorkerService workerService,
-                                      @Lazy PackagesOfOrderService packagesOfOrderService){
+                                      @Lazy PackagesOfOrderService packagesOfOrderService,
+                                      @Lazy ServicesOfOrderMapper servicesOfOrderMapper){
         this.servicesOfOrderRepo = servicesOfOrderRepo;
         this.orderService = orderService;
         this.customerService = customerService;
         this.serviceService = serviceService;
         this.workerService = workerService;
         this.packagesOfOrderService = packagesOfOrderService;
+        this.servicesOfOrderMapper = servicesOfOrderMapper;
     }
 
 
@@ -179,6 +184,22 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
             throw new RuntimeException("Order is confirmed, you can not delete");
         }
         servicesOfOrderRepo.deleteById(serviceOfOrderId);
+    }
+
+    @Override
+    public List<ServicesOfOrderResponse> getAllUnConfirmedByCustomerId(Long customerId){
+        return servicesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
+                .stream()
+                .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
+                .toList();
+    }
+
+    @Override
+    public List<ServicesOfOrderResponse> getAllConfirmedByCustomerId(Long customerId){
+        return servicesOfOrderRepo.findAllConfirmedByCustomerId(customerId)
+                .stream()
+                .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
+                .toList();
     }
 
 }

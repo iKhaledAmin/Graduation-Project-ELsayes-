@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Repository
 public interface ManagersOfOffersRepo extends JpaRepository<ManagersOfPackages,Long> {
-    @Query("SELECT mop FROM ManagersOfPackages mop WHERE mop.manager.id = :managerId AND mop.aPackage.id = :packageId")
+    @Query("SELECT mop FROM ManagersOfPackages mop WHERE mop.manager.id = :managerId AND mop.packageEntity.id = :packageId")
     Optional<ManagersOfPackages> findByManagerIdAndPackageId(Long managerId, Long packageId);
 }
 

@@ -10,8 +10,8 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class ServicesOfOrderResponse {
     private Long id;
-    private String name;
-    private String price;
+    private String serviceName;
+    private String servicePrice;
     private String requiredTime;
     private ProgressStatus progressStatus;
 

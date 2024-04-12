@@ -8,11 +8,12 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 @Repository
 public interface PackagesOfOrderRepo extends JpaRepository<PackagesOfOrder,Long> {
-    @Query("SELECT p FROM PackagesOfOrder p WHERE p.aPackage.id = :packageId AND p.order.id = :orderId")
+    @Query("SELECT p FROM PackagesOfOrder p WHERE p.packageEntity.id = :packageId AND p.order.id = :orderId")
     Optional<PackagesOfOrder> findByPackageIdAndOrderId(Long packageId, Long orderId);
 
     @Query("SELECT p FROM PackagesOfOrder p WHERE p.customer.id = :customerId AND p.order.id = :orderId")
@@ -28,4 +29,7 @@ public interface PackagesOfOrderRepo extends JpaRepository<PackagesOfOrder,Long>
     @Transactional
     @Query("UPDATE PackagesOfOrder po SET po.progressStatus = :progressStatus WHERE po.order.id = :orderId")
     void updateAllProgressStatusByOrderId(Long orderId, ProgressStatus progressStatus);
+
+    @Query("SELECT p FROM PackagesOfOrder p WHERE p.customer.id = :customerId AND p.progressStatus = 'UN_CONFIRMED'")
+    List<PackagesOfOrder> findAllUnConfirmedByCustomerId(Long customerId);
 }

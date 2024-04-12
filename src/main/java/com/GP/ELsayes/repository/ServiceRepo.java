@@ -25,7 +25,7 @@ public interface ServiceRepo extends JpaRepository<ServiceEntity,Long> {
     @Query("select s from ServiceEntity s join s.servicesOfBranch sb where sb.branch.id = :branchId and sb.serviceStatus = 'AVAILABLE'")
     List<ServiceEntity> findAllAvailableInBranch(Long branchId);
 
-    @Query("select s from ServiceEntity s join s.servicesOfPackage so join so.aPackage o where o.id = :packageId")
+    @Query("select s from ServiceEntity s join s.servicesOfPackage so join so.packageEntity o where o.id = :packageId")
     List<ServiceEntity> findAllByPackageId(Long packageId);
     @Query("select s from ServiceEntity s join s.servicesOfOrder so join so.order o where o.id = :orderId")
     List<ServiceEntity> findAllByOrderId(Long orderId);
