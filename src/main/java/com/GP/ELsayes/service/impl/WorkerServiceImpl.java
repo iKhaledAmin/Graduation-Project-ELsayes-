@@ -7,11 +7,11 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
+import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
-import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
+import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
@@ -40,19 +40,26 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final  WorkerRepo workerRepo;
     private final UserMapper userMapper;
     private final BranchService branchService;
+    private final OrderService orderService;
     private final CarService carService;
     private final ServicesOfOrderService servicesOfOrderService;
-    private final VisitationsOfBranchesService customerVisitationService;
+    private final VisitationsOfBranchesService visitationsOfBranchesService;
 
 
 
-    void throwExceptionIfBranchNoteHasManager(Branch branch){
+    private void throwExceptionIfBranchNoteHasManager(Branch branch){
         if(branch.getManager() == null)
             throw new RuntimeException("This branch with id = "+ branch.getId() +" do not have a Manager yet");
         return;
     }
 
-
+    private void throwExceptionIfCustomerHasAnOrderNotFinishedYet(Long customerId) {
+        Optional<Order> unFinishedOrder = orderService.getUnFinishedOrderByCustomerId(customerId);
+        if(unFinishedOrder.isEmpty()){
+            return;
+        }
+        throw new RuntimeException("Customer whit id " + customerId +" has order not finished yet.");
+    }
 
 
     @Override
@@ -193,7 +200,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             car = Optional.ofNullable(carService.add(newCar));
         }
 
-        customerVisitationService.addVisitation(car.get(),branch);
+        visitationsOfBranchesService.addVisitation(car.get(),branch);
     }
 
 
@@ -201,24 +208,44 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     public CheckOutResponse checkOut(String carPlateNumber, Long workerId) {
 
         Car car = carService.getByCarPlateNumber(carPlateNumber);
-        Optional<Worker> worker = getObjectById(workerId);
-        Optional<Branch> branch = branchService.getObjectById(worker.get().getBranch().getId());
+        Worker worker = getById(workerId);
+        Optional<Branch> branch = branchService.getObjectById(worker.getBranch().getId());
         Optional<Customer> customer = Optional.ofNullable(car.getCustomer());
 
-        VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
+
+        VisitationsOfBranches customerVisitation = visitationsOfBranchesService.getRecentByCarPlateNumberAndBranchId(
                 carPlateNumber,
                 branch.get().getId()
         );
+        if(customer.isPresent()){
+            throwExceptionIfCustomerHasAnOrderNotFinishedYet(customer.get().getId());
+        }
+        visitationsOfBranchesService.endVisitation(car,branch.get());
 
-        customerVisitationService.endVisitation(car,branch.get());
 
         CheckOutResponse  checkOutResponse = new CheckOutResponse();
         checkOutResponse.setCarPlateNumber(carPlateNumber);
-        checkOutResponse.setPeriodParking(customerVisitation.getPeriod());
+        checkOutResponse.setParkingPeriod(visitationsOfBranchesService.toFormattedPeriod(customerVisitation.getPeriod()));
+        checkOutResponse.setParkingPrice(
+                visitationsOfBranchesService.calculateParkingPrice(customerVisitation.getPeriod(),visitationsOfBranchesService.getHOUR_PRICE())
+        );
+        checkOutResponse.setTotalCost(checkOutResponse.getParkingPrice());
+
         if(customer.isPresent()){
             checkOutResponse.setCustomerName(customer.get().getFirstName() +" "+ customer.get().getLastName());
+            Optional<Order> order = orderService.getFinishedByCustomerId(customer.get().getId());
+            if (order.isPresent()){
+                checkOutResponse.setOrder(orderService.getResponseFinishedOrderByCustomerId(customer.get().getId()));
+                double currentTotalCost = Double.parseDouble(checkOutResponse.getTotalCost());
+                double orderTotalCost = Double.parseDouble(checkOutResponse.getOrder().getOrderTotalCost());
+                currentTotalCost += orderTotalCost;
+                checkOutResponse.setTotalCost(String.valueOf(currentTotalCost));
+
+                orderService.updateOrderStatus(order.get().getId(), ProgressStatus.PAYED);
+            }
         }
 
+        branchService.incrementProfit(branch.get().getId(),checkOutResponse.getTotalCost());
         return checkOutResponse;
     }
 
@@ -227,7 +254,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         Worker worker = getById(workerId);
         Optional<Branch> branch = branchService.getObjectById(worker.getBranch().getId());
 
-        VisitationsOfBranches customerVisitation = customerVisitationService.getRecentByCarPlateNumberAndBranchId(
+        VisitationsOfBranches customerVisitation = visitationsOfBranchesService.getRecentByCarPlateNumberAndBranchId(
                 carPlateNumber,
                 branch.get().getId()
         );

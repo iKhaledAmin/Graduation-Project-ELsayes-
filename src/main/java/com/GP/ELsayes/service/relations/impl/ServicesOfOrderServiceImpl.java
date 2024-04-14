@@ -100,14 +100,17 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         servicesOfOrder.setService(service);
         servicesOfOrder.setServiceCategory(service.getServiceCategory());
 
-        if (inPackage == true)
+        if (inPackage == true){
             packagesOfOrderService.getByCustomerIdAndOrderId(customer.getId(), unConfirmedOrder.getId())
                     .ifPresent(servicesOfOrder::setPackagesOfOrder);
+        }else {
+            unConfirmedOrder.incrementTotalPrice(service.getPrice());
+        }
+
 
         servicesOfOrderRepo.save(servicesOfOrder);
 
         unConfirmedOrder.incrementRequiredTime(service.getRequiredTime());
-        unConfirmedOrder.incrementTotalPrice(service.getPrice());
         orderService.update(unConfirmedOrder);
     }
 
@@ -186,8 +189,9 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         servicesOfOrderRepo.deleteById(serviceOfOrderId);
     }
 
+
     @Override
-    public List<ServicesOfOrderResponse> getAllUnConfirmedByCustomerId(Long customerId){
+    public List<ServicesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId){
         return servicesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
                 .stream()
                 .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
@@ -195,8 +199,16 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     }
 
     @Override
-    public List<ServicesOfOrderResponse> getAllConfirmedByCustomerId(Long customerId){
+    public List<ServicesOfOrderResponse> getResponseAllConfirmedByCustomerId(Long customerId){
         return servicesOfOrderRepo.findAllConfirmedByCustomerId(customerId)
+                .stream()
+                .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
+                .toList();
+    }
+
+    @Override
+    public List<ServicesOfOrderResponse> getResponseAllByOrderId(Long orderId) {
+        return servicesOfOrderRepo.findAllByOrderId(orderId)
                 .stream()
                 .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
                 .toList();

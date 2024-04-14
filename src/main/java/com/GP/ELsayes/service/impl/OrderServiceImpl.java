@@ -1,5 +1,6 @@
 package com.GP.ELsayes.service.impl;
 
+import com.GP.ELsayes.model.dto.OrderProgressResponse;
 import com.GP.ELsayes.model.dto.OrderResponse;
 import com.GP.ELsayes.model.dto.PackagesOfOrderResponse;
 import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
@@ -104,12 +105,14 @@ public class OrderServiceImpl implements OrderService {
         update(order.get());
     }
 
-
-
     @Override
-    public void delete(Long aLong) {
-
+    public void clearOrderListByCustomerId(Long customerId) {
+        Optional<Order> unConfirmed = Optional.ofNullable(getUnConfirmedByCustomerId(customerId).orElseThrow(
+                () -> new RuntimeException("Order list is already empty!")
+        ));
+        orderRepo.deleteById(unConfirmed.get().getId());
     }
+
 
     @Override
     public Optional<Order> getObjectById(Long orderId) {
@@ -128,17 +131,61 @@ public class OrderServiceImpl implements OrderService {
         return orderRepo.findUnConfirmedByCustomerId(customerId);
     }
 
-    @Override
-    public OrderResponse getUnConfirmedOrderByCustomerId(Long customerId) {
-        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getAllUnConfirmedByCustomerId(customerId);
-        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getAllUnConfirmedByCustomerId(customerId);
 
-        return new OrderResponse(servicesOfOrder,packagesOfOrder);
+    @Override
+    public Optional<Order> getUnFinishedOrderByCustomerId(Long customerId) {
+        return orderRepo.findUnFinishedByCustomerId(customerId);
     }
 
     @Override
-    public  List<ServicesOfOrderResponse> getConfirmedOrderByCustomerId(Long customerId){
-        return servicesOfOrderService.getAllConfirmedByCustomerId(customerId);
+    public OrderResponse getResponseUnConfirmedByCustomerId(Long customerId) {
+        Optional<Order> unConfirmedOrder = orderRepo.findUnConfirmedByCustomerId(customerId);
+
+        if (unConfirmedOrder.isEmpty())
+            return null;
+
+        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getResponseAllUnConfirmedByCustomerId(customerId);
+        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getResponseAllByOrderId(unConfirmedOrder.get().getId());
+        return new OrderResponse(
+                servicesOfOrder
+                ,packagesOfOrder
+                ,unConfirmedOrder.get().getTotalPrice()
+                ,unConfirmedOrder.get().getTotalRequiredTime()
+        );
+    }
+
+
+    @Override
+    public OrderResponse getResponseFinishedOrderByCustomerId(Long customerId){
+        Optional<Order> finishedOrder = getFinishedByCustomerId(customerId);
+        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getResponseAllByOrderId(finishedOrder.get().getId());
+        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getResponseAllByOrderId(finishedOrder.get().getId());
+
+        return new OrderResponse(
+                servicesOfOrder
+                ,packagesOfOrder
+                ,finishedOrder.get().getTotalPrice()
+                ,finishedOrder.get().getTotalRequiredTime()
+        );
+    }
+
+    @Override
+    public Optional<Order> getFinishedByCustomerId(Long customerId) {
+        return orderRepo.findFinishedByCustomerId(customerId);
+    }
+
+    @Override
+    public  OrderProgressResponse getProgressOfConfirmedOrderByCustomerId(Long customerId){
+        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getResponseAllConfirmedByCustomerId(customerId);
+        Optional<Order> confirmedOrder = orderRepo.findConfirmedByCustomerId(customerId);
+
+        if (confirmedOrder.isEmpty())
+            return null;
+
+        return new  OrderProgressResponse(
+                servicesOfOrder,
+                confirmedOrder.get().getProgressStatus()
+        );
     }
 
     public List<ServiceEntity> findServicesNotInBranch(Long orderId,Long branchId){
@@ -189,8 +236,10 @@ public class OrderServiceImpl implements OrderService {
         unConfirmedOrder = update(unConfirmedOrder);
         servicesOfOrderService.confirmAllServiceOfOrder(unConfirmedOrder.getId());
         packagesOfOrderService.confirmAllPackagesOfOrder(unConfirmedOrder.getId());
-
         orderHandlingService.saveOrder(unConfirmedOrder.getId());
+
+        visitationsOfBranch.setOrder(unConfirmedOrder);
+        visitationsOfBranchesService.update(visitationsOfBranch);
 
     }
 

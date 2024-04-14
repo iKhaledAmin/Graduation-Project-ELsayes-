@@ -13,5 +13,7 @@ public class OrderResponse {
 
     private List<ServicesOfOrderResponse> services;
     private List<PackagesOfOrderResponse> packages;
-
+    private String OrderTotalCost;
+    private String totalRequiredTime ;
 }
+

@@ -9,7 +9,6 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.mapper.relations.VisitationsOfBranchesMapper;
 import com.GP.ELsayes.repository.relations.VisitationsOfBranchesRepo;
-import com.GP.ELsayes.service.CarService;
 
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import lombok.AllArgsConstructor;
@@ -30,7 +29,7 @@ import java.util.Optional;
 @AllArgsConstructor
 public class VisitationsOfBranchesServiceImpl implements VisitationsOfBranchesService {
 
-    private final CarService carService;
+    public final String HOUR_PRICE = "5" ;
     private final VisitationsOfBranchesMapper visitationsOfBranchesMapper;
     private final VisitationsOfBranchesRepo visitationsOfBranchesRepo;
 
@@ -56,23 +55,42 @@ public class VisitationsOfBranchesServiceImpl implements VisitationsOfBranchesSe
         }
     }
 
-
-    private String calculatePeriod(Date dateOfArriving, Date dateOfLeaving) {
+    private Duration calculatePeriod(Date dateOfArriving, Date dateOfLeaving){
         Instant start = dateOfArriving.toInstant();
         Instant end = dateOfLeaving.toInstant();
 
         Duration duration = Duration.between(start, end);
+        return duration;
+    }
+
+    public String toFormattedPeriod(Duration period) {
 
         // Get the duration components
-        long days = duration.toDays();
-        long hours = duration.toHours() % 24;
-        long minutes = duration.toMinutes() % 60;
+        long days = period.toDays();
+        long hours = period.toHours() % 24;
+        long minutes = period.toMinutes() % 60;
 
         // Format the period string
-        return String.format("%02dd:%02dh:%02dm", days, hours, minutes);
+        return String.format("%02dd : %02dh : %02dm", days, hours, minutes);
+    }
+
+    public String getHOUR_PRICE(){
+        return HOUR_PRICE;
+    }
+
+    @Override
+    public String calculateParkingPrice(Duration period , String hourPrice) {
+
+        double pricePerHour = Double.parseDouble(hourPrice);
+        double totalTimeInHours = period.toHours();
+
+        // Calculate the total parking price
+        double totalPrice = totalTimeInHours * pricePerHour;
+
+        return String.valueOf(totalPrice);
     }
     @SneakyThrows
-    private VisitationsOfBranches update(VisitationsOfBranches visitation){
+    public VisitationsOfBranches update(VisitationsOfBranches visitation){
 
         VisitationsOfBranches updatedCustomerVisitation = visitation;
         VisitationsOfBranches existedCustomerVisitation = getRecentByCarPlateNumberAndBranchId(
@@ -146,7 +164,7 @@ public class VisitationsOfBranchesServiceImpl implements VisitationsOfBranchesSe
 
     @Override
     public VisitationsOfBranches endVisitation(Car car, Branch branch) {
-        com.GP.ELsayes.model.entity.relations.VisitationsOfBranches existedCustomerVisitation = getRecentByCarPlateNumberAndBranchId(
+        VisitationsOfBranches existedCustomerVisitation = getRecentByCarPlateNumberAndBranchId(
                 car.getCarPlateNumber(),
                 branch.getId()
         );

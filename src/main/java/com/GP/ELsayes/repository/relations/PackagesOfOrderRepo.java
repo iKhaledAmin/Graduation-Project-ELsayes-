@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -32,4 +33,11 @@ public interface PackagesOfOrderRepo extends JpaRepository<PackagesOfOrder,Long>
 
     @Query("SELECT p FROM PackagesOfOrder p WHERE p.customer.id = :customerId AND p.progressStatus = 'UN_CONFIRMED'")
     List<PackagesOfOrder> findAllUnConfirmedByCustomerId(Long customerId);
+
+    List<PackagesOfOrder> findAllByOrderId(Long orderId);
+
+//    @Modifying
+//    @Query("DELETE FROM PackagesOfOrder po WHERE po.progressStatus = 'UN_CONFIRMED' " +
+//            " AND po.customer.id = :customerId")
+//    void deleteAllUnConfirmedByCustomerId(Long customerId);
 }

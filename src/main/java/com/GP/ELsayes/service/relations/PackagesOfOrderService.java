@@ -10,12 +10,18 @@ import java.util.Optional;
 
 @Service
 public interface PackagesOfOrderService {
-    void addPackageToOrder(Long customerId,Long packageIdId);
-    public void deletePackageFromOrderList(Long packageId);
+    public void addPackageToOrder(Long customerId, Long packageIdId);
+
     public void confirmAllPackagesOfOrder(Long orderId);
 
     public void updateStatusOfAllOrderPackage(Long orderId, ProgressStatus progressStatus);
 
     public Optional<PackagesOfOrder> getByCustomerIdAndOrderId(Long customerId, Long orderId);
-    public List<PackagesOfOrderResponse> getAllUnConfirmedByCustomerId(Long customerId);
+
+    public List<PackagesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId);
+
+    List<PackagesOfOrderResponse> getResponseAllByOrderId(Long orderId);
+
+    public void deletePackageFromOrderList(Long packageId);
+
 }

@@ -61,7 +61,7 @@ public class CustomerController {
         return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete-service-from-order-lis/{serviceId}")
+    @DeleteMapping("/delete-service-from-order-list/{serviceId}")
     public ResponseEntity<?> deleteServiceFromOrderList(@PathVariable Long serviceId){
         this.customerService.deleteServiceFromOrderList(serviceId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
@@ -73,9 +73,15 @@ public class CustomerController {
         return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete-package-from-order-lis/{packageId}")
+    @DeleteMapping("/delete-package-from-order-list/{packageId}")
     public ResponseEntity<?> deletePackageFromOrderList(@PathVariable Long packageId){
         this.customerService.deletePackageFromOrderList(packageId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/clear-order-list/{customerId}")
+    public ResponseEntity<?> clearOrderList(@PathVariable Long customerId){
+        this.customerService.clearOrderList(customerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
 
@@ -89,8 +95,8 @@ public class CustomerController {
         return new ResponseEntity<>(this.customerService.getUnConfirmedOrder(customerId),HttpStatus.OK);
     }
 
-    @GetMapping("/get-confirm-order/{customerId}")
-    public ResponseEntity<?> getConfirmedOrder(@PathVariable Long customerId){
-        return new ResponseEntity<>(this.customerService.getConfirmedOrder(customerId),HttpStatus.OK);
+    @GetMapping("/get-progress-confirm-order/{customerId}")
+    public ResponseEntity<?> getProgressOfConfirmedOrder(@PathVariable Long customerId){
+        return new ResponseEntity<>(this.customerService.getProgressOfConfirmedOrder(customerId),HttpStatus.OK);
     }
 }

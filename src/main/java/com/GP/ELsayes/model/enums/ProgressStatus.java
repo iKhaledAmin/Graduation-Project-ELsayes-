@@ -4,5 +4,6 @@ public enum ProgressStatus {
     UN_CONFIRMED,
     WAITING,
     ON_WORKING,
-    FINISHED
+    FINISHED,
+    PAYED
 }

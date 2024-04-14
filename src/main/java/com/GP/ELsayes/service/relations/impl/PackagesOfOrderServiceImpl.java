@@ -48,8 +48,16 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
     }
 
     @Override
-    public List<PackagesOfOrderResponse> getAllUnConfirmedByCustomerId(Long customerId) {
+    public List<PackagesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId) {
         return packagesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
+                .stream()
+                .map(packagesOfOrder ->  packagesOfOrderMapper.toResponse(packagesOfOrder))
+                .toList();
+    }
+
+    @Override
+    public List<PackagesOfOrderResponse> getResponseAllByOrderId(Long orderId) {
+        return packagesOfOrderRepo.findAllByOrderId(orderId)
                 .stream()
                 .map(packagesOfOrder ->  packagesOfOrderMapper.toResponse(packagesOfOrder))
                 .toList();
@@ -81,6 +89,11 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
             servicesOfOrderService.addServiceToOrder(customerId,service.getId(),true);
         });
 
+        double totalOrderPrice = Double.parseDouble(aPackage.getCurrentPackagePrice() )+ Double.parseDouble(unConfirmedOrder.get().getTotalPrice() );
+        unConfirmedOrder.get().setTotalPrice(
+                String.valueOf(totalOrderPrice)
+        );
+        orderService.update(unConfirmedOrder.get());
     }
 
     @Override
@@ -102,6 +115,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
         packagesOfOrderRepo.deleteById(packageOfOrderId);
 
     }
+
 
     @Override
     public void confirmAllPackagesOfOrder(Long orderId) {

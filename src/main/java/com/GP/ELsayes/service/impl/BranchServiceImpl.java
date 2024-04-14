@@ -103,6 +103,10 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public BranchResponse add(BranchRequest branchRequest) {
         Branch branch = this.branchMapper.toEntity(branchRequest);
+        branch.setProfitOfDay("0");
+        branch.setProfitOfMonth("0");
+        branch.setProfitOfYear("0");
+        branch.setTotalProfit("0");
         branch = this.branchRepo.save(branch);
 
         Owner owner = ownerService.getById(branchRequest.getOwnerId());
@@ -178,11 +182,6 @@ public class BranchServiceImpl implements BranchService {
     }
 
     @Override
-    public BranchResponse getResponseByManagerId(Long managerId) {
-        return branchMapper.toResponse(getByManagerId(managerId));
-    }
-
-    @Override
     public Branch getByWorkerId(Long workerId) {
         return branchRepo.findByWorkerId(workerId).orElseThrow(
                 () -> new NoSuchElementException("There is no branch has worker with id = " + workerId)
@@ -209,6 +208,24 @@ public class BranchServiceImpl implements BranchService {
     @Override
     public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
         return customerVisitationsService.getResponseAllVisitationsInBranchByADate(branchId,date);
+    }
+
+    @Override
+    public void incrementProfit(Long branchId , String addedProfit) {
+        Branch branch = getById(branchId);
+        double profitOfDay = Double.parseDouble(branch.getProfitOfDay()) + Double.parseDouble(addedProfit);
+        double profitOfMonth = Double.parseDouble(branch.getProfitOfMonth()) + Double.parseDouble(addedProfit);
+        double profitOfYear = Double.parseDouble(branch.getProfitOfYear()) + Double.parseDouble(addedProfit);
+        double totalProfit = Double.parseDouble(branch.getTotalProfit()) + Double.parseDouble(addedProfit);
+
+        branch.setProfitOfDay(String.valueOf(profitOfDay));
+        branch.setProfitOfMonth(String.valueOf(profitOfMonth));
+        branch.setProfitOfYear(String.valueOf(profitOfYear));
+        branch.setTotalProfit(String.valueOf(totalProfit));
+
+        // Save the updated branch back to the repository (if needed)
+        branchRepo.save(branch);
+
     }
 
 

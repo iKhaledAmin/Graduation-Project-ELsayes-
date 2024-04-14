@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
+import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
@@ -160,18 +161,23 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     }
 
     @Override
+    public void clearOrderList(Long customerId){
+        orderService.clearOrderListByCustomerId(customerId);
+    }
+
+    @Override
     public void confirmOrder(Long customerId){
         orderService.confirmOrderByCustomerId(customerId);
     }
 
     @Override
     public OrderResponse getUnConfirmedOrder(Long customerId){
-        return orderService.getUnConfirmedOrderByCustomerId(customerId);
+        return orderService.getResponseUnConfirmedByCustomerId(customerId);
     }
 
     @Override
-    public List<ServicesOfOrderResponse> getConfirmedOrder(Long customerId){
-        return orderService.getConfirmedOrderByCustomerId(customerId);
+    public OrderProgressResponse getProgressOfConfirmedOrder(Long customerId){
+        return orderService.getProgressOfConfirmedOrderByCustomerId(customerId);
     }
 
 }

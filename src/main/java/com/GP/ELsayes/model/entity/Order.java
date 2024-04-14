@@ -3,6 +3,7 @@ package com.GP.ELsayes.model.entity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
@@ -54,11 +55,15 @@ public class Order {
     private Branch branch;
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.REMOVE)
     private List<ServicesOfOrders> servicesOfOrder;
     @JsonManagedReference
-    @OneToMany(mappedBy = "order")
+    @OneToMany(mappedBy = "order",cascade = CascadeType.REMOVE)
     private List<PackagesOfOrder> packagesOfOrder;
+
+    @JsonManagedReference
+    @OneToOne(mappedBy = "order")
+    private VisitationsOfBranches visitationsOfBranch;
 
 
     public void incrementRequiredTime(String serviceTime){

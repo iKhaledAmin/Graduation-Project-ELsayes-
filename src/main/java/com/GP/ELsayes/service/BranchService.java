@@ -13,8 +13,6 @@ import java.util.List;
 public interface BranchService extends CrudService<BranchRequest, Branch, BranchResponse,Long>{
 
     public Branch getByManagerId(Long managerId);
-    public BranchResponse getResponseByManagerId(Long managerId);
-
     Branch getByWorkerId(Long workerId);
 
     public List<Branch> getAllByServiceId(Long serviceId);
@@ -23,4 +21,5 @@ public interface BranchService extends CrudService<BranchRequest, Branch, Branch
     public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date);
 
 
+    public void incrementProfit(Long branchId , String addedProfit);
 }

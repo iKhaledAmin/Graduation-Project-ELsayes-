@@ -40,7 +40,15 @@ public interface ServicesOfOrderRepo extends JpaRepository<ServicesOfOrders,Long
             "AND so.packagesOfOrder.id is null AND so.customer.id = :customerId")
     List<ServicesOfOrders> findAllUnConfirmedByCustomerId(Long customerId);
 
-    @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus <> 'UN_CONFIRMED' " +
-            "AND so.customer.id = :customerId")
+
+    @Query("SELECT so FROM ServicesOfOrders so WHERE so.order.customer.id = :customerId " +
+            "AND so.order.progressStatus IN ('WAITING', 'ON_WORKING', 'FINISHED')")
     List<ServicesOfOrders> findAllConfirmedByCustomerId(Long customerId);
+
+    List<ServicesOfOrders> findAllByOrderId(Long orderId);
+
+//    @Modifying
+//    @Query("SELECT so FROM ServicesOfOrders so WHERE so.progressStatus = 'UN_CONFIRMED' " +
+//            "AND so.packagesOfOrder.id IS NULL AND so.customer.id = :customerId")
+//    void deleteAllUnConfirmedByCustomerId(Long customerId);
 }
