@@ -26,4 +26,6 @@ public interface WorkerService extends UserService, CrudService<WorkerRequest, W
 
     public  List<Worker> getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole workerRole);
 
+    public void changeWorkerStatus(Long workerId);
+
 }

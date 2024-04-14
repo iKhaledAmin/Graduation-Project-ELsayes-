@@ -27,6 +27,12 @@ public class WorkerController {
         return new ResponseEntity<>(this.workerService.editProfile(userRequest , workerId), HttpStatus.ACCEPTED);
     }
 
+    @PutMapping("/change-worker-status/{workerId}")
+    public ResponseEntity<?> changeWorkerStatus(@PathVariable Long workerId){
+        this.workerService.changeWorkerStatus(workerId);
+        return new ResponseEntity<>("Changed Successfully", HttpStatus.ACCEPTED);
+    }
+
     @PostMapping("/record-visitation")
     public ResponseEntity<?> recordVisitation(@RequestBody @Valid RecordVisitationRequest customerVisitationsRequest) {
         this.workerService.recordVisitation(

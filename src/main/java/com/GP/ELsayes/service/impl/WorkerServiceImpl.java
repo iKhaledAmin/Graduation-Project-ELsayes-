@@ -136,6 +136,14 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     }
 
     @Override
+    public void changeWorkerStatus(Long workerId){
+        Optional<Worker> worker = workerRepo.findById(workerId);
+        if (worker.get().getWorkerStatus() == WorkerStatus.AVAILABLE)
+            updateWorkerStatus(workerId, WorkerStatus.UN_AVAILABLE);
+        else  updateWorkerStatus(workerId, WorkerStatus.AVAILABLE);
+    }
+
+    @Override
     public UserResponse editProfile(UserRequest userRequest, Long userId) {
         Worker worker = getById(userId);
         Branch branch = this.branchService.getByWorkerId(worker.getId());
