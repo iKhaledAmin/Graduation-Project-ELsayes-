@@ -15,19 +15,30 @@ import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
 
-@RequiredArgsConstructor
+
 @Service
 public class FreeTrialCodeServiceImpl implements FreeTrialCodeService {
     private final FreeTrialCodeMapper freeTrialCodeMapper;
     private final FreeTrialCodeRepo freeTrialCodeRepo;
     private final WorkerService workerService;
-
-
     private final CustomerService customerService;
+    public FreeTrialCodeServiceImpl(
+            FreeTrialCodeMapper freeTrialCodeMapper,
+            FreeTrialCodeRepo freeTrialCodeRepo,
+            @Lazy WorkerService workerService,
+            CustomerService customerService) {
+        this.freeTrialCodeMapper = freeTrialCodeMapper;
+        this.freeTrialCodeRepo = freeTrialCodeRepo;
+        this.workerService = workerService;
+        this.customerService = customerService;
+    }
+
+
 
     private void throwExceptionIfCodeIsUsedBefore(String code){
         Optional<FreeTrialCode> freeTrialCode = freeTrialCodeRepo.findByCode(code);

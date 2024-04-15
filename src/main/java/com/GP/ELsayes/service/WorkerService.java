@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.CheckOutResponse;
+import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
@@ -27,5 +28,7 @@ public interface WorkerService extends UserService, CrudService<WorkerRequest, W
     public  List<Worker> getAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole workerRole);
 
     public void changeWorkerStatus(Long workerId);
+
+    public FreeTrialCodeResponse generateFreeTrialCode(Long workerId);
 
 }

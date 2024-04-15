@@ -52,5 +52,11 @@ public class WorkerController {
       return new ResponseEntity<>("Finished Successfully",HttpStatus.ACCEPTED);
     }
 
+    @PostMapping("/generate-free-code/{workerId}")
+    public ResponseEntity<?> generateFreeTrialCode(@PathVariable Long workerId){
+        this.workerService.generateFreeTrialCode(workerId);
+        return new ResponseEntity<>("Generate Successfully", HttpStatus.ACCEPTED);
+    }
+
 }
 

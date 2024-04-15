@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.CheckOutResponse;
+import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -44,6 +45,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     private final CarService carService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final VisitationsOfBranchesService visitationsOfBranchesService;
+    private final FreeTrialCodeService freeTrialCodeService;
 
 
 
@@ -284,7 +286,9 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         return workerRepo.findAllAvailableWorkerByWorkerRoleOrderByScore(workerRole);
     }
 
-
-
+    @Override
+    public FreeTrialCodeResponse generateFreeTrialCode(Long workerId){
+        return freeTrialCodeService.generateCode(workerId);
+    }
 
 }
