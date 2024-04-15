@@ -3,6 +3,8 @@ import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
@@ -12,6 +14,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.dto.relations.*;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -43,12 +46,13 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     private final ServiceService serviceService;
     private final WorkerService workerService;
     private final PackageService packageService;
+    private final CustomerService customerService;
     private final OwnersOfManagersService ownersOfManagersService;
 
     public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepo managerRepo, UserMapper userMapper,
                               @Lazy BranchService branchService, @Lazy OwnerService ownerService,
                               @Lazy ServiceService serviceService, @Lazy WorkerService workerService,
-                              @Lazy PackageService packageService, OwnersOfManagersService ownersOfManagersService) {
+                              @Lazy PackageService packageService, CustomerService customerService, OwnersOfManagersService ownersOfManagersService) {
         this.managerMapper = managerMapper;
         this.managerRepo = managerRepo;
         this.userMapper = userMapper;
@@ -57,6 +61,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         this.serviceService = serviceService;
         this.workerService = workerService;
         this.packageService = packageService;
+        this.customerService = customerService;
         this.ownersOfManagersService = ownersOfManagersService;
     }
 
@@ -239,6 +244,27 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     @Override
     public List<WorkerResponse> getAllWorkersByBranchId(Long branchId){
         return workerService.getAllByBranchId(branchId);
+    }
+
+
+    @Override
+    public CustomerResponse updateCustomer(CustomerRequest customerRequest, Long customerId){
+        return customerService.update(customerRequest,customerId);
+    }
+
+    @Override
+    public void deleteCustomer(Long customerId){
+        customerService.delete(customerId);
+    }
+
+    @Override
+    public List<CustomerResponse> getAllCustomers(){
+        return customerService.getAll();
+    }
+
+    @Override
+    public CustomerResponse getCustomerById(Long customerId){
+        return customerService.getResponseById(customerId);
     }
 
 

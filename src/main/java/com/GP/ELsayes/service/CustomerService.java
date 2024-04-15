@@ -8,7 +8,13 @@ import org.springframework.stereotype.Service;
 
 @Service
 public interface CustomerService extends  UserService, CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
+    public CustomerResponse register(CustomerRequest customerRequest);
+
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
+    public CarResponse updateCar(CarRequest carRequest, Long carId);
+    public void deleteCra(Long carId);
+
+    public CarResponse getCarById(Long carId);
     public void addServiceToOrderList(AddServiceToOrderListRequest addServiceToOrderListRequest);
     public void deleteServiceFromOrderList(Long serviceId);
     public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest);

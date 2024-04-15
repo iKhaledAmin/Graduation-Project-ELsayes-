@@ -16,4 +16,5 @@ public interface CarService extends CrudService<CarRequest, Car, CarResponse,Lon
     public Optional<Car> getIfExistByCarPlateNumber(String carPlateNumber);
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
 
+
 }

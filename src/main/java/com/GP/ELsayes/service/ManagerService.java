@@ -4,6 +4,8 @@ import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
@@ -32,6 +34,12 @@ public interface ManagerService extends UserService , CrudService<ManagerRequest
     public WorkerResponse getWorkerResponseById(Long workerId);
     public List<WorkerResponse> getAllWorkersByBranchId(Long branchId);
 
+
+
+    public CustomerResponse updateCustomer(CustomerRequest customerRequest, Long customerId);
+    public void deleteCustomer(Long customerId);
+    public List<CustomerResponse> getAllCustomers();
+    public CustomerResponse getCustomerById(Long customerId);
 
 
     public ServiceResponse addService(ServiceRequest serviceRequest);

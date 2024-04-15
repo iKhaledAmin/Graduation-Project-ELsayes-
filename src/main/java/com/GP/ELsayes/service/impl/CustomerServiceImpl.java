@@ -70,6 +70,11 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         return this.customerMapper.toResponse(customer);
     }
 
+    @Override
+    public CustomerResponse register(CustomerRequest customerRequest){
+        return add(customerRequest);
+    }
+
     @SneakyThrows
     @Override
     public CustomerResponse update(CustomerRequest customerRequest, Long customerId) {
@@ -132,6 +137,21 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     @Override
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest){
         return carService.addCarToCustomer(addCarRequest);
+    }
+
+    @Override
+    public CarResponse updateCar(CarRequest carRequest, Long carId){
+        return carService.update(carRequest,carId);
+    }
+
+    @Override
+    public void deleteCra(Long carId){
+        carService.delete(carId);
+    }
+
+    @Override
+    public CarResponse getCarById(Long carId){
+        return carService.getResponseById(carId);
     }
 
     @Override

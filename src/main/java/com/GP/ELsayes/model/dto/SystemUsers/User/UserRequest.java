@@ -42,8 +42,6 @@ public class UserRequest {
     @Size(max = 20, min = 8, message = "student_password Must Be Between 8 and 20 character.")
     private String password;
 
-    @NotNull(message = "Email name must not be null")
-    @NotEmpty(message = "Email name must not be empty")
     @Email(message = "Invalid email address")
     private String email;
 
@@ -52,13 +50,10 @@ public class UserRequest {
     @Pattern(regexp="(^$|[0-9]{11})" , message = "Invalid phone number")
     private String phoneNumber;
 
-    @NotNull (message = "Birthday must not be null")
     private Date birthday;
 
-    @NotNull (message = "Gender must not be null")
     private UserGender gender ;
 
-    //private UserRole userRole;
 
 
 }

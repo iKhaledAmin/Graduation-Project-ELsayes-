@@ -3,6 +3,7 @@ package com.GP.ELsayes.controller;
 import com.GP.ELsayes.model.dto.AddCarRequest;
 import com.GP.ELsayes.model.dto.AddPackageToOrderListRequest;
 import com.GP.ELsayes.model.dto.AddServiceToOrderListRequest;
+import com.GP.ELsayes.model.dto.CarRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.CustomerService;
@@ -20,13 +21,8 @@ public class CustomerController {
     private CustomerService customerService;
 
     @PostMapping("")
-    public ResponseEntity<?> add(@RequestBody @Valid CustomerRequest customerRequest) {
-        return new ResponseEntity<>(this.customerService.add(customerRequest), HttpStatus.CREATED);
-    }
-
-    @PutMapping("/{customerId}")
-    public ResponseEntity<?> update(@RequestBody @Valid CustomerRequest customerRequest,@PathVariable Long customerId){
-        return new ResponseEntity<>(this.customerService.update(customerRequest , customerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> register(@RequestBody @Valid CustomerRequest customerRequest) {
+        return new ResponseEntity<>(this.customerService.register(customerRequest), HttpStatus.CREATED);
     }
 
     @PutMapping("/edit-profile/{customerId}")
@@ -35,25 +31,30 @@ public class CustomerController {
     }
 
 
-    @DeleteMapping("/{customerId}")
-    public ResponseEntity<?> delete(@PathVariable Long customerId){
-        this.customerService.delete(customerId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
-    }
 
-    @GetMapping("")
-    ResponseEntity<?> getAll(){
-        return new ResponseEntity<>(this.customerService.getAll(), HttpStatus.OK);
-    }
-    @GetMapping("/get-by-id/{customerId}")
-    public ResponseEntity<?> getById(@PathVariable Long customerId){
-        return new ResponseEntity<>(this.customerService.getResponseById(customerId),HttpStatus.OK);
-    }
 
-    @PutMapping("/add-car-to-customer")
+    @PutMapping("/add-car")
     public ResponseEntity<?> addCarToCustomer(@RequestBody @Valid AddCarRequest addCarRequest){
         return new ResponseEntity<>(this.customerService.addCarToCustomer(addCarRequest), HttpStatus.ACCEPTED);
     }
+
+
+    @PutMapping("/update-car/{carId}")
+    public ResponseEntity<?> updateCare(@RequestBody @Valid CarRequest carRequest, @PathVariable Long carId){
+        return new ResponseEntity<>(this.customerService.updateCar(carRequest , carId), HttpStatus.ACCEPTED);
+    }
+
+    @DeleteMapping("/delete-car{carId}")
+    public ResponseEntity<?> deleteCar(@PathVariable Long carId){
+        this.customerService.delete(carId);
+        return new ResponseEntity<>("Deleted successfully", HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-car-by-id/{carId}")
+    public ResponseEntity<?> getCarById(@PathVariable Long carId){
+        return new ResponseEntity<>(this.customerService.getResponseById(carId),HttpStatus.OK);
+    }
+
 
     @PutMapping("/add-service-to-order-list")
     public ResponseEntity<?> addServiceToOrderList(@RequestBody @Valid AddServiceToOrderListRequest addServiceToOrderListRequest){

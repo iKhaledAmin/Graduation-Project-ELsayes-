@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.ServiceRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
@@ -53,6 +54,30 @@ private ManagerService managerService;
     @GetMapping("/get-all-workers-by-branchId/{branchId}")
     public ResponseEntity<?> getAllWorkersByBranchId(@PathVariable Long branchId){
         return new ResponseEntity<>(this.managerService.getAllWorkersByBranchId(branchId), HttpStatus.OK);
+    }
+
+
+
+
+    @PutMapping("/update-customer/{customerId}")
+    public ResponseEntity<?> updateCustomer(@RequestBody @Valid CustomerRequest customerRequest, @PathVariable Long customerId){
+        return new ResponseEntity<>(this.managerService.updateCustomer(customerRequest , customerId), HttpStatus.ACCEPTED);
+    }
+
+
+    @DeleteMapping("/delete-customer/{customerId}")
+    public ResponseEntity<?> deleteCustomer(@PathVariable Long customerId){
+        this.managerService.deleteCustomer(customerId);
+        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/get-all-customers")
+    ResponseEntity<?> getAllCustomers(){
+        return new ResponseEntity<>(this.managerService.getAllCustomers(), HttpStatus.OK);
+    }
+    @GetMapping("/get-customer-by-id/{customerId}")
+    public ResponseEntity<?> getCustomerById(@PathVariable Long customerId){
+        return new ResponseEntity<>(this.managerService.getCustomerById(customerId),HttpStatus.OK);
     }
 
 

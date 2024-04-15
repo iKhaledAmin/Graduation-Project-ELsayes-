@@ -19,4 +19,5 @@ public class CustomerResponse extends UserResponse {
     @JsonFormat(pattern="yyyy-MM-dd")
     private Date dateOfJoining;
     private String freeTrialCode;
+    private Long currentBranchId;
 }
