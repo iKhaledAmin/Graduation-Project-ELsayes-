@@ -5,8 +5,8 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
-import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.enums.ServiceCategory;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
@@ -32,6 +32,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     private final UserMapper userMapper;
     private final CarService carService;
     private OrderService orderService;
+    private final ServiceService serviceService;
     private final FreeTrialCodeService freeTrialCodeService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final PackagesOfOrderService packagesOfOrderService;
@@ -40,7 +41,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
                                UserMapper userMapper, @Lazy CarService carService,
                                @Lazy OrderService orderService,
-                               @Lazy FreeTrialCodeService freeTrialCodeService,
+                               @Lazy ServiceService serviceService, @Lazy FreeTrialCodeService freeTrialCodeService,
                                @Lazy ServicesOfOrderService servicesOfOrderService,
                                @Lazy PackagesOfOrderService packagesOfOrderService) {
         this.customerMapper = customerMapper;
@@ -48,6 +49,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         this.userMapper = userMapper;
         this.carService = carService;
         this.orderService = orderService;
+        this.serviceService = serviceService;
         this.freeTrialCodeService = freeTrialCodeService;
         this.servicesOfOrderService = servicesOfOrderService;
         this.packagesOfOrderService = packagesOfOrderService;
@@ -152,6 +154,27 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     @Override
     public CarResponse getCarById(Long carId){
         return carService.getResponseById(carId);
+    }
+
+
+    @Override
+    public List<ServiceResponse> getAllCleaningServices(){
+        return  serviceService.getAllCleaningServices();
+    }
+
+    @Override
+    public List<ServiceResponse> getAllMaintenanceServices(){
+        return  serviceService.getAllMaintenanceServices();
+    }
+
+    @Override
+    public List<ServiceResponse> getAllTakeAwayServices(){
+        return  serviceService.getAllTakeAwayServices();
+    }
+
+    @Override
+    public ServiceResponse getServiceByIdAndBranchId(Long serviceId, Long branchId){
+        return serviceService.getResponseByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
     }
 
     @Override

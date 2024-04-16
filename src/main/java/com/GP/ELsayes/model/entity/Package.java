@@ -32,7 +32,6 @@ public class Package {
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
     private String currentPackagePrice;
-    private String profit;
     //private String currentPackageRequiredTime;
 
 

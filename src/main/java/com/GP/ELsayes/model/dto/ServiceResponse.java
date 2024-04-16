@@ -19,6 +19,6 @@ public class ServiceResponse {
     private String price;
     private String requiredTime;
     private ServiceCategory serviceCategory;
-    private Status serviceStatus;
-    private String profit;
+   // private Status statusInBranch;
+   private boolean availableInBranch;
 }

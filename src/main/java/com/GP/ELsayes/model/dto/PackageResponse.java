@@ -23,7 +23,6 @@ public class PackageResponse {
     private String originalTotalRequiredTime;
     private String currentPackagePrice;
     private Status packageStatus;
-    private String profit;
 
 
 

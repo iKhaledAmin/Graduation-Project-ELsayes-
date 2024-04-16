@@ -1,9 +1,6 @@
 package com.GP.ELsayes.controller;
 
-import com.GP.ELsayes.model.dto.AddCarRequest;
-import com.GP.ELsayes.model.dto.AddPackageToOrderListRequest;
-import com.GP.ELsayes.model.dto.AddServiceToOrderListRequest;
-import com.GP.ELsayes.model.dto.CarRequest;
+import com.GP.ELsayes.model.dto.*;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.CustomerService;
@@ -53,6 +50,26 @@ public class CustomerController {
     @GetMapping("/get-car-by-id/{carId}")
     public ResponseEntity<?> getCarById(@PathVariable Long carId){
         return new ResponseEntity<>(this.customerService.getResponseById(carId),HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-cleaning-services")
+    ResponseEntity<?> getAllCleaningServices(){
+        return new ResponseEntity<>(this.customerService.getAllCleaningServices(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-maintenance-services")
+    ResponseEntity<?> getAllMaintenanceServices(){
+        return new ResponseEntity<>(this.customerService.getAllMaintenanceServices(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-all-take-away-services")
+    ResponseEntity<?> getAllTakeAwayServices(){
+        return new ResponseEntity<>(this.customerService.getAllTakeAwayServices(), HttpStatus.OK);
+    }
+
+    @GetMapping("/get-service-by-id-and-branch-by-id")
+    public ResponseEntity<?> getServiceByIdAndBranchId(@RequestBody @Valid GetServiceRequest getServiceRequest) {
+        return new ResponseEntity<>(this.customerService.getServiceByIdAndBranchId(getServiceRequest.getServiceId(),getServiceRequest.getBranchId()), HttpStatus.OK);
     }
 
 

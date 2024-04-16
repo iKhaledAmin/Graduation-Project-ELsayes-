@@ -13,6 +13,7 @@ import com.GP.ELsayes.model.entity.relations.ManagersOfServices;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.enums.OperationType;
+import com.GP.ELsayes.model.enums.ServiceCategory;
 import com.GP.ELsayes.model.enums.Status;
 import com.GP.ELsayes.model.mapper.ServiceMapper;
 import com.GP.ELsayes.repository.ServiceRepo;
@@ -20,6 +21,7 @@ import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
+import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -30,19 +32,40 @@ import java.util.NoSuchElementException;
 import java.util.Optional;
 
 
-@RequiredArgsConstructor
+
+
 @Service
 public class ServiceServiceImpl implements ServiceService {
-    private final ServiceRepo serviceRepo;
-    private final ServiceMapper serviceMapper;
-    private final ManagerService managerService;
-    private final PackageService packageService;
-    private final BranchService branchService;
-    private final OrderService orderService;
+    private  ServiceRepo serviceRepo;
+    private  ServiceMapper serviceMapper;
+    private  ManagerService managerService;
+    private  PackageService packageService;
+    private  BranchService branchService;
+    private  OrderService orderService;
 
-    private final ManagersOfServicesService managersOfServicesService;
-    private final ServicesOfBranchesService servicesOfBranchesService;
-    private final ServicesOfPackagesService servicesOfpackagesService;
+    private  ManagersOfServicesService managersOfServicesService;
+    private  ServicesOfBranchesService servicesOfBranchesService;
+    private  ServicesOfPackagesService servicesOfpackagesService;
+
+    public ServiceServiceImpl(ServiceRepo serviceRepo, ServiceMapper serviceMapper,
+                              ManagerService managerService, PackageService packageService,
+                              BranchService branchService, OrderService orderService,
+                              ManagersOfServicesService managersOfServicesService,
+                              ServicesOfBranchesService servicesOfBranchesService,
+                              ServicesOfPackagesService servicesOfpackagesService) {
+        this.serviceRepo = serviceRepo;
+        this.serviceMapper = serviceMapper;
+        this.managerService = managerService;
+        this.packageService = packageService;
+        this.branchService = branchService;
+        this.orderService = orderService;
+        this.managersOfServicesService = managersOfServicesService;
+        this.servicesOfBranchesService = servicesOfBranchesService;
+        this.servicesOfpackagesService = servicesOfpackagesService;
+    }
+    public ServiceServiceImpl() {
+
+    }
 
 
     void throwExceptionIfServiceStillIncludedInOffer(Long serviceId){
@@ -123,6 +146,18 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public Optional<ServiceEntity> getByObjectByIdAndBranchId(Long serviceId, Long branchId) {
+        return serviceRepo.findByServiceIdAndBranchId(serviceId, branchId);
+    }
+
+    @Override
+    public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId) {
+        return getByObjectByIdAndBranchId(serviceId,branchId).orElseThrow(
+                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
+        );
+    }
+
+    @Override
     public ServiceEntity getById(Long serviceId) {
         return getObjectById(serviceId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId)
@@ -133,11 +168,50 @@ public class ServiceServiceImpl implements ServiceService {
     public ServiceResponse getResponseById(Long serviceId) {
         return serviceMapper.toResponse(getById(serviceId));
     }
+    @Override
+    public ServiceResponse getResponseByIdAndBranchId(Long serviceId, Long branchId) {
+        return serviceMapper.toResponseAccordingToBranch(getByIdAndBranchId(serviceId,branchId),branchId);
+    }
+
+
 
     @Override
-    public Optional<ServiceEntity> getByServiceIdAndBranchId(Long serviceId, Long branchId) {
-        return serviceRepo.findByServiceIdAndBranchId(serviceId, branchId);
+    public ServiceResponse getResponseByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId){
+        if (branchId == null)
+            return getResponseById(serviceId);
+        else return getResponseByIdAndBranchId(serviceId,branchId);
     }
+
+    @Override
+    public List<ServiceEntity> getAllByBranchId(Long branchId) {
+        branchService.getById(branchId);
+        return serviceRepo.findAllByBranchId(branchId);
+    }
+
+//    @Override
+//    public List<ServiceResponse> getResponseAllByBranchId(Long branchId) {
+//        branchService.getById(branchId);
+//        return serviceRepo.findAllByBranchId(branchId)
+//                .stream()
+//                .map(service -> {
+//                    ServiceResponse response = serviceMapper.toResponse(service);
+//                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
+//                    response.setStatusInBranch(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
+//                    return response;
+//                })
+//                .toList();
+//    }
+
+
+
+    public List<ServiceEntity> getAllAvailableInBranch(Long branchId) {
+        branchService.getById(branchId);
+        return serviceRepo.findAllAvailableInBranch(branchId);
+    }
+
+
+
+
 
     @Override
     public boolean isExistInBranch(Long serviceId, Long branchId) {
@@ -190,32 +264,7 @@ public class ServiceServiceImpl implements ServiceService {
         return servicesOfBranchesResponse;
     }
 
-    @Override
-    public List<ServiceEntity> getAllByBranchId(Long branchId) {
-        branchService.getById(branchId);
-        return serviceRepo.findAllByBranchId(branchId);
-    }
 
-
-    public List<ServiceEntity> getAllAvailableInBranch(Long branchId) {
-        branchService.getById(branchId);
-        return serviceRepo.findAllAvailableInBranch(branchId);
-    }
-
-
-    @Override
-    public List<ServiceResponse> getResponseAllByBranchId(Long branchId) {
-        branchService.getById(branchId);
-        return serviceRepo.findAllByBranchId(branchId)
-                .stream()
-                .map(service -> {
-                    ServiceResponse response = serviceMapper.toResponse(service);
-                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
-                    response.setServiceStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
-                    return response;
-                })
-                .toList();
-    }
 
     @Override
     public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest) {
@@ -242,9 +291,10 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
-    public List<ServiceResponse> getResponseAllByOfferId(Long offerId) {
-        Package aPackage = packageService.getById(offerId);
-        return serviceRepo.findAllByPackageId(offerId)
+    public List<ServiceResponse> getResponseAllByPackageId(Long packageId
+    ) {
+        Package aPackage = packageService.getById(packageId);
+        return serviceRepo.findAllByPackageId(packageId)
                 .stream()
                 .map(service ->  serviceMapper.toResponse(service))
                 .toList();
@@ -260,5 +310,26 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceMapper.toResponse(service);
     }
 
+    @Override
+    public List<ServiceResponse> getAllByCategory(ServiceCategory category) {
+        return serviceRepo.findAllByCategory(category)
+                .stream()
+                .map(service -> serviceMapper.toResponse(service))
+                .toList();
+    }
 
+    @Override
+    public List<ServiceResponse> getAllCleaningServices(){
+        return getAllByCategory(ServiceCategory.CLEANING_SERVICE);
+    }
+
+    @Override
+    public List<ServiceResponse> getAllMaintenanceServices(){
+        return getAllByCategory(ServiceCategory.MAINTENANCE_SERVICE);
+    }
+
+    @Override
+    public List<ServiceResponse> getAllTakeAwayServices(){
+        return getAllByCategory(ServiceCategory.TAKE_AWAY_SERVICE);
+    }
 }

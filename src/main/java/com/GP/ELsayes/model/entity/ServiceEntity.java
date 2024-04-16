@@ -20,41 +20,42 @@ import java.util.List;
 @AllArgsConstructor
 
 
-@Entity
-@Table(name = "service")
-public class ServiceEntity {
+    @Entity
+    @Table(name = "service")
+    public class ServiceEntity {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "service_id")
-    private Long id;
+        @Id
+        @GeneratedValue(strategy = GenerationType.IDENTITY)
+        @Column(name = "service_id")
+        private Long id;
 
-    private String name;
-    private String description;
-    private String serviceImageURL;
-    private String price;
-    private String requiredTime;
-    private String profit;
+        private String name;
+        private String description;
+        private String serviceImageURL;
+        private String price;
+        private String requiredTime;
 
-    @Enumerated(EnumType.STRING)
-    private ServiceCategory serviceCategory;
+        @Enumerated(EnumType.STRING)
+        private ServiceCategory serviceCategory;
 
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "service")
-    private List<ManagersOfServices> managersOfService;
+        @JsonManagedReference
+        @OneToMany(mappedBy = "service")
+        private List<ManagersOfServices> managersOfService;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "service",cascade = CascadeType.REMOVE)
-    private List<ServicesOfBranches> servicesOfBranch;
+        @JsonManagedReference
+        @OneToMany(mappedBy = "service",cascade = CascadeType.REMOVE)
+        private List<ServicesOfBranches> servicesOfBranch;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "service")
-    private List<ServicesOfPackage> servicesOfPackage ;
 
-    @JsonManagedReference
-    @OneToMany(mappedBy = "service")
-    private List<ServicesOfOrders> servicesOfOrder;
 
-}
+        @JsonManagedReference
+        @OneToMany(mappedBy = "service")
+        private List<ServicesOfPackage> servicesOfPackage ;
+
+        @JsonManagedReference
+        @OneToMany(mappedBy = "service")
+        private List<ServicesOfOrders> servicesOfOrder;
+
+    }
 

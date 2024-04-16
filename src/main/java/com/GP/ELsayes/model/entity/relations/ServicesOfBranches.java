@@ -44,4 +44,6 @@ public class ServicesOfBranches {
     private Status serviceStatus;
     private Date addingDate;
 
+
+
 }

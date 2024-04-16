@@ -1,10 +1,13 @@
 package com.GP.ELsayes.repository;
 
+import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.enums.ServiceCategory;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
@@ -29,6 +32,10 @@ public interface ServiceRepo extends JpaRepository<ServiceEntity,Long> {
     List<ServiceEntity> findAllByPackageId(Long packageId);
     @Query("select s from ServiceEntity s join s.servicesOfOrder so join so.order o where o.id = :orderId")
     List<ServiceEntity> findAllByOrderId(Long orderId);
+
+    @Query("SELECT s FROM ServiceEntity s WHERE s.serviceCategory = :category")
+    List<ServiceEntity> findAllByCategory(ServiceCategory category);
 }
+
 
 
