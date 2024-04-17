@@ -13,6 +13,7 @@ import com.GP.ELsayes.repository.CustomerRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
+import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -37,15 +38,17 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     private final FreeTrialCodeService freeTrialCodeService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final PackagesOfOrderService packagesOfOrderService;
+    private final VisitationsOfBranchesService visitationsOfBranchesService;
 
 
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
                                UserMapper userMapper, @Lazy CarService carService,
                                @Lazy OrderService orderService,
-                               @Lazy ServiceService serviceService,@Lazy PackageService packageService,
+                               @Lazy ServiceService serviceService, @Lazy PackageService packageService,
                                @Lazy FreeTrialCodeService freeTrialCodeService,
                                @Lazy ServicesOfOrderService servicesOfOrderService,
-                               @Lazy PackagesOfOrderService packagesOfOrderService) {
+                               @Lazy PackagesOfOrderService packagesOfOrderService,
+                               @Lazy VisitationsOfBranchesService visitationsOfBranchesService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
         this.userMapper = userMapper;
@@ -56,6 +59,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         this.freeTrialCodeService = freeTrialCodeService;
         this.servicesOfOrderService = servicesOfOrderService;
         this.packagesOfOrderService = packagesOfOrderService;
+        this.visitationsOfBranchesService = visitationsOfBranchesService;
     }
 
 
@@ -89,9 +93,22 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
 
         updatedCustomer.setId(customerId);
-        BeanUtils.copyProperties(updatedCustomer,existedCustomer);
+        updatedCustomer.setFirstName(customerRequest.getFirstName());
+        updatedCustomer.setLastName(customerRequest.getLastName());
+        updatedCustomer.setUserName(existedCustomer.getUserName());
+        updatedCustomer.setPassword(customerRequest.getPassword());
+        updatedCustomer.setEmail(customerRequest.getEmail());
+        updatedCustomer.setProfileImageURL(customerRequest.getProfileImageURL());
+        updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());
+        updatedCustomer.setBirthday(customerRequest.getBirthday());
+        updatedCustomer.setGender(customerRequest.getGender());
+        updatedCustomer.setDateOfJoining(existedCustomer.getDateOfJoining());
+        updatedCustomer.setCustomerFreeTrialCode(existedCustomer.getCustomerFreeTrialCode());
+        updatedCustomer.setUserRole(existedCustomer.getUserRole());
 
-        return this.customerMapper.toResponse(customerRepo.save(existedCustomer));
+        System.out.println(updatedCustomer.getUserRole());
+
+        return this.customerMapper.toResponse(customerRepo.save(updatedCustomer));
     }
 
     @Override
@@ -100,6 +117,8 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
         CustomerRequest customerRequest = userMapper.toCustomerRequest(userRequest);
 
+
+        System.out.println(customerRequest);
 
         CustomerResponse customerResponse = update(customerRequest,userId);
 
@@ -135,7 +154,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
     @Override
     public CustomerResponse getResponseById(Long customerId) {
-        return customerMapper.toResponse(getById(customerId));
+        return customerMapper.toResponseAccordingToBranch(getById(customerId),visitationsOfBranchesService);
     }
 
 

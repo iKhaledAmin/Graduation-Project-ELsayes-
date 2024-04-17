@@ -30,22 +30,7 @@ public class VisitationsOfBranches {
 
     private Date dateOfArriving;
     private Date dateOfLeaving;
-    //@Convert(converter = DurationConverter.class) // Specify the custom converter
     private Duration period;
-
-//    // Custom converter for Duration to Long
-//    @Converter
-//    public static class DurationConverter implements AttributeConverter<Duration, Long> {
-//        @Override
-//        public Long convertToDatabaseColumn(Duration duration) {
-//            return duration.toHours(); // Convert to seconds (or any other suitable representation)
-//        }
-//
-//        @Override
-//        public Duration convertToEntityAttribute(Long seconds) {
-//            return Duration.ofHours(seconds); // Convert back to Duration
-//        }
-//    }
 
 
     @JsonBackReference
