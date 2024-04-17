@@ -158,7 +158,7 @@ public class ServiceServiceImpl implements ServiceService {
 
 
     @Override
-    public ServiceResponse getByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId){
+    public ServiceResponse getByServiceIdOrByServiceIdAndBranchId(Long serviceId, Long branchId){
         if (branchId == null)
             return getResponseById(serviceId);
         else return toResponseAccordingToBranch(serviceId,branchId);
@@ -176,25 +176,10 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findAllByBranchId(branchId)
                 .stream()
                 .map(service -> {
-                    ServiceResponse response = serviceMapper.toResponseAccordingToBranch(service,branchId,servicesOfBranchesService);
-//                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
-//                    response.setStatusInBranch(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
-                    return response;
+                    return serviceMapper.toResponseAccordingToBranch(service,branchId,servicesOfBranchesService);
                 })
                 .toList();
     }
-
-
-//    @Override
-//    public ServiceResponse getResponseByServiceIdOrAndServiceIdBranchId(Long serviceId,Long branchId) {
-//
-//        ServiceEntity service = getByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
-//        ServiceResponse response = serviceMapper.toResponse(service);
-//        boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
-//        response.setAvailableInBranch(isAvailable ? true : false);
-//        return response;
-//
-//    }
 
 
 

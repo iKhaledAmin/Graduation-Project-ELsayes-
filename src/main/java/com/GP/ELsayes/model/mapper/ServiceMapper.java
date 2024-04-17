@@ -48,18 +48,7 @@ public interface ServiceMapper {
         return null;
     }
 
-    // Retrieve ServicesOfBranches from the repository
-//    default ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId, ServiceRepo serviceRepo) {
-//        Optional<ServiceEntity> serviceEntityOptional = serviceRepo.findById(serviceId);
-//        if (serviceEntityOptional.isPresent()) {
-//            ServiceEntity serviceEntity = serviceEntityOptional.get();
-//            return serviceEntity.getServicesOfBranch().stream()
-//                    .filter(sb -> sb.getBranch().getId().equals(branchId))
-//                    .findFirst()
-//                    .orElse(null);
-//        }
-//        return null;
-//    }
+
 
     default ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId, ServicesOfBranchesService servicesOfBranchesService) {
         Optional<ServicesOfBranches> servicesOfBranch = servicesOfBranchesService.getObjectByServiceIdAndBranchId(serviceId,branchId);

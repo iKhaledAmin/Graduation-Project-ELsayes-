@@ -2,6 +2,7 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
+import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Package;
@@ -248,20 +249,35 @@ import java.util.Optional;
         branchService.getById(branchId);
         return packageRepo.findAllByBranchId(branchId);
     }
+    private Package getByPackageIdAndBranchId(Long packageId, Long branchId) {
+        return packageRepo.findByPackageIdAndBranchId(packageId,branchId);
+    }
+    @Override
+    public PackageResponse toResponseAccordingToBranch(Long packageId, Long branchId) {
+        return packageMapper.toResponseAccordingToBranch(getByPackageIdAndBranchId(packageId,branchId),branchId,packagesOfBranchesService);
+    }
+
+
+
+    @Override
+    public PackageResponse getByPackageIdOrByPackageIdAndBranchId(Long packageId, Long branchId){
+        if (branchId == null)
+            return getResponseById(packageId);
+        else return toResponseAccordingToBranch(packageId,branchId);
+    }
 
     @Override
     public List<PackageResponse> getResponseAllByBranchId(Long branchId) {
         branchService.getById(branchId);
         return packageRepo.findAllByBranchId(branchId)
                 .stream()
-                .map(service -> {
-                    PackageResponse response = packageMapper.toResponse(service);
-                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
-                    response.setPackageStatus(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
-                    return response;
+                .map(packageEntity -> {
+                    return packageMapper.toResponseAccordingToBranch(packageEntity,branchId,packagesOfBranchesService);
                 })
                 .toList();
     }
+
+
 
     @Override
     public Optional<Package> getByServiceIdAndBranchId(Long serviceId, Long branchId) {

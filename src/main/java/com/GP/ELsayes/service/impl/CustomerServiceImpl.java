@@ -32,6 +32,8 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     private final CarService carService;
     private OrderService orderService;
     private final ServiceService serviceService;
+
+    private final PackageService packageService;
     private final FreeTrialCodeService freeTrialCodeService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final PackagesOfOrderService packagesOfOrderService;
@@ -40,7 +42,8 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
                                UserMapper userMapper, @Lazy CarService carService,
                                @Lazy OrderService orderService,
-                               @Lazy ServiceService serviceService, @Lazy FreeTrialCodeService freeTrialCodeService,
+                               @Lazy ServiceService serviceService,@Lazy PackageService packageService,
+                               @Lazy FreeTrialCodeService freeTrialCodeService,
                                @Lazy ServicesOfOrderService servicesOfOrderService,
                                @Lazy PackagesOfOrderService packagesOfOrderService) {
         this.customerMapper = customerMapper;
@@ -49,6 +52,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         this.carService = carService;
         this.orderService = orderService;
         this.serviceService = serviceService;
+        this.packageService = packageService;
         this.freeTrialCodeService = freeTrialCodeService;
         this.servicesOfOrderService = servicesOfOrderService;
         this.packagesOfOrderService = packagesOfOrderService;
@@ -173,7 +177,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
     @Override
     public ServiceResponse getServiceByIdAndBranchId(Long serviceId, Long branchId){
-        return serviceService.getByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
+        return serviceService.getByServiceIdOrByServiceIdAndBranchId(serviceId,branchId);
     }
 
     @Override
@@ -188,6 +192,13 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     public void deleteServiceFromOrderList(Long serviceOfOrderId){
         servicesOfOrderService.deleteServiceFromOrderList(serviceOfOrderId);
     }
+
+
+    @Override
+    public PackageResponse getPackageByIdAndBranchId(Long packageId, Long branchId){
+        return packageService.getByPackageIdOrByPackageIdAndBranchId(packageId,branchId);
+    }
+
 
     @Override
     public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest) {

@@ -28,6 +28,7 @@ public interface CustomerService extends  UserService, CrudService<CustomerReque
 
     public void addServiceToOrderList(AddServiceToOrderListRequest addServiceToOrderListRequest);
     public void deleteServiceFromOrderList(Long serviceId);
+    public PackageResponse getPackageByIdAndBranchId(Long packageId, Long branchId);
     public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest);
     public void deletePackageFromOrderList(Long packageOfOrderId);
     public void clearOrderList(Long customerId);

@@ -73,6 +73,7 @@ public class CustomerController {
     }
 
 
+
     @PutMapping("/add-service-to-order-list")
     public ResponseEntity<?> addServiceToOrderList(@RequestBody @Valid AddServiceToOrderListRequest addServiceToOrderListRequest){
         this.customerService.addServiceToOrderList(addServiceToOrderListRequest);
@@ -83,6 +84,13 @@ public class CustomerController {
     public ResponseEntity<?> deleteServiceFromOrderList(@PathVariable Long serviceId){
         this.customerService.deleteServiceFromOrderList(serviceId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+    }
+
+
+
+    @GetMapping("/get-package-by-id-and-branch-by-id")
+    public ResponseEntity<?> getPackageByIdAndBranchId(@RequestBody @Valid GetPackageRequest getPackageRequest) {
+        return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(getPackageRequest.getPackageId(),getPackageRequest.getBranchId()), HttpStatus.OK);
     }
 
     @PutMapping("/add-package-to-order-list")

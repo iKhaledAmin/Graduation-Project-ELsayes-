@@ -40,9 +40,14 @@ public class PackagesOfBranchesServiceImpl implements PackagesOfBranchesService 
     }
 
 
+    @Override
+    public Optional<PackagesOfBranches> getObjectByPackageIdAndBranchId(Long packageId , Long branchId) {
+        return packagesOfBranchesRepo.findByPackageIdAndBranchId(packageId,branchId);
+    }
 
+    @Override
     public PackagesOfBranches getByPackageIdAndBranchId(Long packageId , Long branchId) {
-        return packagesOfBranchesRepo.findByPackageIdAndBranchId(packageId,branchId).orElseThrow(
+        return getObjectByPackageIdAndBranchId(packageId,branchId).orElseThrow(
                 () -> new NoSuchElementException("There is no package with id = " + packageId + " in this branch")
         );
     }

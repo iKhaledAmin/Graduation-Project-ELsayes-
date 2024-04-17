@@ -18,7 +18,7 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
     public Optional<ServiceEntity> getByObjectByIdAndBranchId(Long serviceId, Long branchId);
     public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId);
     public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId);
-    public ServiceResponse getByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId);
+    public ServiceResponse getByServiceIdOrByServiceIdAndBranchId(Long serviceId, Long branchId);
     boolean isExistInBranch(Long serviceId, Long branchId) ;
     boolean isAvailableInBranch(Long serviceId, Long branchId) ;
 

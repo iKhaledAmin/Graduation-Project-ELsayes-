@@ -22,5 +22,7 @@ public interface PackageRepo extends JpaRepository<Package,Long> {
     @Query("SELECT pkg FROM Package pkg JOIN pkg.packagesOfBranch branchPkg WHERE branchPkg.packageStatus = 'AVAILABLE' AND branchPkg.packageEntity.id = :packageId AND branchPkg.branch.id = :branchId")
     Optional<Package> findByPackageIdAndBranchIdIfAvailable(Long packageId, Long branchId);
 
+    @Query("SELECT pkg FROM Package pkg JOIN pkg.packagesOfBranch branchPkg WHERE branchPkg.packageEntity.id = :packageId AND branchPkg.branch.id = :branchId")
 
+    Package findByPackageIdAndBranchId(Long packageId, Long branchId);
 }

@@ -25,6 +25,9 @@ public interface PackageService extends CrudService<PackageRequest, Package, Pac
     public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
 
     public List<Package> getAllByBranchId(Long branchId);
+
+    public PackageResponse toResponseAccordingToBranch(Long packageId, Long branchId);
+    public PackageResponse getByPackageIdOrByPackageIdAndBranchId(Long packageId, Long branchId);
     public List<PackageResponse> getResponseAllByBranchId(Long branchId);
 
     Optional<Package> getByServiceIdAndBranchId(Long serviceId, Long branchId);

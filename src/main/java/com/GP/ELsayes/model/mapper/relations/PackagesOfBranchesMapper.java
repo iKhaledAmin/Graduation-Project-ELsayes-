@@ -11,7 +11,7 @@ import org.mapstruct.factory.Mappers;
 public interface PackagesOfBranchesMapper {
     PackagesOfBranches INSTANCE = Mappers.getMapper(PackagesOfBranches.class);
 
-    //@Mapping(target = "packageName" , source = "entity.packagesOfOrder.name")
     @Mapping(target = "branchName" , source = "entity.branch.name")
+    @Mapping(target = "packageName" , source = "entity.packageEntity.name")
     PackageOfBranchesResponse toResponse(PackagesOfBranches entity);
 }
