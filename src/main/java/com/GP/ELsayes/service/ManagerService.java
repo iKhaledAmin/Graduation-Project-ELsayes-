@@ -51,7 +51,7 @@ public interface ManagerService extends UserService , CrudService<ManagerRequest
     public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest);
-    public List<ServiceEntity> getAllServicesByBranchId(Long branchId);
+    public List<ServiceResponse> getAllServicesByBranchId(Long branchId);
 
 
 

@@ -247,6 +247,8 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
 
 
+
+
     @Override
     public CustomerResponse updateCustomer(CustomerRequest customerRequest, Long customerId){
         return customerService.update(customerRequest,customerId);
@@ -268,6 +270,8 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
 
 
+
+
     @Override
     public ServiceResponse addService(ServiceRequest serviceRequest){
         return serviceService.add(serviceRequest);
@@ -284,6 +288,12 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     public List<ServiceResponse> getAllServices(){
         return serviceService.getAll();
     }
+
+    @Override
+    public List<ServiceResponse> getAllServicesByBranchId(Long branchId){
+        return serviceService.getResponseAllByBranchId(branchId);
+    }
+
     @Override
     public ServiceResponse getServiceResponseById(Long serviceId){
         return serviceService.getResponseById(serviceId);
@@ -303,10 +313,6 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     @Override
     public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest){
         return serviceService.addServiceToPackage(servicesOfPackageRequest);
-    }
-    @Override
-    public List<ServiceEntity> getAllServicesByBranchId(Long branchId){
-        return serviceService.getAllByBranchId(branchId);
     }
 
 

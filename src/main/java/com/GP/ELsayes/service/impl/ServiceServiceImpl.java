@@ -170,19 +170,19 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findAllByBranchId(branchId);
     }
 
-//    @Override
-//    public List<ServiceResponse> getResponseAllByBranchId(Long branchId) {
-//        branchService.getById(branchId);
-//        return serviceRepo.findAllByBranchId(branchId)
-//                .stream()
-//                .map(service -> {
-//                    ServiceResponse response = serviceMapper.toResponse(service);
+    @Override
+    public List<ServiceResponse> getResponseAllByBranchId(Long branchId) {
+        branchService.getById(branchId);
+        return serviceRepo.findAllByBranchId(branchId)
+                .stream()
+                .map(service -> {
+                    ServiceResponse response = serviceMapper.toResponseAccordingToBranch(service,branchId,servicesOfBranchesService);
 //                    boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
 //                    response.setStatusInBranch(isAvailable ? Status.AVAILABLE : Status.UNAVAILABLE);
-//                    return response;
-//                })
-//                .toList();
-//    }
+                    return response;
+                })
+                .toList();
+    }
 
 
 //    @Override

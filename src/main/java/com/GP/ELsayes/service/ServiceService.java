@@ -28,7 +28,7 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
     public ServicesOfBranchesResponse activateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public ServicesOfBranchesResponse deactivateServiceInBranch(ServicesOfBranchesRequest servicesOfBranchesRequest);
     public List<ServiceEntity> getAllByBranchId(Long branchId);
-  //  public List<ServiceResponse> getResponseAllByBranchId(Long branchId);
+    public List<ServiceResponse> getResponseAllByBranchId(Long branchId);
     List<ServiceEntity> getAllAvailableInBranch(Long branchId);
 
 
