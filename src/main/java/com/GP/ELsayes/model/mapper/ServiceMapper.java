@@ -19,6 +19,7 @@ import org.mapstruct.factory.Mappers;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mapper(componentModel = "spring")
 public interface ServiceMapper {
@@ -27,29 +28,44 @@ public interface ServiceMapper {
 
     ServiceEntity toEntity(ServiceRequest request);
 
-
     ServiceResponse toResponse(ServiceEntity entity);
 
-
     // Map ServiceEntity to ServiceResponse with availability in a specific branch
-    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getId(), branchId))")
-    ServiceResponse toResponseAccordingToBranch(ServiceEntity entity, Long branchId);
+    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getId(), branchId, servicesOfBranchesService))")
+    ServiceResponse toResponseAccordingToBranch(ServiceEntity entity, Long branchId, ServicesOfBranchesService servicesOfBranchesService);
+
 
 
     // Custom method to determine availability based on serviceStatus
-    default boolean isAvailableInBranch(Long serviceId, Long branchId) {
-        ServicesOfBranches servicesOfBranches = getServicesOfBranches(serviceId, branchId);
+    default Boolean isAvailableInBranch(Long serviceId, Long branchId, ServicesOfBranchesService servicesOfBranchesService) {
+        ServicesOfBranches servicesOfBranches = getServicesOfBranches(serviceId, branchId, servicesOfBranchesService);
 
         if (servicesOfBranches != null) {
             Status serviceStatus = servicesOfBranches.getServiceStatus();
-            return serviceStatus == Status.AVAILABLE;
+            return serviceStatus == Status.AVAILABLE ? true : false;
         }
 
-        // If the service is not found in the branch, consider it unavailable
-        return false;
+        return null;
     }
 
-    // Placeholder method for retrieving ServicesOfBranches
-    ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId);
+    // Retrieve ServicesOfBranches from the repository
+//    default ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId, ServiceRepo serviceRepo) {
+//        Optional<ServiceEntity> serviceEntityOptional = serviceRepo.findById(serviceId);
+//        if (serviceEntityOptional.isPresent()) {
+//            ServiceEntity serviceEntity = serviceEntityOptional.get();
+//            return serviceEntity.getServicesOfBranch().stream()
+//                    .filter(sb -> sb.getBranch().getId().equals(branchId))
+//                    .findFirst()
+//                    .orElse(null);
+//        }
+//        return null;
+//    }
 
+    default ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId, ServicesOfBranchesService servicesOfBranchesService) {
+        Optional<ServicesOfBranches> servicesOfBranch = servicesOfBranchesService.getObjectByServiceIdAndBranchId(serviceId,branchId);
+        if (servicesOfBranch.isPresent()) {
+            return servicesOfBranch.get();
+        }
+        return null;
+    }
 }

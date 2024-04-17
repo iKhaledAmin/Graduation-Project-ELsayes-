@@ -17,8 +17,8 @@ import java.util.Optional;
 public interface ServiceService extends CrudService<ServiceRequest , ServiceEntity , ServiceResponse ,Long> {
     public Optional<ServiceEntity> getByObjectByIdAndBranchId(Long serviceId, Long branchId);
     public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId);
-    public ServiceResponse getResponseByIdAndBranchId(Long serviceId, Long branchId);
-    public ServiceResponse getResponseByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId);
+    public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId);
+    public ServiceResponse getByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId);
     boolean isExistInBranch(Long serviceId, Long branchId) ;
     boolean isAvailableInBranch(Long serviceId, Long branchId) ;
 

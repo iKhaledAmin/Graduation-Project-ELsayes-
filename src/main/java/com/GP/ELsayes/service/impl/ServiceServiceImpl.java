@@ -21,7 +21,6 @@ import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
-import lombok.NoArgsConstructor;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
@@ -35,37 +34,20 @@ import java.util.Optional;
 
 
 @Service
+@RequiredArgsConstructor
 public class ServiceServiceImpl implements ServiceService {
-    private  ServiceRepo serviceRepo;
-    private  ServiceMapper serviceMapper;
-    private  ManagerService managerService;
-    private  PackageService packageService;
-    private  BranchService branchService;
-    private  OrderService orderService;
+    private final ServiceRepo serviceRepo;
+    private  final ServiceMapper serviceMapper;
+    private final ManagerService managerService;
+    private  final PackageService packageService;
+    private  final BranchService branchService;
+    private  final OrderService orderService;
 
-    private  ManagersOfServicesService managersOfServicesService;
-    private  ServicesOfBranchesService servicesOfBranchesService;
-    private  ServicesOfPackagesService servicesOfpackagesService;
+    private  final ManagersOfServicesService managersOfServicesService;
+    private  final ServicesOfBranchesService servicesOfBranchesService;
+    private  final ServicesOfPackagesService servicesOfpackagesService;
 
-    public ServiceServiceImpl(ServiceRepo serviceRepo, ServiceMapper serviceMapper,
-                              ManagerService managerService, PackageService packageService,
-                              BranchService branchService, OrderService orderService,
-                              ManagersOfServicesService managersOfServicesService,
-                              ServicesOfBranchesService servicesOfBranchesService,
-                              ServicesOfPackagesService servicesOfpackagesService) {
-        this.serviceRepo = serviceRepo;
-        this.serviceMapper = serviceMapper;
-        this.managerService = managerService;
-        this.packageService = packageService;
-        this.branchService = branchService;
-        this.orderService = orderService;
-        this.managersOfServicesService = managersOfServicesService;
-        this.servicesOfBranchesService = servicesOfBranchesService;
-        this.servicesOfpackagesService = servicesOfpackagesService;
-    }
-    public ServiceServiceImpl() {
 
-    }
 
 
     void throwExceptionIfServiceStillIncludedInOffer(Long serviceId){
@@ -152,7 +134,7 @@ public class ServiceServiceImpl implements ServiceService {
 
     @Override
     public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId) {
-        return getByObjectByIdAndBranchId(serviceId,branchId).orElseThrow(
+        return getObjectById(serviceId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
         );
     }
@@ -169,17 +151,17 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceMapper.toResponse(getById(serviceId));
     }
     @Override
-    public ServiceResponse getResponseByIdAndBranchId(Long serviceId, Long branchId) {
-        return serviceMapper.toResponseAccordingToBranch(getByIdAndBranchId(serviceId,branchId),branchId);
+    public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId) {
+        return serviceMapper.toResponseAccordingToBranch(getByIdAndBranchId(serviceId,branchId),branchId,servicesOfBranchesService);
     }
 
 
 
     @Override
-    public ServiceResponse getResponseByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId){
+    public ServiceResponse getByServiceIdOrAndServiceIdBranchId(Long serviceId, Long branchId){
         if (branchId == null)
             return getResponseById(serviceId);
-        else return getResponseByIdAndBranchId(serviceId,branchId);
+        else return toResponseAccordingToBranch(serviceId,branchId);
     }
 
     @Override
@@ -200,6 +182,18 @@ public class ServiceServiceImpl implements ServiceService {
 //                    return response;
 //                })
 //                .toList();
+//    }
+
+
+//    @Override
+//    public ServiceResponse getResponseByServiceIdOrAndServiceIdBranchId(Long serviceId,Long branchId) {
+//
+//        ServiceEntity service = getByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
+//        ServiceResponse response = serviceMapper.toResponse(service);
+//        boolean isAvailable = isAvailableInBranch(service.getId(), branchId);
+//        response.setAvailableInBranch(isAvailable ? true : false);
+//        return response;
+//
 //    }
 
 

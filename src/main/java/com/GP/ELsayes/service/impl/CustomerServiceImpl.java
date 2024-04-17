@@ -6,7 +6,6 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.enums.ServiceCategory;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
@@ -174,7 +173,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
     @Override
     public ServiceResponse getServiceByIdAndBranchId(Long serviceId, Long branchId){
-        return serviceService.getResponseByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
+        return serviceService.getByServiceIdOrAndServiceIdBranchId(serviceId,branchId);
     }
 
     @Override

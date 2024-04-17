@@ -20,5 +20,5 @@ public class ServiceResponse {
     private String requiredTime;
     private ServiceCategory serviceCategory;
    // private Status statusInBranch;
-   private boolean availableInBranch;
+   private Boolean availableInBranch;
 }

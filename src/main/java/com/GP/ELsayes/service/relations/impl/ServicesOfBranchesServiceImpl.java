@@ -42,10 +42,14 @@ public class ServicesOfBranchesServiceImpl implements ServicesOfBranchesService 
         this.servicesOfOffersService = servicesOfOffersService;
     }
 
+    @Override
+    public Optional<ServicesOfBranches> getObjectByServiceIdAndBranchId(Long serviceId , Long branchId){
+        return servicesOfBranchesRepo.findByServiceIdAndBranchId(serviceId,branchId);
+    }
 
-
-    public static ServicesOfBranches getByServiceIdAndBranchId(Long serviceId , Long branchId) {
-        return servicesOfBranchesRepo.findByServiceIdAndBranchId(serviceId,branchId).orElseThrow(
+    @Override
+    public  ServicesOfBranches getByServiceIdAndBranchId(Long serviceId , Long branchId) {
+        return getObjectByServiceIdAndBranchId(serviceId,branchId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
         );
     }
