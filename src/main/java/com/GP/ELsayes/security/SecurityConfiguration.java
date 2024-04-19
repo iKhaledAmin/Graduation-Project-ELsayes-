@@ -28,19 +28,20 @@ public class SecurityConfiguration {
     SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
         http.authorizeHttpRequests(authRequest -> {
-//            authRequest.anyRequest().permitAll();
+
             authRequest.requestMatchers("/auth/login").permitAll();
             authRequest.requestMatchers("/customers/register").permitAll();
+
+
+            authRequest.requestMatchers("/customers/edit-profile/{customerId}").hasRole("CUSTOMER");
             authRequest.requestMatchers("/customers/add-car").hasRole("CUSTOMER");
+
+
             authRequest.requestMatchers("/customers/get-all-cleaning-services").hasRole("CUSTOMER");
             authRequest.requestMatchers("/customers/get-all-maintenance-services").hasRole("CUSTOMER");
             authRequest.requestMatchers("/customers/get-all-take-away-services").hasRole("CUSTOMER");
 
-//            authRequest.requestMatchers("/customers/edit-profile/{customerId}").hasRole("CUSTOMER");
 
-//            authRequest.requestMatchers("/").hasAnyRole();
-//            authRequest.requestMatchers("/").hasAuthority();
-//
 
 
         });

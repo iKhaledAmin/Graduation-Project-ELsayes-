@@ -57,16 +57,7 @@ public abstract class User {
     @Enumerated(EnumType.STRING)
     private UserRole userRole;
 
-    @JsonIgnore
-    @CreationTimestamp
-    @Column(updatable = false)
-    private LocalDateTime createdAt;
 
-    @JsonIgnore
-    @UpdateTimestamp
-    private LocalDateTime updatedAt;
-    @JsonIgnore
-    private LocalDateTime deletedAt;
 
 
 

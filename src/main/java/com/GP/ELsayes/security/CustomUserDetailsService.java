@@ -13,7 +13,6 @@ import java.util.Optional;
 
 @RequiredArgsConstructor
 @Service
-@Slf4j
 public class CustomUserDetailsService implements UserDetailsService {
     private final UserRepo userRepo;
 
