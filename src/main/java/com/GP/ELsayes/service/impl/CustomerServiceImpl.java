@@ -116,9 +116,6 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
         CustomerRequest customerRequest = userMapper.toCustomerRequest(userRequest);
 
-
-        System.out.println(customerRequest);
-
         CustomerResponse customerResponse = update(customerRequest,userId);
 
         return userMapper.toUserResponse(customerResponse);
@@ -168,7 +165,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     }
 
     @Override
-    public void deleteCra(Long carId){
+    public void deleteCar(Long carId){
         carService.delete(carId);
     }
 

@@ -66,8 +66,8 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
     @Override
     public void addPackageToOrder(Long customerId, Long packageId) {
 
-        Customer customer = customerService.getObjectById(customerId).get();
-        Package aPackage = packageService.getObjectById(packageId).get();
+        Customer customer = customerService.getById(customerId);
+        Package aPackage = packageService.getById(packageId);
 
 
         Optional<Order> unConfirmedOrder = orderService.getUnConfirmedByCustomerId(customerId);

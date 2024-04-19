@@ -41,15 +41,15 @@ public class CustomerController {
         return new ResponseEntity<>(this.customerService.updateCar(carRequest , carId), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/delete-car{carId}")
+    @DeleteMapping("/delete-car/{carId}")
     public ResponseEntity<?> deleteCar(@PathVariable Long carId){
-        this.customerService.delete(carId);
+        this.customerService.deleteCar(carId);
         return new ResponseEntity<>("Deleted successfully", HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-car-by-id/{carId}")
     public ResponseEntity<?> getCarById(@PathVariable Long carId){
-        return new ResponseEntity<>(this.customerService.getResponseById(carId),HttpStatus.OK);
+        return new ResponseEntity<>(this.customerService.getCarById(carId),HttpStatus.OK);
     }
 
     @GetMapping("/get-all-cleaning-services")
