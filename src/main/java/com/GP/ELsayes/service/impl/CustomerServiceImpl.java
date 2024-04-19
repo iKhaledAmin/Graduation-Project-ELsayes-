@@ -15,7 +15,6 @@ import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
 import lombok.SneakyThrows;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -98,7 +97,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         updatedCustomer.setUserName(existedCustomer.getUserName());
         updatedCustomer.setPassword(customerRequest.getPassword());
         updatedCustomer.setEmail(customerRequest.getEmail());
-        updatedCustomer.setProfileImageURL(customerRequest.getProfileImageURL());
+        updatedCustomer.setImage(customerRequest.getProfileImageURL());
         updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());
         updatedCustomer.setBirthday(customerRequest.getBirthday());
         updatedCustomer.setGender(customerRequest.getGender());

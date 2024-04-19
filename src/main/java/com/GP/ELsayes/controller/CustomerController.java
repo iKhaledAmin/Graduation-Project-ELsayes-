@@ -17,7 +17,7 @@ public class CustomerController {
     @Autowired
     private CustomerService customerService;
 
-    @PostMapping("")
+    @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid CustomerRequest customerRequest) {
         return new ResponseEntity<>(this.customerService.register(customerRequest), HttpStatus.CREATED);
     }
@@ -37,7 +37,7 @@ public class CustomerController {
 
 
     @PutMapping("/update-car/{carId}")
-    public ResponseEntity<?> updateCare(@RequestBody @Valid CarRequest carRequest, @PathVariable Long carId){
+    public ResponseEntity<?> updateCar(@RequestBody @Valid CarRequest carRequest, @PathVariable Long carId){
         return new ResponseEntity<>(this.customerService.updateCar(carRequest , carId), HttpStatus.ACCEPTED);
     }
 

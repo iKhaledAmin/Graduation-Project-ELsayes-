@@ -1,7 +1,5 @@
 package com.GP.ELsayes.model.entity.SystemUsers;
 
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.enums.UserGender;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -34,7 +32,6 @@ public abstract class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    //@GeneratedValue(strategy = GenerationType.TABLE)
     @Column(name = "user_id")
     private Long id;
     private String firstName;
@@ -42,7 +39,9 @@ public abstract class User {
     private String userName;
     private String password;
     private String email;
-    private String profileImageURL;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private String image;
     private String phoneNumber;
 
     @JsonFormat(pattern="yyyy-MM-dd")

@@ -31,7 +31,10 @@ import java.util.List;
 
         private String name;
         private String description;
-        private String serviceImageURL;
+
+        @Lob
+        @Column(columnDefinition = "LONGBLOB")
+        private String image;
         private String price;
         private String requiredTime;
 

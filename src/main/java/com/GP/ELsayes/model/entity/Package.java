@@ -24,10 +24,11 @@ public class Package {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "package_id")
     private Long id;
-
     private String name;
     private String description;
-    private String packageImageURL;
+    @Lob
+    @Column(columnDefinition = "LONGBLOB")
+    private String image;
     private String percentageOfDiscount;
     private String originalTotalPrice;
     private String originalTotalRequiredTime;

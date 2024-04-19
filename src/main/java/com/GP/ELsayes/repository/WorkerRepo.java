@@ -19,4 +19,6 @@ public interface WorkerRepo extends JpaRepository<Worker, Long> {
 
     @Query("SELECT w FROM Worker w WHERE w.workerStatus = 'AVAILABLE' AND w.workerRole = :workerRole ORDER BY w.score DESC")
     List<Worker> findAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole workerRole);
+
+    Optional<Worker> findByEmail(String username);
 }
