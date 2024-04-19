@@ -24,12 +24,12 @@ public class OwnerController {
     @Autowired
     private  OwnerService ownerService;
 
-    @PostMapping("")
+    @PostMapping("/add-owner")
     public ResponseEntity<?> add(@RequestBody @Valid OwnerRequest ownerRequest) {
         return new ResponseEntity<>(this.ownerService.add(ownerRequest), HttpStatus.CREATED);
     }
 
-    @PutMapping("/{ownerId}")
+    @PutMapping("/update-owner/{ownerId}")
     public ResponseEntity<?> update(@RequestBody @Valid OwnerRequest ownerRequest,@PathVariable Long ownerId){
         return new ResponseEntity<>(this.ownerService.update(ownerRequest , ownerId), HttpStatus.ACCEPTED);
     }
@@ -39,13 +39,13 @@ public class OwnerController {
         return new ResponseEntity<>(this.ownerService.editProfile(userRequest , ownerId), HttpStatus.ACCEPTED);
     }
 
-    @DeleteMapping("/{ownerId}")
+    @DeleteMapping("/delete-owner/{ownerId}")
     public ResponseEntity<?> delete(@PathVariable Long ownerId){
         this.ownerService.delete(ownerId);
         return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("")
+    @GetMapping("get-all")
     ResponseEntity<?> getAll(){
         return new ResponseEntity<>(this.ownerService.getAll(), HttpStatus.OK);
     }
@@ -118,19 +118,9 @@ public class OwnerController {
     public ResponseEntity<?> getBranchById(@PathVariable Long branchId){
         return new ResponseEntity<>(this.ownerService.getBranchResponseById(branchId), HttpStatus.OK);
     }
-    @GetMapping("/get-current-customer-in-branch/{branchId}")
-    ResponseEntity<?> getAllCurrentVisitationsInBranch(@PathVariable Long branchId){
-        return new ResponseEntity<>(this.ownerService.getResponseAllCurrentVisitationsInBranch(branchId), HttpStatus.OK);
-    }
-    @GetMapping("/get-visitations-by-date")
-    ResponseEntity<?> getAllVisitationsInBranchByADate(@RequestBody GetVisitationsRequest getVisitationsRequest){
-        Long branchId = getVisitationsRequest.getBranchId();
-        Date date = getVisitationsRequest.getDate();
-        if (date == null) {
-            date = java.sql.Date.valueOf(LocalDate.now());
-        }
-        return new ResponseEntity<>(this.ownerService.getResponseAllVisitationsInBranchByADate(branchId, date), HttpStatus.OK);
-    }
+
+
+
 
 
 

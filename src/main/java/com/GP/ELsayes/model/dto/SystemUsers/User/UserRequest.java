@@ -47,6 +47,8 @@ public class UserRequest {
 
     private String profileImageURL;
 
+    private String image;
+    
     @Pattern(regexp="(^$|[0-9]{11})" , message = "Invalid phone number")
     private String phoneNumber;
 

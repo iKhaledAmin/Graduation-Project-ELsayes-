@@ -19,6 +19,7 @@ import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
+import com.GP.ELsayes.model.enums.permissions.ManagerPermission;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.ManagerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
@@ -90,7 +91,6 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     public ManagerResponse add(ManagerRequest managerRequest) {
 
         Manager manager = this.managerMapper.toEntity(managerRequest);
-        manager.setUserRole(UserRole.MANAGER);
         manager.setBranch(branchService.getById(managerRequest.getBranchId()));
         manager.setDateOfEmployment(new Date());
         manager.setTotalSalary(emp -> {
@@ -98,6 +98,10 @@ public class ManagerServiceImpl implements UserService, ManagerService {
             double bonus = Double.parseDouble(emp.getBonus());
             return baseSalary + bonus;
         });
+        if (managerRequest.getManagerPermission() == ManagerPermission.FIRST_LEVEL)
+            manager.setUserRole(UserRole.TOP_MANAGER);
+        else manager.setUserRole(UserRole.MANAGER);
+
 
 
         Branch branch = branchService.getById(managerRequest.getBranchId());
@@ -122,8 +126,11 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         Manager updatedManager = this.managerMapper.toEntity(managerRequest);
 
         // Set fields from the existing manager that are not supposed to change
-        updatedManager.setUserRole(existedManager.getUserRole());
         updatedManager.setDateOfEmployment(existedManager.getDateOfEmployment());
+
+        if (managerRequest.getManagerPermission() == ManagerPermission.FIRST_LEVEL)
+            updatedManager.setUserRole(UserRole.TOP_MANAGER);
+        else updatedManager.setUserRole(UserRole.MANAGER);
 
 
         if (updatedManager.getBaseSalary() == null || updatedManager.getBonus() == null) {

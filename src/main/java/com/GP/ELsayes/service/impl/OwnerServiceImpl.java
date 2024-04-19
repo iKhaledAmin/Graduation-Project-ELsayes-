@@ -74,8 +74,10 @@ public class OwnerServiceImpl
 
 
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
-        newOwner.setUserRole(UserRole.OWNER);
         newOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
+        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
+            newOwner.setUserRole(UserRole.TOP_OWNER);
+        else newOwner.setUserRole(UserRole.OWNER);
         newOwner = this.ownerRepo.save(newOwner);
 
         Owner oldOwner = null;
@@ -101,9 +103,10 @@ public class OwnerServiceImpl
 
         Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
         updatedOwner.setId(ownerId);
-        updatedOwner.setUserRole(existedOwner.getUserRole());
         updatedOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
-
+        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
+            updatedOwner.setUserRole(UserRole.TOP_OWNER);
+        else updatedOwner.setUserRole(UserRole.OWNER);
         BeanUtils.copyProperties(existedOwner,updatedOwner);
 
         updatedOwner = ownerRepo.save(existedOwner);

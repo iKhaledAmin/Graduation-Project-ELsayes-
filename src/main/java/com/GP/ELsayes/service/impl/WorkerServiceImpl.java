@@ -72,7 +72,6 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
 
         Worker worker = this.workerMapper.toEntity(workerRequest);
-        worker.setUserRole(UserRole.WORKER);
         worker.setWorkerStatus(WorkerStatus.AVAILABLE);
         worker.setDateOfEmployment(new Date());
         worker.setScore("0");
@@ -81,6 +80,12 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             double bonus = Double.parseDouble(emp.getBonus());
             return baseSalary + bonus;
         });
+        if (workerRequest.getWorkerRole() == WorkerRole.CLEANING_WORKER)
+            worker.setUserRole(UserRole.CLEANING_WORKER);
+        else if (workerRequest.getWorkerRole() == WorkerRole.MAINTENANCE_WORKER) {
+            worker.setUserRole(UserRole.MAINTENANCE_WORKER);
+        }else worker.setUserRole(UserRole.PARKING_WORKER);
+
 
         worker.setBranch(branch);
         worker.setManager(branch.getManager());
@@ -98,7 +103,6 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
 
         // Set fields from the existing manager that are not supposed to change
-        updatedWorker.setUserRole(existedWorker.getUserRole());
         updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
 
@@ -106,6 +110,12 @@ public class WorkerServiceImpl implements UserService, WorkerService {
             updatedWorker.setBaseSalary(existedWorker.getBaseSalary());
             updatedWorker.setBonus(existedWorker.getBonus());
         }
+
+        if (workerRequest.getWorkerRole() == WorkerRole.CLEANING_WORKER)
+            updatedWorker.setUserRole(UserRole.CLEANING_WORKER);
+        else if (workerRequest.getWorkerRole() == WorkerRole.MAINTENANCE_WORKER) {
+            updatedWorker.setUserRole(UserRole.MAINTENANCE_WORKER);
+        }else updatedWorker.setUserRole(UserRole.PARKING_WORKER);
 
 
         updatedWorker.setId(workerId);

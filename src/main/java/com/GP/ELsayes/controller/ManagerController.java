@@ -1,5 +1,6 @@
 package com.GP.ELsayes.controller;
 
+import com.GP.ELsayes.model.dto.GetVisitationsRequest;
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
@@ -14,6 +15,9 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.time.LocalDate;
+import java.util.Date;
 
 @RestController
 @CrossOrigin("*")
@@ -170,5 +174,19 @@ private ManagerService managerService;
     }
 
 
+//
+//    @GetMapping("/get-current-customer-in-branch/{branchId}")
+//    ResponseEntity<?> getAllCurrentVisitationsInBranch(@PathVariable Long branchId){
+//        return new ResponseEntity<>(this.ownerService.getResponseAllCurrentVisitationsInBranch(branchId), HttpStatus.OK);
+//    }
+//    @GetMapping("/get-visitations-by-date")
+//    ResponseEntity<?> getAllVisitationsInBranchByADate(@RequestBody GetVisitationsRequest getVisitationsRequest){
+//        Long branchId = getVisitationsRequest.getBranchId();
+//        Date date = getVisitationsRequest.getDate();
+//        if (date == null) {
+//            date = java.sql.Date.valueOf(LocalDate.now());
+//        }
+//        return new ResponseEntity<>(this.ownerService.getResponseAllVisitationsInBranchByADate(branchId, date), HttpStatus.OK);
+//    }
 
 }
