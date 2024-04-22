@@ -45,6 +45,7 @@ public class SecurityConfiguration {
             authRequest.requestMatchers(
                     "/workers/check-out"
                             , "/workers/generate-free-code/{workerId}"
+                            , "/workers/record-visitation"
                     ).hasRole("PARKING_WORKER");
 
 
@@ -52,7 +53,7 @@ public class SecurityConfiguration {
 
             authRequest.requestMatchers(
                     "/managers/edit-profile/{managerId}",
-                    "/managers/add-worker/{workerId}",
+                    "/managers/add-worker",
                     "/managers/update-worker/{workerId}",
                     "/managers/delete-worker/{workerId}",
                     "/managers/get-worker-by-id/{workerId}",
@@ -89,10 +90,11 @@ public class SecurityConfiguration {
 
 
 
-            authRequest.requestMatchers("/owners/add-owner").permitAll();
+            authRequest.requestMatchers("/owners/register-owner").permitAll();
 
             authRequest.requestMatchers(
                     "/owners/edit-profile/{ownerId}",
+                    "/owners/add-owner",
                     "/owners/get-all",
                     "/owners/get-by-id/{ownerId}",
                     "/owners/add-manager",

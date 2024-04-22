@@ -6,6 +6,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
@@ -61,10 +62,16 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         this.visitationsOfBranchesService = visitationsOfBranchesService;
     }
 
+    private void throwExceptionIfUserNameAlreadyExist(String userName) {
+        Optional<Customer> customer = customerRepo.findByUserName(userName);
+        if(customer.isPresent())
+            throw new RuntimeException("User name already exist");
+    }
 
 
     @Override
     public CustomerResponse add(CustomerRequest customerRequest) {
+        throwExceptionIfUserNameAlreadyExist(customerRequest.getUserName());
 
         Customer customer = this.customerMapper.toEntity(customerRequest);
         customer.setDateOfJoining(new Date());
@@ -86,6 +93,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     @SneakyThrows
     @Override
     public CustomerResponse update(CustomerRequest customerRequest, Long customerId) {
+        throwExceptionIfUserNameAlreadyExist(customerRequest.getUserName());
 
         Customer existedCustomer = this.getById(customerId);
         Customer updatedCustomer = this.customerMapper.toEntity(customerRequest);
@@ -97,7 +105,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         updatedCustomer.setUserName(existedCustomer.getUserName());
         updatedCustomer.setPassword(customerRequest.getPassword());
         updatedCustomer.setEmail(customerRequest.getEmail());
-        updatedCustomer.setImage(customerRequest.getProfileImageURL());
+        updatedCustomer.setImage(customerRequest.getImage());
         updatedCustomer.setPhoneNumber(customerRequest.getPhoneNumber());
         updatedCustomer.setBirthday(customerRequest.getBirthday());
         updatedCustomer.setGender(customerRequest.getGender());

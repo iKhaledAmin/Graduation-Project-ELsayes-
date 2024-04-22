@@ -10,6 +10,7 @@ import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.ProgressStatus;
@@ -63,9 +64,16 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         throw new RuntimeException("Customer whit id " + customerId +" has order not finished yet.");
     }
 
+    private void throwExceptionIfUserNameAlreadyExist(String userName) {
+        Optional<Worker> worker = workerRepo.findByUserName(userName);
+        if(worker.isPresent())
+            throw new RuntimeException("User name already exist");
+    }
+
 
     @Override
     public WorkerResponse add(WorkerRequest workerRequest) {
+        throwExceptionIfUserNameAlreadyExist(workerRequest.getUserName());
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
         throwExceptionIfBranchNoteHasManager(branch);
@@ -98,6 +106,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     @SneakyThrows
     @Override
     public WorkerResponse update(WorkerRequest workerRequest, Long workerId) {
+        throwExceptionIfUserNameAlreadyExist(workerRequest.getUserName());
 
         Worker existedWorker = this.getById(workerId);
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);

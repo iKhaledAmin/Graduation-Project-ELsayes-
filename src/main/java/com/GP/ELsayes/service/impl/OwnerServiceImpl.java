@@ -68,9 +68,22 @@ public class OwnerServiceImpl
             getById(oldOwnerId);
     }
 
+    private void throwExceptionIfThereIsAMainOwner() {
+        Optional<OwnersOfRestrictedOwners> mainOwner = ownersOfRestrictedOwnersService.findTneMainOwner();
+        if(mainOwner.isPresent())
+            throw new RuntimeException("The main owner already registered,can not register new one");
+    }
+
+    private void throwExceptionIfUserNameAlreadyExist(String userName) {
+        Optional<Owner> owner = ownerRepo.findByUserName(userName);
+        if(owner.isPresent())
+            throw new RuntimeException("User name already exist");
+    }
+
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {
         throwExceptionIfThereIsAMainOwnerAndOldOwnerIdISNULL(ownerRequest.getOldOwnerId());
+        throwExceptionIfUserNameAlreadyExist(ownerRequest.getUserName());
 
 
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
@@ -95,9 +108,21 @@ public class OwnerServiceImpl
         return this.ownerMapper.toResponse(newOwner);
     }
 
+    @Override
+    public OwnerResponse register(UserRequest userRequest){
+        throwExceptionIfThereIsAMainOwner();
+        OwnerRequest ownerRequest = userMapper.toOwnerRequest(userRequest);
+        ownerRequest.setOwnerPermission(OwnerPermission.FULL_PERMISSION);
+        return add(ownerRequest);
+
+    }
+
+
+
     @SneakyThrows
     @Override
     public OwnerResponse update(OwnerRequest ownerRequest, Long ownerId) {
+        throwExceptionIfUserNameAlreadyExist(ownerRequest.getUserName());
 
         Owner existedOwner = this.getById(ownerId);
 

@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.GetVisitationsRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.OwnerService;
 import jakarta.validation.Valid;
@@ -23,6 +24,11 @@ public class OwnerController {
 
     @Autowired
     private  OwnerService ownerService;
+
+    @PostMapping("/register-owner")
+    public ResponseEntity<?> registerTheMainOwner(@RequestBody @Valid UserRequest userRequest) {
+        return new ResponseEntity<>(this.ownerService.register(userRequest), HttpStatus.CREATED);
+    }
 
     @PostMapping("/add-owner")
     public ResponseEntity<?> add(@RequestBody @Valid OwnerRequest ownerRequest) {

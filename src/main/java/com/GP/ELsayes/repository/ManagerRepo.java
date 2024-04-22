@@ -16,4 +16,5 @@ public interface ManagerRepo extends JpaRepository<Manager,Long> {
     @Query("SELECT manager FROM Manager manager JOIN manager.managersOfPackage mo WHERE mo.packageEntity.id = :packageId")
     Optional<Manager> findByPackageId(Long packageId);
 
+    Optional<Manager> findByUserName(String userName);
 }

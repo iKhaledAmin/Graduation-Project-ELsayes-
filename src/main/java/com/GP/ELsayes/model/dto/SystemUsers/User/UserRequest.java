@@ -1,9 +1,6 @@
 package com.GP.ELsayes.model.dto.SystemUsers.User;
 
 import com.GP.ELsayes.model.enums.UserGender;
-import com.GP.ELsayes.model.enums.roles.UserRole;
-import jakarta.persistence.Column;
-import jakarta.persistence.UniqueConstraint;
 import jakarta.validation.constraints.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -44,8 +41,6 @@ public class UserRequest {
 
     @Email(message = "Invalid email address")
     private String email;
-
-    private String profileImageURL;
 
     private String image;
     

@@ -22,6 +22,11 @@ public class CustomerController {
         return new ResponseEntity<>(this.customerService.register(customerRequest), HttpStatus.CREATED);
     }
 
+    @GetMapping("/get-customer-by-id/{customerId}")
+    public ResponseEntity<?> getCustomerById(@PathVariable Long customerId){
+        return new ResponseEntity<>(this.customerService.getResponseById(customerId),HttpStatus.OK);
+    }
+
     @PutMapping("/edit-profile/{customerId}")
     public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long customerId){
         return new ResponseEntity<>(this.customerService.editProfile(userRequest , customerId), HttpStatus.ACCEPTED);
@@ -34,6 +39,7 @@ public class CustomerController {
     public ResponseEntity<?> addCarToCustomer(@RequestBody @Valid AddCarRequest addCarRequest){
         return new ResponseEntity<>(this.customerService.addCarToCustomer(addCarRequest), HttpStatus.ACCEPTED);
     }
+
 
 
     @PutMapping("/update-car/{carId}")

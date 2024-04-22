@@ -21,4 +21,6 @@ public interface WorkerRepo extends JpaRepository<Worker, Long> {
     List<Worker> findAllAvailableWorkerByWorkerRoleOrderByScore(WorkerRole workerRole);
 
     Optional<Worker> findByEmail(String username);
+
+    Optional<Worker> findByUserName(String userName);
 }

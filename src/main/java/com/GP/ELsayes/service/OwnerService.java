@@ -7,6 +7,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.M
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import org.springframework.stereotype.Service;
@@ -16,6 +17,8 @@ import java.util.List;
 
 @Service
 public interface OwnerService extends UserService , CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
+
+    public OwnerResponse register(UserRequest userRequest);
     public Owner getByManagerId(Long managerId);
     public ManagerResponse addManager(ManagerRequest managerRequest);
     public ManagerResponse updateManager(ManagerRequest managerRequest, Long managerId);

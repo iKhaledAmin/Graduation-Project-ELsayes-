@@ -83,12 +83,20 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         throw new RuntimeException("This branch with id = "+ branch.getId() +" already have a manager and every branch only have one manager");
     }
 
+    private void throwExceptionIfUserNameAlreadyExist(String userName) {
+        Optional<Manager> manager = managerRepo.findByUserName(userName);
+        if(manager.isPresent())
+            throw new RuntimeException("User name already exist");
+    }
+
+
     @Override
     public Optional<Manager> getIfExistByBranchId(Long managerId) {
         return managerRepo.findByBranchId(managerId);
     }
     @Override
     public ManagerResponse add(ManagerRequest managerRequest) {
+        throwExceptionIfUserNameAlreadyExist(managerRequest.getUserName());
 
         Manager manager = this.managerMapper.toEntity(managerRequest);
         manager.setBranch(branchService.getById(managerRequest.getBranchId()));
@@ -122,6 +130,7 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     }
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
+        throwExceptionIfUserNameAlreadyExist(managerRequest.getUserName());
         Manager existedManager = this.getById(managerId);
         Manager updatedManager = this.managerMapper.toEntity(managerRequest);
 

@@ -7,9 +7,11 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 
 
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer,Long> {
 
+    Optional<Customer> findByUserName(String userName);
 }
