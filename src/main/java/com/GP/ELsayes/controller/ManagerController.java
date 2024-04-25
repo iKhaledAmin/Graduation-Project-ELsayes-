@@ -32,6 +32,11 @@ private ManagerService managerService;
         return new ResponseEntity<>(this.managerService.editProfile(userRequest , managerId), HttpStatus.ACCEPTED);
     }
 
+    @GetMapping("/get-manager-by-id/{managerId}")
+    public ResponseEntity<?> getManagerById(@PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.getResponseById(managerId),HttpStatus.OK);
+    }
+
 
 
     @PostMapping("/add-worker")

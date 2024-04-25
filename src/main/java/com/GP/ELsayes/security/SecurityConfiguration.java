@@ -70,8 +70,11 @@ public class SecurityConfiguration {
                     "/managers/add-package-to-branch",
                     "/managers/activate-package-in-branch",
                     "/managers/deactivate-package-in-branch",
-                    "/managers/get-all-packages-by-branch-id/{branchId}"
+                    "/managers/get-all-packages-by-branch-id/{branchId}",
+                    "/managers/get-manager-by-id/{managerId}"
                     ).hasAnyRole("TOP_MANAGER", "MANAGER");
+
+
 
             authRequest.requestMatchers(
                     "/managers/get-all-workers",
