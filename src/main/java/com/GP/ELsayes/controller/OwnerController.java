@@ -61,10 +61,13 @@ public class OwnerController {
         return new ResponseEntity<>(this.ownerService.getResponseById(ownerId),HttpStatus.OK);
     }
 
+    @GetMapping("/main-owner-is-exist")
+    public ResponseEntity<?> mainOwnerIsExist(){
+        return new ResponseEntity<>(this.ownerService.mainOwnerIsExist(),HttpStatus.OK);
+    }
 
 
 
-    /////
 
     @PostMapping("/add-manager")
     public ResponseEntity<?> addManager(@RequestBody @Valid ManagerRequest managerRequest) {

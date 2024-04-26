@@ -23,7 +23,6 @@ public class CustomUserDetailsService implements UserDetailsService {
 
         if (user.isPresent()) {
             User existingUser = user.get();
-
             return CustomUserDetails.builder()
                     .id(existingUser.getId())
                     .userName(existingUser.getUserName())

@@ -18,6 +18,7 @@ import java.util.List;
 @Service
 public interface OwnerService extends UserService , CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
 
+    public Boolean mainOwnerIsExist();
     public OwnerResponse register(UserRequest userRequest);
     public Owner getByManagerId(Long managerId);
     public ManagerResponse addManager(ManagerRequest managerRequest);

@@ -11,7 +11,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 
-@CrossOrigin("*")
+//@CrossOrigin("*")
 @RequestMapping("/auth")
 @RestController
 public class AuthController {
@@ -20,17 +20,29 @@ public class AuthController {
     private AuthenticationManager authenticationManager;
 
 
+//    @PostMapping("/login")
+//    public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
+//        Authentication authentication = authenticationManager.authenticate(
+//                new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
+//        );
+//        SecurityContextHolder.getContext().setAuthentication(authentication);
+//        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+//        return new ResponseEntity<>(userDetails, HttpStatus.ACCEPTED);
+//    }
+
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody @Valid LoginRequest request) {
-        Authentication authentication = authenticationManager.authenticate(
-                new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
-        );
-        SecurityContextHolder.getContext().setAuthentication(authentication);
-        CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
-//        LoginResponse loginResponse = new LoginResponse();
-//        loginResponse.setId(userDetails.getId());
-//        loginResponse.setEmail(userDetails.getEmail());
-//        loginResponse.setUserRole(userDetails.getUserRole());
-        return new ResponseEntity<>(userDetails, HttpStatus.ACCEPTED);
+        //System.out.println("Attempting to authenticate user: " + request.getUserName());
+        try {
+            Authentication authentication = authenticationManager.authenticate(
+                    new UsernamePasswordAuthenticationToken(request.getUserName(), request.getPassword())
+            );
+            SecurityContextHolder.getContext().setAuthentication(authentication);
+            CustomUserDetails userDetails = (CustomUserDetails) authentication.getPrincipal();
+            return new ResponseEntity<>(userDetails, HttpStatus.ACCEPTED);
+        } catch (Exception e) {
+            //System.out.println("Authentication failed: " + e.getMessage());
+            return new ResponseEntity<>("Authentication failed: " + e.getMessage(), HttpStatus.UNAUTHORIZED);
+        }
     }
 }

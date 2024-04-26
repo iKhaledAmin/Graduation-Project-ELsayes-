@@ -67,6 +67,12 @@ public class OwnerServiceImpl
         if (oldOwnerId != null)
             getById(oldOwnerId);
     }
+    public Boolean mainOwnerIsExist(){
+        Optional<OwnersOfRestrictedOwners> mainOwner = ownersOfRestrictedOwnersService.findTneMainOwner();
+        if(mainOwner.isPresent())
+            return true;
+        else return false;
+    }
 
     private void throwExceptionIfThereIsAMainOwner() {
         Optional<OwnersOfRestrictedOwners> mainOwner = ownersOfRestrictedOwnersService.findTneMainOwner();
@@ -79,6 +85,8 @@ public class OwnerServiceImpl
         if(owner.isPresent())
             throw new RuntimeException("User name already exist");
     }
+
+
 
     @Override
     public OwnerResponse add(OwnerRequest ownerRequest) {

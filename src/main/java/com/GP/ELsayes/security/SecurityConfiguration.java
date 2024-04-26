@@ -26,8 +26,8 @@ public class SecurityConfiguration {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        //configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // React application's origin
-        configuration.setAllowedOrigins(Arrays.asList("*")); // React application's origin
+        configuration.setAllowedOrigins(Arrays.asList("http://localhost:3000")); // React application's origin
+        //configuration.setAllowedOrigins(Arrays.asList("*")); // React application's origin
         configuration.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
         configuration.setAllowedHeaders(Arrays.asList("*"));
         configuration.setAllowCredentials(true); // Important if you are sending cookies or using sessions
@@ -55,7 +55,13 @@ public class SecurityConfiguration {
                 .authorizeRequests(authorize -> authorize
 
 
-                        .requestMatchers("/auth/login", "/customers/register").permitAll() // Permit all for these endpoints
+                        .requestMatchers(
+                                "/auth/login"
+                                , "/customers/register"
+                                ,"/customers/owners/main-owner-is-exist"
+                        ).permitAll() // Permit all for these endpoints
+
+
                         .requestMatchers("/customers/**").hasRole("CUSTOMER")
 
 
@@ -148,21 +154,6 @@ public class SecurityConfiguration {
 
 
 
-    /////////////////////////////////////
-
-//    @Bean
-//    public AuthenticationManager authenticationManager(AuthenticationConfiguration configuration) throws Exception {
-//        return configuration.getAuthenticationManager();
-//    }
-//
-//
-//
-//    @Bean
-//    public static PasswordEncoder passwordEncoder() {
-//        return NoOpPasswordEncoder.getInstance();
-//    }
-
-
 //    //////////////////////////////////////////////////////////////////////////////////
 //    @Bean
 //    SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
@@ -176,13 +167,13 @@ public class SecurityConfiguration {
 //
 //
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/workers/edit-profile/{workerId}"
 //                    , "/workers/change-worker-status/{workerId}"
 //                    ,"/finish-task"
 //            ).hasAnyRole("PARKING_WORKER", "CLEANING_WORKER","MAINTENANCE_WORKER");
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/workers/check-out"
 //                    , "/workers/generate-free-code/{workerId}"
 //                    , "/workers/record-visitation"
@@ -191,7 +182,7 @@ public class SecurityConfiguration {
 //
 //
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/managers/edit-profile/{managerId}",
 //                    "/managers/add-worker",
 //                    "/managers/update-worker/{workerId}",
@@ -216,7 +207,7 @@ public class SecurityConfiguration {
 //
 //
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/managers/get-all-workers",
 //                    "/managers/update-customer/{customerId}",
 //                    "/managers/delete-customer/{customerId}",
@@ -233,9 +224,9 @@ public class SecurityConfiguration {
 //
 //
 //
-//            .requestMatchers("/owners/register-owner").permitAll();
+//            authRequest.requestMatchers("/owners/register-owner").permitAll();
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/owners/edit-profile/{ownerId}",
 //                    "/owners/add-owner",
 //                    "/owners/get-all",
@@ -251,7 +242,7 @@ public class SecurityConfiguration {
 //
 //            ).hasAnyRole("TOP_OWNER", "OWNER");
 //
-//            .requestMatchers(
+//            authRequest.requestMatchers(
 //                    "/owners/update-owner/{ownerId}",
 //                    "/owners/edit-profile/{ownerId}",
 //                    "/owners/delete-owner/{ownerId}",
