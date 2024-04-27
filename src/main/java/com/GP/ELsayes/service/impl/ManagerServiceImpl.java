@@ -10,12 +10,9 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.M
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.dto.relations.*;
 import com.GP.ELsayes.model.entity.Branch;
-import com.GP.ELsayes.model.entity.ServiceEntity;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.relations.OwnersOfManagers;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
@@ -39,10 +36,11 @@ import java.util.Optional;
 
 
 @Service
-public class ManagerServiceImpl implements UserService, ManagerService {
+public class ManagerServiceImpl implements  ManagerService {
     private final ManagerMapper managerMapper;
     private final ManagerRepo managerRepo;
     private final UserMapper userMapper;
+    private final UserService userService;
     private final BranchService branchService;
     private final OwnerService ownerService;
     private final ServiceService serviceService;
@@ -52,12 +50,13 @@ public class ManagerServiceImpl implements UserService, ManagerService {
     private final OwnersOfManagersService ownersOfManagersService;
 
     public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepo managerRepo, UserMapper userMapper,
-                              @Lazy BranchService branchService, @Lazy OwnerService ownerService,
+                              UserService userService, @Lazy BranchService branchService, @Lazy OwnerService ownerService,
                               @Lazy ServiceService serviceService, @Lazy WorkerService workerService,
                               @Lazy PackageService packageService, CustomerService customerService, OwnersOfManagersService ownersOfManagersService) {
         this.managerMapper = managerMapper;
         this.managerRepo = managerRepo;
         this.userMapper = userMapper;
+        this.userService = userService;
         this.branchService = branchService;
         this.ownerService = ownerService;
         this.serviceService = serviceService;
@@ -172,23 +171,14 @@ public class ManagerServiceImpl implements UserService, ManagerService {
 
         return this.managerMapper.toResponse(updatedManager);
     }
+
     @Override
     public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
-        Manager manager = getById(userId);
-        Owner owner = ownerService.getByManagerId(manager.getId());
-
-        ManagerRequest managerRequest = userMapper.toManagerRequest(profileRequest);
-
-
-        managerRequest.setManagerPermission(manager.getManagerPermission());
-        managerRequest.setBranchId(manager.getBranch().getId());
-        managerRequest.setOwnerId(owner.getId());
-
-
-        ManagerResponse managerResponse = update(managerRequest,userId);
-
-        return userMapper.toUserResponse(managerResponse);
+        getById(userId);
+        return userService.editProfile(profileRequest,userId);
     }
+
+
     @Override
     public void delete(Long managerId) {
         this.getById(managerId);

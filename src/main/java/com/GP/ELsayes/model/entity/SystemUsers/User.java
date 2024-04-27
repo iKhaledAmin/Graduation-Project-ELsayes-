@@ -20,11 +20,12 @@ import java.util.Date;
 
 //@Where(clause = "deleted_at is null")
 
+
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.JOINED)
 
-public abstract class User {
+public class User {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

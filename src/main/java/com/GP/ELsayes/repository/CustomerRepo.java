@@ -1,5 +1,6 @@
 package com.GP.ELsayes.repository;
 
+import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -13,5 +14,6 @@ import java.util.Optional;
 @Repository
 public interface CustomerRepo extends JpaRepository<Customer,Long> {
 
-    Optional<Customer> findByUserName(String userName);
+
+    //Optional<Customer> findByUserName(String userName);
 }

@@ -1,16 +1,19 @@
 package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.*;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
 
 @Service
-public interface CustomerService extends  UserService, CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
+public interface CustomerService extends CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
     public CustomerResponse register(CustomerRequest customerRequest);
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId);
 
     public CarResponse addCarToCustomer(AddCarRequest addCarRequest);
     public CarResponse updateCar(CarRequest carRequest, Long carId);

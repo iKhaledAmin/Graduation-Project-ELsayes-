@@ -11,7 +11,6 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
-import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.relations.OwnersOfRestrictedOwners;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.OperationType;
@@ -25,7 +24,6 @@ import com.GP.ELsayes.service.ManagerService;
 import com.GP.ELsayes.service.OwnerService;
 import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.relations.OwnersOfRestrictedOwnersService;
-import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
 import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.context.annotation.Lazy;
@@ -36,26 +34,26 @@ import java.util.List;
 import java.util.NoSuchElementException;
 import java.util.Optional;
 
-import static java.lang.Double.parseDouble;
-
 
 @Service
 public class OwnerServiceImpl
-        implements UserService , OwnerService {
+        implements  OwnerService {
 
     private final OwnerMapper ownerMapper;
     private final OwnerRepo ownerRepo;
     private final UserMapper userMapper;
+    private final UserService userService;
     private final ManagerService managerService;
     private final BranchService branchService;
     private final OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService;
 
     public OwnerServiceImpl(OwnerMapper ownerMapper, OwnerRepo ownerRepo, UserMapper userMapper,
-                            ManagerService managerService,@Lazy BranchService branchService,
+                            UserService userService, ManagerService managerService, @Lazy BranchService branchService,
                             OwnersOfRestrictedOwnersService ownersOfRestrictedOwnersService) {
         this.ownerMapper = ownerMapper;
         this.ownerRepo = ownerRepo;
         this.userMapper = userMapper;
+        this.userService = userService;
         this.managerService = managerService;
         this.branchService = branchService;
         this.ownersOfRestrictedOwnersService = ownersOfRestrictedOwnersService;
@@ -158,18 +156,13 @@ public class OwnerServiceImpl
         return this.ownerMapper.toResponse(updatedOwner);
     }
 
+
     @Override
     public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
-        Owner owner = getById(userId);
-
-        OwnerRequest ownerRequest = userMapper.toOwnerRequest(profileRequest);
-        ownerRequest.setOwnerPermission(owner.getOwnerPermission());
-
-
-        OwnerResponse ownerResponse = update(ownerRequest,userId);
-
-        return userMapper.toUserResponse(ownerResponse);
+        getById(userId);
+        return userService.editProfile(profileRequest,userId);
     }
+
     @Override
     public void delete(Long ownerId) {
         getById(ownerId);

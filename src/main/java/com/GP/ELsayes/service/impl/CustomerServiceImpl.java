@@ -4,14 +4,14 @@ import com.GP.ELsayes.model.dto.*;
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
+import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.CustomerRepo;
+import com.GP.ELsayes.repository.UserRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
@@ -27,9 +27,10 @@ import java.util.Optional;
 
 //@RequiredArgsConstructor
 @Service
-public class CustomerServiceImpl implements UserService, CustomerService {
+public class CustomerServiceImpl implements CustomerService {
     private final CustomerMapper customerMapper;
     private final CustomerRepo customerRepo;
+    private final UserService userService;
     private final UserMapper userMapper;
     private final CarService carService;
     private OrderService orderService;
@@ -43,7 +44,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
 
 
     public CustomerServiceImpl(CustomerMapper customerMapper, CustomerRepo customerRepo,
-                               UserMapper userMapper, @Lazy CarService carService,
+                               UserRepo userRepo, UserService userService, UserMapper userMapper, @Lazy CarService carService,
                                @Lazy OrderService orderService,
                                @Lazy ServiceService serviceService, @Lazy PackageService packageService,
                                @Lazy FreeTrialCodeService freeTrialCodeService,
@@ -52,6 +53,7 @@ public class CustomerServiceImpl implements UserService, CustomerService {
                                @Lazy VisitationsOfBranchesService visitationsOfBranchesService) {
         this.customerMapper = customerMapper;
         this.customerRepo = customerRepo;
+        this.userService = userService;
         this.userMapper = userMapper;
         this.carService = carService;
         this.orderService = orderService;
@@ -64,10 +66,11 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     }
 
     private void throwExceptionIfUserNameAlreadyExist(String userName) {
-        Optional<Customer> customer = customerRepo.findByUserName(userName);
-        if(customer.isPresent())
+        Optional<User> user = userService.getEntityByUserName(userName);
+        if(user.isPresent())
             throw new RuntimeException("User name already exist");
     }
+
 
 
     @Override
@@ -119,16 +122,25 @@ public class CustomerServiceImpl implements UserService, CustomerService {
         return this.customerMapper.toResponse(customerRepo.save(updatedCustomer));
     }
 
+//    @Override
+//    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
+//        Customer customer = getById(userId);
+//
+//        CustomerRequest customerRequest = userMapper.toCustomerRequest(profileRequest);
+//
+//        CustomerResponse customerResponse = update(customerRequest,userId);
+//
+//        return userMapper.toUserResponse(customerResponse);
+//    }
+
+
     @Override
     public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
-        Customer customer = getById(userId);
-
-        CustomerRequest customerRequest = userMapper.toCustomerRequest(profileRequest);
-
-        CustomerResponse customerResponse = update(customerRequest,userId);
-
-        return userMapper.toUserResponse(customerResponse);
+        getById(userId);
+        return userService.editProfile(profileRequest,userId);
     }
+
+
 
     @Override
     public void delete(Long customerId) {

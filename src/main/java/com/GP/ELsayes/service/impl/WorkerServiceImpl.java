@@ -10,6 +10,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.Order;
+import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
@@ -37,11 +38,12 @@ import java.util.stream.Collectors;
 
 @RequiredArgsConstructor
 @Service
-public class WorkerServiceImpl implements UserService, WorkerService {
+public class WorkerServiceImpl implements WorkerService {
 
     private final  WorkerMapper workerMapper;
     private final  WorkerRepo workerRepo;
     private final UserMapper userMapper;
+    private final UserService userService;
     private final BranchService branchService;
     private final OrderService orderService;
     private final CarService carService;
@@ -165,17 +167,11 @@ public class WorkerServiceImpl implements UserService, WorkerService {
         else  updateWorkerStatus(workerId, WorkerStatus.AVAILABLE);
     }
 
+
     @Override
     public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
-        Worker worker = getById(userId);
-        Branch branch = this.branchService.getByWorkerId(worker.getId());
-
-        WorkerRequest workerRequest = userMapper.toWorkerRequest(profileRequest);
-        workerRequest.setBranchId(branch.getId());
-
-        WorkerResponse workerResponse = update(workerRequest,userId);
-
-        return userMapper.toUserResponse(workerResponse);
+        getById(userId);
+        return userService.editProfile(profileRequest,userId);
     }
 
     @Override

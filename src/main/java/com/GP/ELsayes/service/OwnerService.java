@@ -3,11 +3,13 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.dto.relations.VisitationsOfBranchesResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Owner;
 import org.springframework.stereotype.Service;
@@ -16,10 +18,11 @@ import java.util.Date;
 import java.util.List;
 
 @Service
-public interface OwnerService extends UserService , CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
+public interface OwnerService extends  CrudService<OwnerRequest , Owner , OwnerResponse, Long >{
 
     public Boolean mainOwnerIsExist();
     public OwnerResponse register(UserRequest userRequest);
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId);
     public Owner getByManagerId(Long managerId);
     public ManagerResponse addManager(ManagerRequest managerRequest);
     public ManagerResponse updateManager(ManagerRequest managerRequest, Long managerId);

@@ -2,8 +2,10 @@ package com.GP.ELsayes.service;
 
 import com.GP.ELsayes.model.dto.CheckOutResponse;
 import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
@@ -13,8 +15,9 @@ import java.util.List;
 
 @Service
 
-public interface WorkerService extends UserService, CrudService<WorkerRequest, Worker, WorkerResponse,Long> {
+public interface WorkerService extends CrudService<WorkerRequest, Worker, WorkerResponse,Long> {
 
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId);
 
 
 
