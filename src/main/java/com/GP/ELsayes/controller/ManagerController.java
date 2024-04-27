@@ -3,6 +3,7 @@ package com.GP.ELsayes.controller;
 import com.GP.ELsayes.model.dto.GetVisitationsRequest;
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.ServiceRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -28,8 +29,8 @@ private ManagerService managerService;
 
 
     @PutMapping("/edit-profile/{managerId}")
-    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long managerId){
-        return new ResponseEntity<>(this.managerService.editProfile(userRequest , managerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> editProfile(@RequestBody @Valid EditUserProfileRequest profileRequest, @PathVariable Long managerId){
+        return new ResponseEntity<>(this.managerService.editProfile(profileRequest , managerId), HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-manager-by-id/{managerId}")

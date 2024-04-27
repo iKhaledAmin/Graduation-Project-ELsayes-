@@ -2,6 +2,7 @@ package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.CheckOutRequest;
 import com.GP.ELsayes.model.dto.FinishTaskRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -23,8 +24,8 @@ public class WorkerController {
 
 
     @PutMapping("/edit-profile/{workerId}")
-    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long workerId){
-        return new ResponseEntity<>(this.workerService.editProfile(userRequest , workerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> editProfile(@RequestBody @Valid EditUserProfileRequest profileRequest, @PathVariable Long workerId){
+        return new ResponseEntity<>(this.workerService.editProfile(profileRequest , workerId), HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/change-worker-status/{workerId}")

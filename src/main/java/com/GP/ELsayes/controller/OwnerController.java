@@ -3,6 +3,7 @@ package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.GetVisitationsRequest;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
@@ -41,8 +42,8 @@ public class OwnerController {
     }
 
     @PutMapping("/edit-profile/{ownerId}")
-    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long ownerId){
-        return new ResponseEntity<>(this.ownerService.editProfile(userRequest , ownerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> editProfile(@RequestBody @Valid EditUserProfileRequest profileRequest, @PathVariable Long ownerId){
+        return new ResponseEntity<>(this.ownerService.editProfile(profileRequest , ownerId), HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete-owner/{ownerId}")

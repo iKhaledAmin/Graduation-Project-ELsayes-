@@ -2,6 +2,7 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.CheckOutResponse;
 import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -80,7 +81,7 @@ public class WorkerServiceImpl implements UserService, WorkerService {
 
 
         Worker worker = this.workerMapper.toEntity(workerRequest);
-        worker.setWorkerStatus(WorkerStatus.AVAILABLE);
+        worker.setWorkerStatus(WorkerStatus.UN_AVAILABLE);
         worker.setDateOfEmployment(new Date());
         worker.setScore("0");
         worker.setTotalSalary(emp -> {
@@ -165,11 +166,11 @@ public class WorkerServiceImpl implements UserService, WorkerService {
     }
 
     @Override
-    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
         Worker worker = getById(userId);
         Branch branch = this.branchService.getByWorkerId(worker.getId());
 
-        WorkerRequest workerRequest = userMapper.toWorkerRequest(userRequest);
+        WorkerRequest workerRequest = userMapper.toWorkerRequest(profileRequest);
         workerRequest.setBranchId(branch.getId());
 
         WorkerResponse workerResponse = update(workerRequest,userId);

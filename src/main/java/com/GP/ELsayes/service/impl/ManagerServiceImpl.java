@@ -3,6 +3,7 @@ import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.ServiceRequest;
 import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
@@ -172,11 +173,11 @@ public class ManagerServiceImpl implements UserService, ManagerService {
         return this.managerMapper.toResponse(updatedManager);
     }
     @Override
-    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
         Manager manager = getById(userId);
         Owner owner = ownerService.getByManagerId(manager.getId());
 
-        ManagerRequest managerRequest = userMapper.toManagerRequest(userRequest);
+        ManagerRequest managerRequest = userMapper.toManagerRequest(profileRequest);
 
 
         managerRequest.setManagerPermission(manager.getManagerPermission());

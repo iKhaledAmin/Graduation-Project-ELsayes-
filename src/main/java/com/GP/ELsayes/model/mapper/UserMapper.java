@@ -1,5 +1,6 @@
 package com.GP.ELsayes.model.mapper;
 
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
@@ -17,16 +18,17 @@ import org.mapstruct.factory.Mappers;
 public interface UserMapper {
     UserMapper INSTANCE = Mappers.getMapper(UserMapper.class);
 
+    OwnerRequest toOwnerRequest(EditUserProfileRequest profileRequest);
     OwnerRequest toOwnerRequest(UserRequest userRequest);
     UserResponse toUserResponse(OwnerResponse ownerResponse);
 
-    CustomerRequest toCustomerRequest(UserRequest userRequest);
+    CustomerRequest toCustomerRequest(EditUserProfileRequest profileRequest);
     UserResponse toUserResponse(CustomerResponse customerResponse);
 
-    ManagerRequest toManagerRequest(UserRequest userRequest);
+    ManagerRequest toManagerRequest(EditUserProfileRequest profileRequest);
     UserResponse toUserResponse(ManagerResponse managerResponse);
 
-    WorkerRequest toWorkerRequest(UserRequest userRequest);
+    WorkerRequest toWorkerRequest(EditUserProfileRequest profileRequest);
     UserResponse toUserResponse(WorkerResponse workerResponse);
 
 }

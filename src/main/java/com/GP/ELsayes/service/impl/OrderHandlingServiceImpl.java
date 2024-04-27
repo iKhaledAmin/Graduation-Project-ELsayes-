@@ -4,18 +4,18 @@ import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
+import com.GP.ELsayes.model.enums.NotificationType;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
 import com.GP.ELsayes.service.OrderHandlingService;
 import com.GP.ELsayes.service.OrderService;
-import com.GP.ELsayes.service.ServiceService;
 import com.GP.ELsayes.service.WorkerService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.utils.WorkerStorage;
-import lombok.AllArgsConstructor;
+
 import lombok.RequiredArgsConstructor;
-import org.springframework.jms.core.JmsTemplate;
+
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
@@ -23,11 +23,6 @@ import org.springframework.stereotype.Service;
 import java.util.*;
 
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
-import java.util.function.Function;
-import java.util.stream.Collectors;
 
 
 @Service
@@ -37,7 +32,8 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
     private final WorkerService workerService;
     private final OrderService orderService;
     private final ServicesOfOrderService servicesOfOrderService;
-    private final JmsTemplate jmsTemplate;
+    //private final NotificationService notificationService;
+
 
     private WorkerStorage workerStorage = new WorkerStorage();
     private Deque<Order> unServedOrders = new ArrayDeque<>();
@@ -160,10 +156,19 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
                     servicesOfOrder.getService().getId(),
                     assignedWorker
             );
+
             orderService.updateOrderStatus(
                     servicesOfOrder.getOrder().getId(), ProgressStatus.ON_WORKING
             );
             availableWorkers.remove(assignedWorker.getId());
+
+//            // Send notification to the customer
+//            Notification notification = new Notification();
+//            notification.setNotificationContent("You have new task");
+//            notification.setType(NotificationType.Worker_Notification);
+//            notification.setUser(assignedWorker);
+//            notificationService.sendPrivateNotification(String.valueOf(servicesOfOrder.getCustomer().getId()), notification);
+
             return true;
         } else {
             // No available worker found, return false

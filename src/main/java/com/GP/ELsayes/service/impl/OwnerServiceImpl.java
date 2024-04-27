@@ -3,6 +3,7 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.BranchRequest;
 import com.GP.ELsayes.model.dto.BranchResponse;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.ManagerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerRequest;
@@ -130,12 +131,12 @@ public class OwnerServiceImpl
     @SneakyThrows
     @Override
     public OwnerResponse update(OwnerRequest ownerRequest, Long ownerId) {
-        throwExceptionIfUserNameAlreadyExist(ownerRequest.getUserName());
 
         Owner existedOwner = this.getById(ownerId);
 
         Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
         updatedOwner.setId(ownerId);
+        updatedOwner.setUserName(existedOwner.getUserName());
         updatedOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
         if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
             updatedOwner.setUserRole(UserRole.TOP_OWNER);
@@ -158,10 +159,10 @@ public class OwnerServiceImpl
     }
 
     @Override
-    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
         Owner owner = getById(userId);
 
-        OwnerRequest ownerRequest = userMapper.toOwnerRequest(userRequest);
+        OwnerRequest ownerRequest = userMapper.toOwnerRequest(profileRequest);
         ownerRequest.setOwnerPermission(owner.getOwnerPermission());
 
 

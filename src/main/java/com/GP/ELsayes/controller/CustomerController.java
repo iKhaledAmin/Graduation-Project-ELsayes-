@@ -1,6 +1,7 @@
 package com.GP.ELsayes.controller;
 
 import com.GP.ELsayes.model.dto.*;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.service.CustomerService;
@@ -28,8 +29,8 @@ public class CustomerController {
     }
 
     @PutMapping("/edit-profile/{customerId}")
-    public ResponseEntity<?> editProfile(@RequestBody @Valid UserRequest userRequest, @PathVariable Long customerId){
-        return new ResponseEntity<>(this.customerService.editProfile(userRequest , customerId), HttpStatus.ACCEPTED);
+    public ResponseEntity<?> editProfile(@RequestBody @Valid EditUserProfileRequest profileRequest, @PathVariable Long customerId){
+        return new ResponseEntity<>(this.customerService.editProfile(profileRequest , customerId), HttpStatus.ACCEPTED);
     }
 
 

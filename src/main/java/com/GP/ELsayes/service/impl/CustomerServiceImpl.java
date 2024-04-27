@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.*;
+import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
@@ -119,10 +120,10 @@ public class CustomerServiceImpl implements UserService, CustomerService {
     }
 
     @Override
-    public UserResponse editProfile(UserRequest userRequest, Long userId) {
+    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
         Customer customer = getById(userId);
 
-        CustomerRequest customerRequest = userMapper.toCustomerRequest(userRequest);
+        CustomerRequest customerRequest = userMapper.toCustomerRequest(profileRequest);
 
         CustomerResponse customerResponse = update(customerRequest,userId);
 

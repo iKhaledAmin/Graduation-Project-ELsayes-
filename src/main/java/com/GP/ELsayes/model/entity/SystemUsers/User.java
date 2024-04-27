@@ -3,18 +3,14 @@ package com.GP.ELsayes.model.entity.SystemUsers;
 import com.GP.ELsayes.model.enums.UserGender;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import lombok.experimental.SuperBuilder;
-import org.hibernate.annotations.CreationTimestamp;
-import org.hibernate.annotations.UpdateTimestamp;
 
-
-import java.time.LocalDateTime;
 import java.util.Date;
 
 @SuperBuilder
@@ -61,6 +57,8 @@ public abstract class User {
 
 
 
-
+//    @JsonManagedReference
+//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
+//    private Notification notification;
 
 }
