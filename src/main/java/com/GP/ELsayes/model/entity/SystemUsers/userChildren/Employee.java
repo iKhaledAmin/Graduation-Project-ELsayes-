@@ -31,7 +31,7 @@ import java.util.function.ToDoubleFunction;
 @PrimaryKeyJoinColumn(name = "employee_id")
 @Inheritance(strategy = InheritanceType.JOINED)
 //@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public abstract class Employee extends User {
+public class Employee extends User {
     @Id
     private Long id;
     private String baseSalary;

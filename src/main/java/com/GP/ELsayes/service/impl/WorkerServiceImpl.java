@@ -114,7 +114,7 @@ public class WorkerServiceImpl implements WorkerService {
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
 
         // Set fields from the existing manager that are not supposed to change
-        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
+        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
 
         if (updatedWorker.getBaseSalary() == null || updatedWorker.getBonus() == null) {
@@ -132,7 +132,7 @@ public class WorkerServiceImpl implements WorkerService {
         updatedWorker.setId(workerId);
         updatedWorker.setUserName(existedWorker.getUserName());
         BeanUtils.copyProperties(existedWorker,updatedWorker);
-        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
+        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
         updatedWorker.setScore(workerRequest.getScore());
         updatedWorker.setTotalSalary(emp -> {
             double baseSalary = Double.parseDouble(emp.getBaseSalary());

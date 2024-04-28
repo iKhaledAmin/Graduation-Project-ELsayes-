@@ -3,6 +3,8 @@ package com.GP.ELsayes.service;
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
@@ -15,4 +17,7 @@ public interface UserService {
     public Optional<User> getEntityByUserName(String userName);
 
     Optional<User> getEntityById(Long userId);
+    User getById(Long userId);
+
+
 }

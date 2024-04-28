@@ -6,6 +6,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.UserRepo;
 import com.GP.ELsayes.service.UserService;
@@ -14,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.NoSuchElementException;
 import java.util.Optional;
 
 @Service
@@ -74,4 +76,15 @@ public class UserServiceImpl implements UserService {
     public Optional<User> getEntityById(Long userId) {
         return userRepo.findById(userId);
     }
+
+    @Override
+    public User getById(Long userId) {
+        return getEntityById(userId).orElseThrow(
+                () -> new NoSuchElementException("There is no user with id = " + userId)
+        );
+    }
+
+
+
+
 }

@@ -2,6 +2,7 @@ package com.GP.ELsayes.model.entity.SystemUsers;
 
 import com.GP.ELsayes.model.enums.UserGender;
 import com.GP.ELsayes.model.enums.roles.UserRole;
+import com.GP.ELsayes.websocket.notification.Notification;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
@@ -12,6 +13,7 @@ import lombok.NoArgsConstructor;
 import lombok.experimental.SuperBuilder;
 
 import java.util.Date;
+import java.util.List;
 
 @SuperBuilder
 @Data
@@ -58,8 +60,8 @@ public class User {
 
 
 
-//    @JsonManagedReference
-//    @OneToOne(mappedBy = "user", cascade = CascadeType.REMOVE)
-//    private Notification notification;
+    @JsonManagedReference
+    @OneToMany(mappedBy = "user", cascade = CascadeType.REMOVE)
+    private List<Notification> notifications;
 
 }

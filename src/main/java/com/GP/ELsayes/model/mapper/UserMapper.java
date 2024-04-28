@@ -12,6 +12,8 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.OwnerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import org.mapstruct.Mapper;
 import org.mapstruct.factory.Mappers;
 
@@ -32,6 +34,9 @@ public interface UserMapper {
     WorkerRequest toWorkerRequest(EditUserProfileRequest profileRequest);
     UserResponse toUserResponse(WorkerResponse workerResponse);
 
-    User toEntity(EditUserProfileRequest profileRequest);
     UserResponse toResponse(User updatedUser);
+    User toEntity(EditUserProfileRequest profileRequest);
+    User toEntity(Worker worker);
+    User toEntity(Customer customer);
+
 }

@@ -1,19 +1,21 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.entity.Order;
-import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.enums.NotificationType;
 import com.GP.ELsayes.model.enums.ProgressStatus;
-import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
 import com.GP.ELsayes.service.OrderHandlingService;
 import com.GP.ELsayes.service.OrderService;
+import com.GP.ELsayes.service.UserService;
 import com.GP.ELsayes.service.WorkerService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.utils.WorkerStorage;
 
+import com.GP.ELsayes.websocket.notification.Notification;
+import com.GP.ELsayes.websocket.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 
 import org.springframework.scheduling.annotation.Scheduled;
@@ -32,7 +34,8 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
     private final WorkerService workerService;
     private final OrderService orderService;
     private final ServicesOfOrderService servicesOfOrderService;
-    //private final NotificationService notificationService;
+    private final NotificationService notificationService;
+    private final UserService userService;
 
 
     private WorkerStorage workerStorage = new WorkerStorage();
@@ -161,12 +164,13 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
             );
             availableWorkers.remove(assignedWorker.getId());
 
-//            // Send notification to the customer
-//            Notification notification = new Notification();
-//            notification.setNotificationContent("You have new task");
-//            notification.setType(NotificationType.Worker_Notification);
-//            notification.setUser(assignedWorker);
-//            notificationService.sendPrivateNotification(String.valueOf(servicesOfOrder.getCustomer().getId()), notification);
+            // Send notification to the customer
+            Notification notification = new Notification();
+            notification.setNotificationContent("You have new task");
+            notification.setType(NotificationType.Worker_Notification);
+            User user = (User) assignedWorker;
+            notification.setUser(user);
+            notificationService.sendPrivateNotification(String.valueOf(servicesOfOrder.getCustomer().getId()), notification);
 
             return true;
         } else {
