@@ -28,10 +28,10 @@ public class UserRequest {
     @Size(max = 10 ,message = "Last name Must be less than 10 letters")
     private String lastName;
 
-    @Size(min = 5 ,message = "User name must be more than 5 letters")
-    @Size(max = 20 ,message = "Last name must be less than 20 letters")
-    @NotNull(message = "User-name Must Not Be Null")
-    @NotEmpty(message = "User-name Must Not Be Empty")
+//    @Size(min = 5 ,message = "User name must be more than 5 letters")
+//    @Size(max = 20 ,message = "Last name must be less than 20 letters")
+//    @NotNull(message = "User-name Must Not Be Null")
+//    @NotEmpty(message = "User-name Must Not Be Empty")
     private String userName;
 
     @NotNull(message = "Password must not be null")
@@ -43,7 +43,7 @@ public class UserRequest {
     private String email;
 
     private String image;
-    
+
     @Pattern(regexp="(^$|[0-9]{11})" , message = "Invalid phone number")
     private String phoneNumber;
 

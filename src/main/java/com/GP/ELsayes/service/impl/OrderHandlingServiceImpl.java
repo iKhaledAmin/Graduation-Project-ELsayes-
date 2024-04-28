@@ -110,7 +110,6 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
 //    }
 
     private void serveOrder(Long orderId) {
-
         // Logic to serve the order
         List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getObjectByOrderId(orderId);
         for (ServicesOfOrders service : servicesOfOrder){

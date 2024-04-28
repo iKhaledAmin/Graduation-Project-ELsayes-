@@ -97,7 +97,6 @@ public class CustomerServiceImpl implements CustomerService {
     @SneakyThrows
     @Override
     public CustomerResponse update(CustomerRequest customerRequest, Long customerId) {
-        throwExceptionIfUserNameAlreadyExist(customerRequest.getUserName());
 
         Customer existedCustomer = this.getById(customerId);
         Customer updatedCustomer = this.customerMapper.toEntity(customerRequest);
@@ -122,16 +121,6 @@ public class CustomerServiceImpl implements CustomerService {
         return this.customerMapper.toResponse(customerRepo.save(updatedCustomer));
     }
 
-//    @Override
-//    public UserResponse editProfile(EditUserProfileRequest profileRequest, Long userId) {
-//        Customer customer = getById(userId);
-//
-//        CustomerRequest customerRequest = userMapper.toCustomerRequest(profileRequest);
-//
-//        CustomerResponse customerResponse = update(customerRequest,userId);
-//
-//        return userMapper.toUserResponse(customerResponse);
-//    }
 
 
     @Override

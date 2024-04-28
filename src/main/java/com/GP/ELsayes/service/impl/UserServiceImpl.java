@@ -55,7 +55,7 @@ public class UserServiceImpl implements UserService {
 
             User updatedUser = userMapper.toEntity(profileRequest);
 
-            updatedUser.setId(existedUser.get().getId());
+            updatedUser.setUserName(existedUser.get().getUserName());
             updatedUser = update(updatedUser,userId);
 
             return userMapper.toResponse(updatedUser);

@@ -236,6 +236,8 @@ public class OrderServiceImpl implements OrderService {
         unConfirmedOrder = update(unConfirmedOrder);
         servicesOfOrderService.confirmAllServiceOfOrder(unConfirmedOrder.getId());
         packagesOfOrderService.confirmAllPackagesOfOrder(unConfirmedOrder.getId());
+
+
         orderHandlingService.saveOrder(unConfirmedOrder.getId());
 
         visitationsOfBranch.setOrder(unConfirmedOrder);

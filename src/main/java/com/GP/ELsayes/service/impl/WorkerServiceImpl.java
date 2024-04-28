@@ -109,7 +109,6 @@ public class WorkerServiceImpl implements WorkerService {
     @SneakyThrows
     @Override
     public WorkerResponse update(WorkerRequest workerRequest, Long workerId) {
-        throwExceptionIfUserNameAlreadyExist(workerRequest.getUserName());
 
         Worker existedWorker = this.getById(workerId);
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
@@ -131,14 +130,16 @@ public class WorkerServiceImpl implements WorkerService {
 
 
         updatedWorker.setId(workerId);
+        updatedWorker.setUserName(existedWorker.getUserName());
         BeanUtils.copyProperties(existedWorker,updatedWorker);
-        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
+        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
         updatedWorker.setScore(workerRequest.getScore());
         updatedWorker.setTotalSalary(emp -> {
             double baseSalary = Double.parseDouble(emp.getBaseSalary());
             double bonus = Double.parseDouble(emp.getBonus());
             return baseSalary + bonus;
         });
+
 
         Branch branch = this.branchService.getById(workerRequest.getBranchId());
         updatedWorker.setBranch(branch);
