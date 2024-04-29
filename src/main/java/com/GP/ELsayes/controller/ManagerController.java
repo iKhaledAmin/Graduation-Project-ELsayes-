@@ -42,6 +42,7 @@ private ManagerService managerService;
 
     @PostMapping("/add-worker")
     public ResponseEntity<?> addWorker(@RequestBody @Valid WorkerRequest workerRequest) {
+        System.out.println("In add worker ");
         return new ResponseEntity<>(this.managerService.addWorker(workerRequest), HttpStatus.CREATED);
     }
     @PutMapping("/update-worker/{workerId}")

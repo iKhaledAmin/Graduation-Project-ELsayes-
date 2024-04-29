@@ -85,11 +85,11 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         availableMaintenanceWorkers = getAllAvailableMaintenanceWorkers();
         storeAvailableWorkers(); // Store the workers in WorkerStorage
 
-        System.out.println("availableCleaningWorkers "+availableCleaningWorkers.keySet());
-        System.out.println("availableParkingWorkers "+availableParkingWorkers.keySet());
-        System.out.println("availableMaintenanceWorker s"+availableMaintenanceWorkers.keySet());
-        printPendingServices();
-        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
+//        System.out.println("availableCleaningWorkers "+availableCleaningWorkers.keySet());
+//        System.out.println("availableParkingWorkers "+availableParkingWorkers.keySet());
+//        System.out.println("availableMaintenanceWorker s"+availableMaintenanceWorkers.keySet());
+//        printPendingServices();
+//        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
     }
 
     @Override
