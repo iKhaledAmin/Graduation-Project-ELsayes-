@@ -111,7 +111,8 @@ public class SecurityConfiguration {
                                 "/managers/add-service-to-package",
                                 "/managers/add-package",
                                 "/managers/update-package/{packageId}",
-                                "/managers/delete-package/{packageId}"
+                                "/managers/delete-package/{packageId}",
+                                "/owners/get-all-branches"
                         ).hasRole("TOP_MANAGER")
 
 
