@@ -184,6 +184,11 @@ public class CustomerServiceImpl implements CustomerService {
         return carService.getResponseById(carId);
     }
 
+    @Override
+    public CarResponse getCarByCustomerId(Long customerId){
+        return carService.getResponseByCustomerId(customerId);
+    }
+
 
     @Override
     public List<ServiceResponse> getAllCleaningServices(){

@@ -59,6 +59,11 @@ public class CustomerController {
         return new ResponseEntity<>(this.customerService.getCarById(carId),HttpStatus.OK);
     }
 
+    @GetMapping("/get-car-by-customer-id/{customerId}")
+    public ResponseEntity<?> getCarByCustomerId(@PathVariable Long customerId){
+        return new ResponseEntity<>(this.customerService.getCarByCustomerId(customerId),HttpStatus.OK);
+    }
+
     @GetMapping("/get-all-cleaning-services")
     ResponseEntity<?> getAllCleaningServices(){
         return new ResponseEntity<>(this.customerService.getAllCleaningServices(), HttpStatus.OK);

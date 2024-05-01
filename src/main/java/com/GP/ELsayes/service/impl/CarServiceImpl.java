@@ -157,4 +157,23 @@ public class CarServiceImpl implements CarService {
     }
 
 
+
+    @Override
+    public Optional<Car> getEntityByCustomerId(Long customerId) {
+        return carRepo.findByCustomerId(customerId);
+    }
+
+    @Override
+    public Car getByCustomerId(Long customerId) {
+        return getEntityByCustomerId(customerId).orElseThrow(
+                () -> new NoSuchElementException("There is no car with customer id = " + customerId)
+        );
+    }
+
+    @Override
+    public CarResponse getResponseByCustomerId(Long customerId) {
+        return carMapper.toResponse(getByCustomerId(customerId));
+    }
+
+
 }

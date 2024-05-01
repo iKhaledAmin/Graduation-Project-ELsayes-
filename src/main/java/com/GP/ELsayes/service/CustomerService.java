@@ -20,6 +20,7 @@ public interface CustomerService extends CrudService<CustomerRequest, Customer, 
     public void deleteCar(Long carId);
 
     public CarResponse getCarById(Long carId);
+    public CarResponse getCarByCustomerId(Long customerId);
 
     public List<ServiceResponse> getAllCleaningServices();
 
