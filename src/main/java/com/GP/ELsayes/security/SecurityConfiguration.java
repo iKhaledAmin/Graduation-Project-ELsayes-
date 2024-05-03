@@ -59,6 +59,7 @@ public class SecurityConfiguration {
                                 "/auth/login"
                                 , "/customers/register"
                                 ,"/customers/owners/main-owner-is-exist"
+                                ,"/owners/register-owner"
                                 ,"/notifications/**"
                         ).permitAll() // Permit all for these endpoints
 
@@ -80,6 +81,7 @@ public class SecurityConfiguration {
 
                         .requestMatchers(
                                 "/managers/edit-profile/{managerId}",
+                                "/managers/get-manager-by-id/{managerId}",
                                 "/managers/add-worker",
                                 "/managers/update-worker/{workerId}",
                                 "/managers/delete-worker/{workerId}",
@@ -88,17 +90,14 @@ public class SecurityConfiguration {
                                 "/managers/get-customer-by-id/{customerId}",
                                 "/managers/get-all-services",
                                 "/managers/get-service-by-id/{serviceId}",
-                                "/managers/add-service-to-branch",
                                 "/managers/activate-service-in-branch",
                                 "/managers/deactivate-service-in-branch",
                                 "/managers/get-all-service-by-branch-id/{branchId}",
                                 "/managers/get-package-by-id/{packageId}",
                                 "/managers/get-all-packages",
-                                "/managers/add-package-to-branch",
                                 "/managers/activate-package-in-branch",
                                 "/managers/deactivate-package-in-branch",
-                                "/managers/get-all-packages-by-branch-id/{branchId}",
-                                "/managers/get-manager-by-id/{managerId}"
+                                "/managers/get-all-packages-by-branch-id/{branchId}"
                         ).hasAnyRole("TOP_MANAGER", "MANAGER")
                         .requestMatchers(
                                 "/managers/get-all-workers",
@@ -106,21 +105,23 @@ public class SecurityConfiguration {
                                 "/managers/delete-customer/{customerId}",
                                 "/managers/get-all-customers",
                                 "/managers/add-service",
+                                "/managers/add-service-to-branch",
                                 "/managers/update-service/{serviceId}",
                                 "/managers/delete-service/{serviceId}",
                                 "/managers/add-service-to-package",
                                 "/managers/add-package",
+                                "/managers/add-package-to-branch",
                                 "/managers/update-package/{packageId}",
                                 "/managers/delete-package/{packageId}",
                                 "/owners/get-all-branches"
                         ).hasRole("TOP_MANAGER")
 
 
-
-                        .requestMatchers("/owners/register-owner").permitAll()
                         .requestMatchers(
-                            "/owners/edit-profile/{ownerId}",
                             "/owners/add-owner",
+                            "/owners/update-owner/{ownerId}",
+                            "/owners/edit-profile/{ownerId}",
+                            "/owners/delete-owner/{ownerId}",
                             "/owners/get-all",
                             "/owners/get-by-id/{ownerId}",
                             "/owners/add-manager",
@@ -129,21 +130,13 @@ public class SecurityConfiguration {
                             "/owners/get-all-managers",
                             "/owners/get-manager-by-id/{managerId}",
                             "/owners/get-manager-by-branchId/{branchId}",
+                            "/owners/add-branch",
+                            "/owners/update-branch/{branchId}",
+                            "/owners/delete-branch/{branchId}",
                             "/owners/get-all-branches",
                             "/owners/get-branch-by-id/{branchId}"
 
-                        ).hasAnyRole("TOP_OWNER", "OWNER")
-                        .requestMatchers(
-                            "/owners/update-owner/{ownerId}",
-                            "/owners/edit-profile/{ownerId}",
-                            "/owners/delete-owner/{ownerId}",
-                            "/owners/edit-profile/{ownerId}",
-                            "/owners/add-branch",
-                            "/owners/update-branch/{branchId}",
-                            "/owners/delete-branch/{branchId}"
-
-                        ).hasRole("TOP_OWNER")
-
+                        ).hasAnyRole("OWNER")
 
                         .anyRequest().authenticated()
                 )

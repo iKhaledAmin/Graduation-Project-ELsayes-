@@ -94,10 +94,11 @@ public class OwnerServiceImpl
 
 
         Owner newOwner = this.ownerMapper.toEntity(ownerRequest);
-        newOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
-        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
-            newOwner.setUserRole(UserRole.TOP_OWNER);
-        else newOwner.setUserRole(UserRole.OWNER);
+//        newOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
+//        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
+//            newOwner.setUserRole(UserRole.TOP_OWNER);
+//        else newOwner.setUserRole(UserRole.OWNER);
+        newOwner.setUserRole(UserRole.OWNER);
         newOwner = this.ownerRepo.save(newOwner);
 
         Owner oldOwner = null;
@@ -119,7 +120,7 @@ public class OwnerServiceImpl
     public OwnerResponse register(UserRequest userRequest){
         throwExceptionIfThereIsAMainOwner();
         OwnerRequest ownerRequest = userMapper.toOwnerRequest(userRequest);
-        ownerRequest.setOwnerPermission(OwnerPermission.FULL_PERMISSION);
+        //ownerRequest.setOwnerPermission(OwnerPermission.FULL_PERMISSION);
         return add(ownerRequest);
 
     }
@@ -135,10 +136,11 @@ public class OwnerServiceImpl
         Owner updatedOwner = this.ownerMapper.toEntity(ownerRequest);
         updatedOwner.setId(ownerId);
         updatedOwner.setUserName(existedOwner.getUserName());
-        updatedOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
-        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
-            updatedOwner.setUserRole(UserRole.TOP_OWNER);
-        else updatedOwner.setUserRole(UserRole.OWNER);
+//        updatedOwner.setOwnerPermission(ownerRequest.getOwnerPermission());
+//        if (ownerRequest.getOwnerPermission() == OwnerPermission.FULL_PERMISSION)
+//            updatedOwner.setUserRole(UserRole.TOP_OWNER);
+//        else updatedOwner.setUserRole(UserRole.OWNER);
+        updatedOwner.setUserRole(UserRole.OWNER);
         BeanUtils.copyProperties(existedOwner,updatedOwner);
 
         updatedOwner = ownerRepo.save(existedOwner);

@@ -17,8 +17,8 @@ import java.lang.String;
 @SuperBuilder
 public class OwnerRequest extends UserRequest {
 
-    @NotNull(message = "Owner permission must not be null")
-    private OwnerPermission ownerPermission;
+//    @NotNull(message = "Owner permission must not be null")
+//    private OwnerPermission ownerPermission;
 
     private Long oldOwnerId;
 
