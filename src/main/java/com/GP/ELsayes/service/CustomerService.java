@@ -6,9 +6,11 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public interface CustomerService extends CrudService<CustomerRequest, Customer, CustomerResponse,Long> {
@@ -39,5 +41,7 @@ public interface CustomerService extends CrudService<CustomerRequest, Customer, 
     public void confirmOrder(Long customerId);
     public OrderResponse getUnConfirmedOrder(Long customerId);
     public OrderProgressResponse getProgressOfConfirmedOrder(Long customerId);
+
+    public Optional<VisitationsOfBranches> getVisitationsOfBranchByCustomerId(Long customerId);
 
 }

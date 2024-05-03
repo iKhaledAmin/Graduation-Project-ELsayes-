@@ -7,6 +7,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.mapper.CustomerMapper;
 import com.GP.ELsayes.model.mapper.UserMapper;
@@ -71,6 +72,13 @@ public class CustomerServiceImpl implements CustomerService {
             throw new RuntimeException("User name already exist");
     }
 
+    private void throwExceptionIfCustomerStillInBranch(Long customerId) {
+        Customer customer = getById(customerId);
+        Optional<VisitationsOfBranches> VisitationsOfBranches = getVisitationsOfBranchByCustomerId(customerId);
+        if(VisitationsOfBranches.isPresent())
+            throw new RuntimeException("Customer with id = " +customerId+ " still in branch ,can't delete");
+    }
+
 
 
     @Override
@@ -133,7 +141,7 @@ public class CustomerServiceImpl implements CustomerService {
 
     @Override
     public void delete(Long customerId) {
-
+        throwExceptionIfCustomerStillInBranch(customerId);
         getById(customerId);
         customerRepo.deleteById(customerId);
     }
@@ -161,6 +169,11 @@ public class CustomerServiceImpl implements CustomerService {
     @Override
     public CustomerResponse getResponseById(Long customerId) {
         return customerMapper.toResponseAccordingToBranch(getById(customerId),visitationsOfBranchesService);
+    }
+
+    @Override
+    public Optional<VisitationsOfBranches> getVisitationsOfBranchByCustomerId(Long customerId){
+        return visitationsOfBranchesService.getCurrentVisitationByCustomerId(customerId);
     }
 
 

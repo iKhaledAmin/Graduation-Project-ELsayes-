@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.dto.CarRequest;
 import com.GP.ELsayes.model.dto.CarResponse;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.mapper.CarMapper;
 import com.GP.ELsayes.repository.CarRepo;
 import com.GP.ELsayes.service.CarService;
@@ -39,6 +40,16 @@ public class CarServiceImpl implements CarService {
             return;
         }
         throw new RuntimeException("Invalid car plate number");
+    }
+
+
+    private void throwExceptionIfCarInsideBranch(String carPlateNumber){
+        Optional<Car> car = carRepo.findByCarPlateNumber(carPlateNumber);
+        Optional<VisitationsOfBranches> VisitationsOfBranches =customerService.getVisitationsOfBranchByCustomerId(car.get().getCustomer().getId());
+        if(VisitationsOfBranches.isEmpty()){
+            return;
+        }
+        throw new RuntimeException("Car with number = " +carPlateNumber+ " still in branch ,can't delete");
     }
 
     @Override
@@ -116,7 +127,9 @@ public class CarServiceImpl implements CarService {
 
     @Override
     public void delete(Long carId) {
-        this.getById(carId);
+
+        Car car = this.getById(carId);
+        throwExceptionIfCarInsideBranch(car.getCarPlateNumber());
         carRepo.deleteById(carId);
     }
 

@@ -23,7 +23,7 @@ public class ServiceRequest {
 
     @NotNull(message = "Image must not be null")
     @NotEmpty(message = "Image must not be empty")
-    private String serviceImageURL;
+    private String image;
 
     @NotNull(message = "Price must not be null")
     @NotEmpty(message = "Price must not be empty")
