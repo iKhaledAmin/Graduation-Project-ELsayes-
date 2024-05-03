@@ -11,6 +11,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
+import java.util.Map;
+
 @RestController
 @CrossOrigin("*")
 @RequestMapping("/customers")
@@ -49,9 +52,11 @@ public class CustomerController {
     }
 
     @DeleteMapping("/delete-car/{carId}")
-    public ResponseEntity<?> deleteCar(@PathVariable Long carId){
+    public ResponseEntity<Map<String, String>> deleteCar(@PathVariable Long carId){
         this.customerService.deleteCar(carId);
-        return new ResponseEntity<>("Deleted successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-car-by-id/{carId}")
@@ -87,17 +92,20 @@ public class CustomerController {
 
 
     @PutMapping("/add-service-to-order-list")
-    public ResponseEntity<?> addServiceToOrderList(@RequestBody @Valid AddServiceToOrderListRequest addServiceToOrderListRequest){
+    public ResponseEntity<Map<String, String>> addServiceToOrderList(@RequestBody @Valid AddServiceToOrderListRequest addServiceToOrderListRequest){
         this.customerService.addServiceToOrderList(addServiceToOrderListRequest);
-        return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Added Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete-service-from-order-list/{serviceId}")
-    public ResponseEntity<?> deleteServiceFromOrderList(@PathVariable Long serviceId){
+    public ResponseEntity<Map<String, String>> deleteServiceFromOrderList(@PathVariable Long serviceId){
         this.customerService.deleteServiceFromOrderList(serviceId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Deleted Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
-
 
 
     @GetMapping("/get-package-by-id-and-branch-by-id")
@@ -106,27 +114,35 @@ public class CustomerController {
     }
 
     @PutMapping("/add-package-to-order-list")
-    public ResponseEntity<?> addPackageToOrderList(@RequestBody @Valid AddPackageToOrderListRequest addPackageToOrderListRequest){
+    public ResponseEntity<Map<String, String>> addPackageToOrderList(@RequestBody @Valid AddPackageToOrderListRequest addPackageToOrderListRequest){
         this.customerService.addPackageToOrderList(addPackageToOrderListRequest);
-        return new ResponseEntity<>("Added Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Added Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete-package-from-order-list/{packageId}")
-    public ResponseEntity<?> deletePackageFromOrderList(@PathVariable Long packageId){
+    public ResponseEntity<Map<String, String>> deletePackageFromOrderList(@PathVariable Long packageId){
         this.customerService.deletePackageFromOrderList(packageId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Deleted Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/clear-order-list/{customerId}")
-    public ResponseEntity<?> clearOrderList(@PathVariable Long customerId){
+    public ResponseEntity<Map<String, String>> clearOrderList(@PathVariable Long customerId){
         this.customerService.clearOrderList(customerId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Deleted Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @PutMapping("/confirm-order/{customerId}")
-    public ResponseEntity<?> confirmOrder(@PathVariable Long customerId){
+    public ResponseEntity<Map<String, String>> confirmOrder(@PathVariable Long customerId){
         this.customerService.confirmOrder(customerId);
-        return new ResponseEntity<>("Confirmed Successfully", HttpStatus.ACCEPTED);
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Confirmed Successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
     @GetMapping("/get-non-confirm-order/{customerId}")
     public ResponseEntity<?> getUnConfirmedOrder(@PathVariable Long customerId){
