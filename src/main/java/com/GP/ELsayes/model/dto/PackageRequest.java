@@ -22,7 +22,7 @@ public class PackageRequest {
 
     @NotNull(message = "Image must not be null")
     @NotEmpty(message = "Image must not be empty")
-    private String packageImageURL;
+    private String image;
 
     @NotNull(message = "Percentage of discount must not be null")
     @NotEmpty(message = "Percentage of discount must not be empty")

@@ -16,7 +16,7 @@ public class PackageResponse {
     private Long id;
     private String name;
     private String description;
-    private String packageImageURL;
+    private String image;
     @JsonIgnore
     private String percentageOfDiscount;
     private String originalTotalPrice;

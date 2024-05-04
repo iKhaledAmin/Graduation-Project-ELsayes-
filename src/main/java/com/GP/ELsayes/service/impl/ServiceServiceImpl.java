@@ -92,8 +92,15 @@ public class ServiceServiceImpl implements ServiceService {
         ServiceEntity updatedService = this.serviceMapper.toEntity(serviceRequest);
 
         updatedService.setId(serviceId);
-        BeanUtils.copyProperties(updatedService,existedService);
-        updatedService = serviceRepo.save(existedService);
+        updatedService.setName(serviceRequest.getName());
+        updatedService.setDescription(serviceRequest.getDescription());
+        updatedService.setImage(serviceRequest.getImage());
+        updatedService.setPrice(serviceRequest.getPrice());
+        updatedService.setRequiredTime(serviceRequest.getRequiredTime());
+        updatedService.setServiceCategory(serviceRequest.getServiceCategory());
+
+        //BeanUtils.copyProperties(updatedService,existedService);
+        updatedService = serviceRepo.save(updatedService);
 
         Manager manager = managerService.getById(serviceRequest.getManagerId());
         ManagersOfServices managersOfServices= this.managersOfServicesService.add(

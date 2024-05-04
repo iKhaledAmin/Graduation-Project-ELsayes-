@@ -1,16 +1,11 @@
 package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.repository.UserRepo;
 import com.GP.ELsayes.service.UserService;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
