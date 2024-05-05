@@ -130,7 +130,7 @@ public class ManagerServiceImpl implements  ManagerService {
     }
     @Override
     public ManagerResponse update(ManagerRequest managerRequest, Long managerId) {
-        throwExceptionIfUserNameAlreadyExist(managerRequest.getUserName());
+        //throwExceptionIfUserNameAlreadyExist(managerRequest.getUserName());
         Manager existedManager = this.getById(managerId);
         Manager updatedManager = this.managerMapper.toEntity(managerRequest);
 
@@ -148,6 +148,7 @@ public class ManagerServiceImpl implements  ManagerService {
         }
 
         updatedManager.setId(managerId);
+        updatedManager.setUserName(existedManager.getUserName());
         // Check if the branch has a different manager before setting it
         Branch branch = branchService.getById(managerRequest.getBranchId());
         throwExceptionIfBranchHasAdifferentManager(branch, managerId);

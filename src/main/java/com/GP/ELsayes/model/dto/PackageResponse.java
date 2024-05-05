@@ -22,7 +22,7 @@ public class PackageResponse {
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
     private String currentPackagePrice;
-    private Status packageStatus;
+    //private Status packageStatus;
     private Boolean availableInBranch;
 
 

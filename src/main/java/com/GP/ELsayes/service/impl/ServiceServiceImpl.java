@@ -22,8 +22,6 @@ import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -84,7 +82,6 @@ public class ServiceServiceImpl implements ServiceService {
         return this.serviceMapper.toResponse(service);
     }
 
-    @SneakyThrows
     @Override
     public ServiceResponse update(ServiceRequest serviceRequest, Long serviceId) {
 

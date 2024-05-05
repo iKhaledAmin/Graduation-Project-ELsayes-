@@ -113,6 +113,11 @@ public class CustomerController {
         return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(getPackageRequest.getPackageId(),getPackageRequest.getBranchId()), HttpStatus.OK);
     }
 
+    @GetMapping("/get-all-packages")
+    ResponseEntity<?> getAllPackage(){
+        return new ResponseEntity<>(this.customerService.getAllPackages(), HttpStatus.OK);
+    }
+
     @PutMapping("/add-package-to-order-list")
     public ResponseEntity<Map<String, String>> addPackageToOrderList(@RequestBody @Valid AddPackageToOrderListRequest addPackageToOrderListRequest){
         this.customerService.addPackageToOrderList(addPackageToOrderListRequest);

@@ -242,6 +242,10 @@ public class CustomerServiceImpl implements CustomerService {
         return packageService.getByPackageIdOrByPackageIdAndBranchId(packageId,branchId);
     }
 
+    @Override
+    public List<PackageResponse> getAllPackages(){
+        return packageService.getAll();
+    }
 
     @Override
     public void addPackageToOrderList(AddPackageToOrderListRequest addPackageToOrderListRequest) {
