@@ -85,10 +85,11 @@ public class CustomerController {
     }
 
     @GetMapping("/get-service-by-id-and-branch-by-id")
-    public ResponseEntity<?> getServiceByIdAndBranchId(@RequestBody @Valid GetServiceRequest getServiceRequest) {
-        return new ResponseEntity<>(this.customerService.getServiceByIdAndBranchId(getServiceRequest.getServiceId(),getServiceRequest.getBranchId()), HttpStatus.OK);
+    public ResponseEntity<?> getServiceByIdAndBranchId(
+            @RequestParam("serviceId") Long serviceId,
+            @RequestParam(value = "branchId", required = false) Long branchId) {
+        return new ResponseEntity<>(this.customerService.getServiceByIdAndBranchId(serviceId, branchId), HttpStatus.OK);
     }
-
 
 
     @PutMapping("/add-service-to-order-list")

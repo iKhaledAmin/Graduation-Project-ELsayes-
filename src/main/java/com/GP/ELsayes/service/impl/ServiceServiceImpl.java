@@ -48,7 +48,7 @@ public class ServiceServiceImpl implements ServiceService {
 
 
 
-    void throwExceptionIfServiceStillIncludedInOffer(Long serviceId){
+    void throwExceptionIfServiceStillIncludedInPackage(Long serviceId){
         List<Package> aPackages = packageService.getAllByServiceId(serviceId);
         if(aPackages.isEmpty())
             return;
@@ -112,7 +112,7 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public void delete(Long serviceId) {
         throwExceptionIfServiceStillIncludedInBranch(serviceId);
-        throwExceptionIfServiceStillIncludedInOffer(serviceId);
+        throwExceptionIfServiceStillIncludedInPackage(serviceId);
 
         this.getById(serviceId);
         serviceRepo.deleteById(serviceId);
