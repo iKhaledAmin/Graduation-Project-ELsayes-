@@ -109,10 +109,18 @@ public class CustomerController {
     }
 
 
+//    @GetMapping("/get-package-by-id-and-branch-by-id")
+//    public ResponseEntity<?> getPackageByIdAndBranchId(@RequestBody @Valid GetPackageRequest getPackageRequest) {
+//        return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(getPackageRequest.getPackageId(),getPackageRequest.getBranchId()), HttpStatus.OK);
+//    }
+
     @GetMapping("/get-package-by-id-and-branch-by-id")
-    public ResponseEntity<?> getPackageByIdAndBranchId(@RequestBody @Valid GetPackageRequest getPackageRequest) {
-        return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(getPackageRequest.getPackageId(),getPackageRequest.getBranchId()), HttpStatus.OK);
+    public ResponseEntity<?> getPackageByIdAndBranchId(
+            @RequestParam("packageId") Long packageId,
+            @RequestParam(value = "branchId", required = false) Long branchId) {
+        return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(packageId, branchId), HttpStatus.OK);
     }
+
 
     @GetMapping("/get-all-packages")
     ResponseEntity<?> getAllPackage(){

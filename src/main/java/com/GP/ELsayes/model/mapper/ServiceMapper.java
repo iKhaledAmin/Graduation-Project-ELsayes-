@@ -43,11 +43,11 @@ public interface ServiceMapper {
         if (servicesOfBranches != null) {
             Status serviceStatus = servicesOfBranches.getServiceStatus();
             return serviceStatus == Status.AVAILABLE ? true : false;
+
         }
 
-        return null;
+        return false;
     }
-
 
 
     default ServicesOfBranches getServicesOfBranches(Long serviceId, Long branchId, ServicesOfBranchesService servicesOfBranchesService) {

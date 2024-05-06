@@ -126,22 +126,14 @@ public class ServiceServiceImpl implements ServiceService {
                 .toList();
     }
 
-    @Override
-    public Optional<ServiceEntity> getObjectById(Long serviceId) {
-        return serviceRepo.findById(serviceId);
-    }
+
 
     @Override
     public Optional<ServiceEntity> getByObjectByIdAndBranchId(Long serviceId, Long branchId) {
         return serviceRepo.findByServiceIdAndBranchId(serviceId, branchId);
     }
 
-    @Override
-    public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId) {
-        return getObjectById(serviceId).orElseThrow(
-                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
-        );
-    }
+
 
     @Override
     public ServiceEntity getById(Long serviceId) {
@@ -154,11 +146,24 @@ public class ServiceServiceImpl implements ServiceService {
     public ServiceResponse getResponseById(Long serviceId) {
         return serviceMapper.toResponse(getById(serviceId));
     }
+
+
     @Override
-    public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId) {
-        return serviceMapper.toResponseAccordingToBranch(getByIdAndBranchId(serviceId,branchId),branchId,servicesOfBranchesService);
+    public Optional<ServiceEntity> getObjectById(Long serviceId) {
+        return serviceRepo.findById(serviceId);
     }
 
+//    @Override
+//    public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId) {
+//        return getObjectById(serviceId).orElseThrow(
+//                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
+//        );
+//    }
+
+    @Override
+    public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId) {
+        return serviceMapper.toResponseAccordingToBranch(getById(serviceId),branchId,servicesOfBranchesService);
+    }
 
 
     @Override

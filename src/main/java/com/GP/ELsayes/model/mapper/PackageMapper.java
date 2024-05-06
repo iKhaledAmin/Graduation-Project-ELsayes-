@@ -20,11 +20,7 @@ public interface PackageMapper {
 
     Package toEntity(PackageRequest request);
 
-//    default Status mapOfferStatus(Offer offer) {
-//        return offer.getOffersOfBranch().isEmpty() ? null : offer.getOffersOfBranch().get(0).getPackageStatus();
-//    }
-//
-//    @Mapping(target = "packageStatus", expression = "java(mapOfferStatus(entity))")
+
     PackageResponse toResponse(Package entity);
 
 
@@ -37,13 +33,13 @@ public interface PackageMapper {
     // Custom method to determine availability based on serviceStatus
     default Boolean isAvailableInBranch(Long packageId, Long branchId, PackagesOfBranchesService packagesOfBranchesService) {
         PackagesOfBranches packagesOfBranch = getPackagesOfBranches(packageId, branchId, packagesOfBranchesService);
-
         if (packagesOfBranch != null) {
+
             Status serviceStatus = packagesOfBranch.getPackageStatus();
             return serviceStatus == Status.AVAILABLE ? true : false;
         }
 
-        return null;
+        return false;
     }
 
 

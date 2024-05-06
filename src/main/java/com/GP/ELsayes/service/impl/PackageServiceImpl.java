@@ -2,7 +2,6 @@ package com.GP.ELsayes.service.impl;
 
 import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
-import com.GP.ELsayes.model.dto.ServiceResponse;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
 import com.GP.ELsayes.model.entity.Package;
@@ -249,15 +248,11 @@ import java.util.Optional;
         branchService.getById(branchId);
         return packageRepo.findAllByBranchId(branchId);
     }
-    private Package getByPackageIdAndBranchId(Long packageId, Long branchId) {
-        return packageRepo.findByPackageIdAndBranchId(packageId,branchId);
-    }
+
     @Override
     public PackageResponse toResponseAccordingToBranch(Long packageId, Long branchId) {
-        return packageMapper.toResponseAccordingToBranch(getByPackageIdAndBranchId(packageId,branchId),branchId,packagesOfBranchesService);
+        return packageMapper.toResponseAccordingToBranch(getById(packageId),branchId,packagesOfBranchesService);
     }
-
-
 
     @Override
     public PackageResponse getByPackageIdOrByPackageIdAndBranchId(Long packageId, Long branchId){
