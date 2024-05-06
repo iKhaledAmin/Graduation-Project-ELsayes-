@@ -109,11 +109,6 @@ public class CustomerController {
     }
 
 
-//    @GetMapping("/get-package-by-id-and-branch-by-id")
-//    public ResponseEntity<?> getPackageByIdAndBranchId(@RequestBody @Valid GetPackageRequest getPackageRequest) {
-//        return new ResponseEntity<>(this.customerService.getPackageByIdAndBranchId(getPackageRequest.getPackageId(),getPackageRequest.getBranchId()), HttpStatus.OK);
-//    }
-
     @GetMapping("/get-package-by-id-and-branch-by-id")
     public ResponseEntity<?> getPackageByIdAndBranchId(
             @RequestParam("packageId") Long packageId,
@@ -158,10 +153,18 @@ public class CustomerController {
         response.put("message", "Confirmed Successfully");
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
-    @GetMapping("/get-non-confirm-order/{customerId}")
-    public ResponseEntity<?> getUnConfirmedOrder(@PathVariable Long customerId){
-        return new ResponseEntity<>(this.customerService.getUnConfirmedOrder(customerId),HttpStatus.OK);
+//    @GetMapping("/get-non-confirm-order/{customerId}")
+//    public ResponseEntity<?> getUnConfirmedOrder(@PathVariable Long customerId){
+//        return new ResponseEntity<>(this.customerService.getUnConfirmedOrder(customerId),HttpStatus.OK);
+//    }
+
+    @GetMapping("/get-non-confirm-order")
+    public ResponseEntity<?> getUnConfirmedOrder(
+            @RequestParam("customerId") Long customerId,
+            @RequestParam(value = "branchId", required = false) Long branchId) {
+        return new ResponseEntity<>(this.customerService.getUnConfirmedOrder(customerId, branchId), HttpStatus.OK);
     }
+
 
     @GetMapping("/get-progress-confirm-order/{customerId}")
     public ResponseEntity<?> getProgressOfConfirmedOrder(@PathVariable Long customerId){

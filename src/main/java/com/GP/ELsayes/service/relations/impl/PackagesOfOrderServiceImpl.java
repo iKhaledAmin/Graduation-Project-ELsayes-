@@ -1,6 +1,7 @@
 package com.GP.ELsayes.service.relations.impl;
 
 import com.GP.ELsayes.model.dto.PackagesOfOrderResponse;
+import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
@@ -47,13 +48,42 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
         return packagesOfOrderRepo.findByCustomerIdAndOrderId(customerId,orderId);
     }
 
-    @Override
-    public List<PackagesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId) {
-        return packagesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
+
+
+
+    private  List<PackagesOfOrderResponse> getResponseAllUnConfirmedPackagesByCustomerId(Long customerId){
+
+        List<PackagesOfOrder> packagesOfOrder = packagesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId);
+        return packagesOfOrder
                 .stream()
-                .map(packagesOfOrder ->  packagesOfOrderMapper.toResponse(packagesOfOrder))
+                .map(serviceOfOrderResponse ->  packagesOfOrderMapper.toResponse(serviceOfOrderResponse))
                 .toList();
     }
+
+    private  List<PackagesOfOrderResponse> getResponseAllUnConfirmedPackagesByCustomerIdAccordingBranch(Long customerId,Long branchId){
+
+        List<PackagesOfOrder> packagesOfOrderList = packagesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId);
+        return packagesOfOrderList
+                .stream()
+                .map(packagesOfOrder -> {
+                    Package aPackage = packageService.getById(packagesOfOrder.getPackageEntity().getId());
+                    return packagesOfOrderMapper.toResponseAccordingToBranch(aPackage,branchId,packageService);
+                })
+                .toList();
+    }
+
+    @Override
+    public List<PackagesOfOrderResponse> getUnConfirmedPackagesOfOrderByCustomerId(Long customerId, Long branchId){
+
+        System.out.println("THe  " + branchId);
+        if (branchId == null)
+            return getResponseAllUnConfirmedPackagesByCustomerId(customerId);
+        else {
+            return getResponseAllUnConfirmedPackagesByCustomerIdAccordingBranch(customerId,branchId);
+        }
+
+    }
+
 
     @Override
     public List<PackagesOfOrderResponse> getResponseAllByOrderId(Long orderId) {

@@ -138,14 +138,15 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public OrderResponse getResponseUnConfirmedByCustomerId(Long customerId) {
+    public OrderResponse getResponseUnConfirmedByCustomerId(Long customerId,Long branchId) {
+        customerService.getById(customerId);
         Optional<Order> unConfirmedOrder = orderRepo.findUnConfirmedByCustomerId(customerId);
 
         if (unConfirmedOrder.isEmpty())
             return null;
 
-        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getResponseAllUnConfirmedByCustomerId(customerId);
-        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getResponseAllByOrderId(unConfirmedOrder.get().getId());
+        List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getUnConfirmedServicesOfOrderByCustomerId(customerId,branchId);
+        List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getUnConfirmedPackagesOfOrderByCustomerId(customerId,branchId);
         return new OrderResponse(
                 servicesOfOrder
                 ,packagesOfOrder

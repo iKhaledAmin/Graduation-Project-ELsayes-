@@ -153,12 +153,7 @@ public class ServiceServiceImpl implements ServiceService {
         return serviceRepo.findById(serviceId);
     }
 
-//    @Override
-//    public ServiceEntity getByIdAndBranchId(Long serviceId,Long branchId) {
-//        return getObjectById(serviceId).orElseThrow(
-//                () -> new NoSuchElementException("There is no service with id = " + serviceId + " in this branch")
-//        );
-//    }
+
 
     @Override
     public ServiceResponse toResponseAccordingToBranch(Long serviceId, Long branchId) {

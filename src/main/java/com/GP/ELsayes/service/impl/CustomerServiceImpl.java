@@ -271,8 +271,8 @@ public class CustomerServiceImpl implements CustomerService {
     }
 
     @Override
-    public OrderResponse getUnConfirmedOrder(Long customerId){
-        return orderService.getResponseUnConfirmedByCustomerId(customerId);
+    public OrderResponse getUnConfirmedOrder(Long customerId,Long branchId){
+        return orderService.getResponseUnConfirmedByCustomerId(customerId,branchId);
     }
 
     @Override

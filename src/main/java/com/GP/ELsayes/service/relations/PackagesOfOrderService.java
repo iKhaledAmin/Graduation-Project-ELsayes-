@@ -18,7 +18,8 @@ public interface PackagesOfOrderService {
 
     public Optional<PackagesOfOrder> getByCustomerIdAndOrderId(Long customerId, Long orderId);
 
-    public List<PackagesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId);
+    //public List<PackagesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId);
+    public List<PackagesOfOrderResponse> getUnConfirmedPackagesOfOrderByCustomerId(Long customerId, Long branchId);
 
     List<PackagesOfOrderResponse> getResponseAllByOrderId(Long orderId);
 

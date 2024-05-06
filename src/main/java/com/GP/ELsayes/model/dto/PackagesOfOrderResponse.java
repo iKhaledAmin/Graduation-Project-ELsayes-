@@ -15,4 +15,6 @@ public class PackagesOfOrderResponse {
     private String packagePrice;
     private String requiredTime;
     private ProgressStatus progressStatus;
+    private Boolean availableInBranch;
+    private String image;
 }

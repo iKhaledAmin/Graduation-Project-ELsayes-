@@ -17,8 +17,9 @@ public interface ServicesOfOrderService {
     public void finishServiceTask(Long customerId, Long workerId);
 
     public List<ServicesOfOrders> getAllUnConfirmedByPackageOfOrderId(Long packageOfOrderId);
-    public List<ServicesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId);
+    //  public List<ServicesOfOrderResponse> getResponseAllUnConfirmedServicesByCustomerId(Long customerId);
     public List<ServicesOfOrderResponse> getResponseAllConfirmedByCustomerId(Long customerId);
+    public List<ServicesOfOrderResponse> getUnConfirmedServicesOfOrderByCustomerId(Long customerId, Long branchId);
 
     List<ServicesOfOrderResponse> getResponseAllByOrderId(Long orderId);
 

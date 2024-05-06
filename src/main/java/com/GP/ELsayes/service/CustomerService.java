@@ -40,7 +40,7 @@ public interface CustomerService extends CrudService<CustomerRequest, Customer, 
     public void deletePackageFromOrderList(Long packageOfOrderId);
     public void clearOrderList(Long customerId);
     public void confirmOrder(Long customerId);
-    public OrderResponse getUnConfirmedOrder(Long customerId);
+    public OrderResponse getUnConfirmedOrder(Long customerId,Long branchId);
     public OrderProgressResponse getProgressOfConfirmedOrder(Long customerId);
 
     public Optional<VisitationsOfBranches> getVisitationsOfBranchByCustomerId(Long customerId);

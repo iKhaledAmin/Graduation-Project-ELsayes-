@@ -14,5 +14,6 @@ public class ServicesOfOrderResponse {
     private String servicePrice;
     private String requiredTime;
     private ProgressStatus progressStatus;
-
+    private Boolean availableInBranch;
+    private String image;
 }

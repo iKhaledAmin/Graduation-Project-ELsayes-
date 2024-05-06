@@ -163,6 +163,8 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         }
     }
 
+
+
     @Override
     public List<ServicesOfOrders> getAllUnConfirmedByPackageOfOrderId(Long packageOfOrderId) {
         return servicesOfOrderRepo.findAllUnConfirmedByPackageOrderId(packageOfOrderId);
@@ -189,13 +191,43 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         servicesOfOrderRepo.deleteById(serviceOfOrderId);
     }
 
+//    public ServicesOfOrderResponse getByServiceIdOrByServiceIdAndBranchId(Long customerId, Long branchId){
+//        if (branchId == null)
+//            return getResponseById(customerId);
+//        else return toResponseAccordingToBranch(serviceId,branchId);
+//    }
+
+
+    private List<ServicesOfOrderResponse> getResponseAllUnConfirmedServicesByCustomerId(Long customerId){
+
+        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId);
+        return servicesOfOrder
+                .stream()
+                .map(serviceOfOrderResponse ->  servicesOfOrderMapper.toResponse(serviceOfOrderResponse))
+                .toList();
+    }
+
+    private List<ServicesOfOrderResponse> getResponseAllUnConfirmedServicesByCustomerIdAccordingBranch(Long customerId,Long branchId){
+
+        List<ServicesOfOrders> servicesOfOrderList = servicesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId);
+        return servicesOfOrderList
+                .stream()
+                .map(servicesOfOrder -> {
+                    ServiceEntity service = serviceService.getById(servicesOfOrder.getService().getId());
+                    return servicesOfOrderMapper.toResponseAccordingToBranch(service,branchId,serviceService);
+                })
+                .toList();
+    }
 
     @Override
-    public List<ServicesOfOrderResponse> getResponseAllUnConfirmedByCustomerId(Long customerId){
-        return servicesOfOrderRepo.findAllUnConfirmedByCustomerId(customerId)
-                .stream()
-                .map(servicesOfOrder ->  servicesOfOrderMapper.toResponse(servicesOfOrder))
-                .toList();
+    public List<ServicesOfOrderResponse> getUnConfirmedServicesOfOrderByCustomerId(Long customerId, Long branchId){
+
+        if (branchId == null)
+            return getResponseAllUnConfirmedServicesByCustomerId(customerId);
+        else {
+            return getResponseAllUnConfirmedServicesByCustomerIdAccordingBranch(customerId,branchId);
+        }
+
     }
 
     @Override
