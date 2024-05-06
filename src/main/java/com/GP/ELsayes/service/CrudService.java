@@ -14,6 +14,8 @@ public interface CrudService<Request, Entity, Response, ID> {
     public List<Response> getAll();
 
     public Optional<Entity> getObjectById(ID id);
+
+
     public Entity getById(ID id);
 
     public Response getResponseById(ID id);

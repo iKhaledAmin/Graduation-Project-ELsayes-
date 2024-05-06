@@ -268,6 +268,17 @@ public class ServiceServiceImpl implements ServiceService {
     }
 
     @Override
+    public List<ServicesOfPackagesResponse> addServiceListToPackage(List<Long> serviceIds,Long packageId){
+        return serviceIds
+                .stream()
+                .map(id -> {
+                    ServicesOfPackageRequest servicesOfPackageRequest = new ServicesOfPackageRequest(id,packageId);
+                    return addServiceToPackage(servicesOfPackageRequest);
+                })
+                .toList();
+    }
+
+    @Override
     public List<ServiceEntity> getAllByPackageId(Long offerId) {
         Package aPackage = packageService.getById(offerId);
         return serviceRepo.findAllByPackageId(offerId);

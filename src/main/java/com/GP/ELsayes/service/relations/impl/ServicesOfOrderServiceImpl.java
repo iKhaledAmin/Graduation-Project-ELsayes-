@@ -181,6 +181,13 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         return servicesOfOrderRepo.findObjectByOrderId(orderId);
     }
 
+    @Override
+    public Optional<ServicesOfOrders> getUnConfirmedByOrderIdAndServiceId(Long orderId, Long serviceId) {
+        return servicesOfOrderRepo.findUnConfirmedByOrderIdAndServiceId(orderId,serviceId);
+    }
+
+
+
     public void deleteServiceFromOrderList(Long serviceOfOrderId){
         ServicesOfOrders servicesOfOrder = servicesOfOrderRepo.findById(serviceOfOrderId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceOfOrderId)

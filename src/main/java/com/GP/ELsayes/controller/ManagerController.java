@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 
 @RestController
 @CrossOrigin("*")
@@ -132,6 +133,13 @@ private ManagerService managerService;
     public ResponseEntity<?> addServiceToPackage(@RequestBody @Valid ServicesOfPackageRequest servicesOfPackageRequest) {
         return new ResponseEntity<>(this.managerService.addServiceToPackage(servicesOfPackageRequest), HttpStatus.CREATED);
     }
+
+    @PostMapping("/add-list-of-service-to-package")
+    public ResponseEntity<?> addServiceListToPackage(@RequestBody @Valid ServicesOfPackageRequest servicesOfPackageRequest) {
+        return new ResponseEntity<>(this.managerService.
+                addServiceListToPackage(servicesOfPackageRequest.getServiceIds(),servicesOfPackageRequest.getPackageId()), HttpStatus.CREATED);
+    }
+
 
     @GetMapping("/get-all-service-by-branch-id/{branchId}")
     public ResponseEntity<?> getServiceAllByBranchId(@PathVariable Long branchId){

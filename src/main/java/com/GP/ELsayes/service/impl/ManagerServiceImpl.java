@@ -323,6 +323,13 @@ public class ManagerServiceImpl implements  ManagerService {
         return serviceService.addServiceToPackage(servicesOfPackageRequest);
     }
 
+    @Override
+    public List<ServicesOfPackagesResponse> addServiceListToPackage(List<Long> serviceIds,Long packageId){
+        return serviceService.addServiceListToPackage(serviceIds,packageId);
+    }
+
+
+
 
 
 

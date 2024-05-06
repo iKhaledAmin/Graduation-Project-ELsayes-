@@ -34,6 +34,7 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
 
 
     public ServicesOfPackagesResponse addServiceToPackage(ServicesOfPackageRequest servicesOfPackageRequest);
+    public List<ServicesOfPackagesResponse> addServiceListToPackage(List<Long> serviceIds,Long packageId);
 
     public List<ServiceEntity> getAllByPackageId(Long offerId);
     public List<ServiceResponse> getResponseAllByPackageId(Long offerId);

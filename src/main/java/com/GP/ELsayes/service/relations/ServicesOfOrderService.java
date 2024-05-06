@@ -5,6 +5,7 @@ import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Wor
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 
 import java.util.List;
+import java.util.Optional;
 
 public interface ServicesOfOrderService {
     public void addServiceToOrder(Long customerId, Long serviceId ,Boolean inPackage);
@@ -12,6 +13,7 @@ public interface ServicesOfOrderService {
     public void confirmAllServiceOfOrder(Long orderId);
 
     public List<ServicesOfOrders> getObjectByOrderId(Long orderId);
+    public Optional<ServicesOfOrders> getUnConfirmedByOrderIdAndServiceId(Long orderId, Long serviceId);
     public void setWorkerServiceTask(Long customerId, Long serviceId, Worker worker);
 
     public void finishServiceTask(Long customerId, Long workerId);

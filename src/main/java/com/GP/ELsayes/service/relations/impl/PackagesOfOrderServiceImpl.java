@@ -35,7 +35,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
 
 
 
-    private void throwExceptionIfServiceHasAlreadyExistedInOrder(Long packageId , Long orderId){
+    private void throwExceptionPackageHasAlreadyExistedInOrder(Long packageId , Long orderId){
         Optional<PackagesOfOrder> packagesOfOrder = packagesOfOrderRepo.findByPackageIdAndOrderId(packageId,orderId);
         if(packagesOfOrder.isEmpty()){
             return;
@@ -105,7 +105,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
             unConfirmedOrder = Optional.ofNullable(orderService.add(customerId));
         }
 
-        throwExceptionIfServiceHasAlreadyExistedInOrder(packageId,unConfirmedOrder.get().getId());
+        throwExceptionPackageHasAlreadyExistedInOrder(packageId,unConfirmedOrder.get().getId());
 
         PackagesOfOrder packagesOfOrder = new PackagesOfOrder();
         packagesOfOrder.setProgressStatus(ProgressStatus.UN_CONFIRMED);
@@ -115,8 +115,13 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
         packagesOfOrderRepo.save(packagesOfOrder);
 
         List<ServiceEntity> packageServices = serviceService.getAllByPackageId(packageId);
+        Long orderId = unConfirmedOrder.get().getId();
         packageServices.stream().forEach(service -> {
-            servicesOfOrderService.addServiceToOrder(customerId,service.getId(),true);
+            Optional<ServicesOfOrders> servicesOfOrder = servicesOfOrderService
+                    .getUnConfirmedByOrderIdAndServiceId(orderId,service.getId());
+            if (servicesOfOrder.isEmpty())
+                servicesOfOrderService.addServiceToOrder(customerId,service.getId(),true);
+
         });
 
         double totalOrderPrice = Double.parseDouble(aPackage.getCurrentPackagePrice() )+ Double.parseDouble(unConfirmedOrder.get().getTotalPrice() );
