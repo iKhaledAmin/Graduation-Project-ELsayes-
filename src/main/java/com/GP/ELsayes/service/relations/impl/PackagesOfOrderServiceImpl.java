@@ -67,7 +67,7 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
                 .stream()
                 .map(packagesOfOrder -> {
                     Package aPackage = packageService.getById(packagesOfOrder.getPackageEntity().getId());
-                    return packagesOfOrderMapper.toResponseAccordingToBranch(aPackage,branchId,packageService);
+                    return packagesOfOrderMapper.toResponseAccordingToBranch(packagesOfOrder,branchId,packageService);
                 })
                 .toList();
     }
@@ -142,7 +142,6 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
 
         List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.
                 getAllUnConfirmedByPackageOfOrderId(packagesOfOrder.getId());
-        System.out.println("The Size " + servicesOfOrder.size());
         servicesOfOrder.stream().forEach(service -> {
             servicesOfOrderService.deleteServiceFromOrderList(service.getId());
         });

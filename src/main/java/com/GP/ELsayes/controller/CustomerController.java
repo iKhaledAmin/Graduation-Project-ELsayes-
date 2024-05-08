@@ -153,10 +153,6 @@ public class CustomerController {
         response.put("message", "Confirmed Successfully");
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
-//    @GetMapping("/get-non-confirm-order/{customerId}")
-//    public ResponseEntity<?> getUnConfirmedOrder(@PathVariable Long customerId){
-//        return new ResponseEntity<>(this.customerService.getUnConfirmedOrder(customerId),HttpStatus.OK);
-//    }
 
     @GetMapping("/get-non-confirm-order")
     public ResponseEntity<?> getUnConfirmedOrder(

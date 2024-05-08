@@ -198,11 +198,6 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         servicesOfOrderRepo.deleteById(serviceOfOrderId);
     }
 
-//    public ServicesOfOrderResponse getByServiceIdOrByServiceIdAndBranchId(Long customerId, Long branchId){
-//        if (branchId == null)
-//            return getResponseById(customerId);
-//        else return toResponseAccordingToBranch(serviceId,branchId);
-//    }
 
 
     private List<ServicesOfOrderResponse> getResponseAllUnConfirmedServicesByCustomerId(Long customerId){
@@ -221,7 +216,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
                 .stream()
                 .map(servicesOfOrder -> {
                     ServiceEntity service = serviceService.getById(servicesOfOrder.getService().getId());
-                    return servicesOfOrderMapper.toResponseAccordingToBranch(service,branchId,serviceService);
+                    return servicesOfOrderMapper.toResponseAccordingToBranch(servicesOfOrder,branchId,serviceService);
                 })
                 .toList();
     }

@@ -24,12 +24,17 @@ public interface PackagesOfOrderMapper {
 
 
 
-    @Mapping(source = "entity.name", target = "packageName")
-    @Mapping(source = "entity.image", target = "image")
-    @Mapping(source = "entity.currentPackagePrice", target = "packagePrice")
-    @Mapping(source = "entity.originalTotalRequiredTime", target = "requiredTime")
-    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getId(), branchId, packageService))")
-    PackagesOfOrderResponse toResponseAccordingToBranch(Package entity, Long branchId, PackageService packageService);
+//    @Mapping(source = "entity.name", target = "packageName")
+//    @Mapping(source = "entity.image", target = "image")
+//    @Mapping(source = "entity.currentPackagePrice", target = "packagePrice")
+//    @Mapping(source = "entity.originalTotalRequiredTime", target = "requiredTime")
+
+    @Mapping(source = "entity.packageEntity.name", target = "packageName")
+    @Mapping(source = "entity.packageEntity.currentPackagePrice", target = "packagePrice")
+    @Mapping(source = "entity.packageEntity.originalTotalRequiredTime", target = "requiredTime")
+    @Mapping(source = "entity.packageEntity.image", target = "image")
+    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getPackageEntity().getId(), branchId, packageService))")
+    PackagesOfOrderResponse toResponseAccordingToBranch(PackagesOfOrder entity, Long branchId, PackageService packageService);
 
 
 

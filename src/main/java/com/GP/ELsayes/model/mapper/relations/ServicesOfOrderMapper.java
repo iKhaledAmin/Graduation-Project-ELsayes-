@@ -24,12 +24,12 @@ public interface ServicesOfOrderMapper {
     ServicesOfOrderResponse toResponse(ServicesOfOrders entity);
 
 
-    @Mapping(source = "entity.name", target = "serviceName")
-    @Mapping(source = "entity.image", target = "image")
-    @Mapping(source = "entity.price", target = "servicePrice")
-    @Mapping(source = "entity.requiredTime", target = "requiredTime")
-    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getId(), branchId, serviceService))")
-    ServicesOfOrderResponse toResponseAccordingToBranch(ServiceEntity entity, Long branchId, ServiceService serviceService);
+    @Mapping(source = "entity.service.name", target = "serviceName")
+    @Mapping(source = "entity.service.price", target = "servicePrice")
+    @Mapping(source = "entity.service.requiredTime", target = "requiredTime")
+    @Mapping(source = "entity.service.image", target = "image")
+    @Mapping(target = "availableInBranch", expression = "java(isAvailableInBranch(entity.getService().getId(), branchId, serviceService))")
+    ServicesOfOrderResponse toResponseAccordingToBranch(ServicesOfOrders entity, Long branchId, ServiceService serviceService);
 
 
     
