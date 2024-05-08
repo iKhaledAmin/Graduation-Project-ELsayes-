@@ -189,12 +189,20 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
 
 
     public void deleteServiceFromOrderList(Long serviceOfOrderId){
+
         ServicesOfOrders servicesOfOrder = servicesOfOrderRepo.findById(serviceOfOrderId).orElseThrow(
                 () -> new NoSuchElementException("There is no service with id = " + serviceOfOrderId)
         );
         if (servicesOfOrder.getProgressStatus() != ProgressStatus.UN_CONFIRMED){
             throw new RuntimeException("Order is confirmed, you can not delete");
         }
+
+        Order unConfirmedOrder = orderService.getUnConfirmedByCustomerId(servicesOfOrder.getCustomer().getId()).get();
+        ServiceEntity service = servicesOfOrder.getService();
+        unConfirmedOrder.decrementRequiredTime(service.getRequiredTime());
+        unConfirmedOrder.decrementTotalPrice(service.getPrice());
+        orderService.update(unConfirmedOrder);
+
         servicesOfOrderRepo.deleteById(serviceOfOrderId);
     }
 

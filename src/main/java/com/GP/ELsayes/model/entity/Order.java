@@ -66,6 +66,7 @@ public class Order {
     private VisitationsOfBranches visitationsOfBranch;
 
 
+
     public void incrementRequiredTime(String serviceTime){
         double totalRequiredTime = Double.parseDouble(this.totalRequiredTime) + Double.parseDouble(serviceTime) ;
         this.setTotalRequiredTime(
@@ -74,6 +75,20 @@ public class Order {
     }
     public void incrementTotalPrice(String serviceCost){
         double totalPrice = Double.parseDouble(this.getTotalPrice()) + Double.parseDouble(serviceCost) ;
+        this.setTotalPrice(
+                String.valueOf(totalPrice)
+        );
+    }
+
+
+    public void decrementRequiredTime(String serviceTime){
+        double totalRequiredTime = Double.parseDouble(this.totalRequiredTime) - Double.parseDouble(serviceTime) ;
+        this.setTotalRequiredTime(
+                String.valueOf(totalRequiredTime)
+        );
+    }
+    public void decrementTotalPrice(String serviceCost){
+        double totalPrice = Double.parseDouble(this.getTotalPrice()) - Double.parseDouble(serviceCost) ;
         this.setTotalPrice(
                 String.valueOf(totalPrice)
         );
