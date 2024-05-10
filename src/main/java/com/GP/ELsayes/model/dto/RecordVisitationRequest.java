@@ -12,6 +12,6 @@ public class RecordVisitationRequest {
     @NotNull(message = "Car plateNumber id must not be null")
     private String carPlateNumber;
 
-    @NotNull(message = "Branch id must not be null")
-    private Long branchId;
+    @NotNull(message = "Worker id must not be null")
+    private Long workerId;
 }

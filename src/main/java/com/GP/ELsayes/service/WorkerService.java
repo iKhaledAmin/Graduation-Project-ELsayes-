@@ -22,7 +22,7 @@ public interface WorkerService extends CrudService<WorkerRequest, Worker, Worker
 
 
     public List<WorkerResponse> getAllByBranchId(Long branchId);
-    public void recordVisitation(String carPlateNumber , Long branchId);
+    public void recordVisitation(String carPlateNumber , Long workerId);
     public CheckOutResponse checkOut(String carPlateNumber, Long workerId);
     public void finishTask(String carPlateNumber, Long workerId);
     public  Integer getNumberOfWorkersByBranchId (Long branchId);
@@ -33,5 +33,7 @@ public interface WorkerService extends CrudService<WorkerRequest, Worker, Worker
     public void changeWorkerStatus(Long workerId);
 
     public FreeTrialCodeResponse generateFreeTrialCode(Long workerId);
+    public String getCountOfCurrentVisitationByWorkerId(Long workerId);
+        public String getCapacityByWorkerId(Long workerId);
 
 }

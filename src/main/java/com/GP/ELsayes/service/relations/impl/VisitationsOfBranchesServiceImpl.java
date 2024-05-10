@@ -140,6 +140,11 @@ public class VisitationsOfBranchesServiceImpl implements VisitationsOfBranchesSe
         return visitationsOfBranchesRepo.findCurrentVisitationByCustomerId(customerId);
     }
 
+    @Override
+    public String getCountOfCurrentVisitationByBranchId(Long branchId) {
+        return visitationsOfBranchesRepo.findCountOfCurrentVisitationByBranchId(branchId);
+    }
+
 
     @Override
     public VisitationsOfBranches addVisitation(Car car, Branch branch) {

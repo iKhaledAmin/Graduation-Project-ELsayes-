@@ -22,4 +22,7 @@ public interface BranchService extends CrudService<BranchRequest, Branch, Branch
 
 
     public void incrementProfit(Long branchId , String addedProfit);
+
+    public String getCountOfCurrentVisitationByBranchId(Long branchId);
+    public String getCapacityByBranchId(Long branchId);
 }

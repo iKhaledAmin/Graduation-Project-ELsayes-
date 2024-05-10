@@ -23,5 +23,6 @@ public interface VisitationsOfBranchesService {
     public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId);
     public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId , Date date);
 
-    Optional<VisitationsOfBranches> getCurrentVisitationByCustomerId(Long customerId);
+    public Optional<VisitationsOfBranches> getCurrentVisitationByCustomerId(Long customerId);
+    public String getCountOfCurrentVisitationByBranchId(Long branchId);
 }

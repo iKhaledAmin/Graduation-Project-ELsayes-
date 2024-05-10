@@ -44,4 +44,7 @@ public interface VisitationsOfBranchesRepo extends JpaRepository<VisitationsOfBr
 
     @Query("SELECT v FROM VisitationsOfBranches v WHERE v.customer.id = :customerId AND v.dateOfLeaving IS NULL")
     Optional<VisitationsOfBranches> findCurrentVisitationByCustomerId(Long customerId);
+
+    @Query("SELECT COUNT(v) FROM VisitationsOfBranches v WHERE v.branch.id = :branchId AND v.dateOfLeaving IS NULL")
+    String findCountOfCurrentVisitationByBranchId(Long branchId);
 }

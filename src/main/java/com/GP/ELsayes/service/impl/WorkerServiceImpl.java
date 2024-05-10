@@ -216,9 +216,9 @@ public class WorkerServiceImpl implements WorkerService {
     }
 
     @Override
-    public void recordVisitation(String carPlateNumber , Long branchId) {
-        Branch branch = branchService.getById(branchId);
-
+    public void recordVisitation(String carPlateNumber , Long workerId) {
+        getById(workerId);
+        Branch branch = branchService.getByWorkerId(workerId);
         Optional<Car> car = carService.getIfExistByCarPlateNumber(carPlateNumber);
 
         if (car.isEmpty()){
@@ -306,6 +306,20 @@ public class WorkerServiceImpl implements WorkerService {
     @Override
     public FreeTrialCodeResponse generateFreeTrialCode(Long workerId){
         return freeTrialCodeService.generateCode(workerId);
+    }
+
+    @Override
+    public String getCountOfCurrentVisitationByWorkerId(Long workerId) {
+        getById(workerId);
+        Branch branch = branchService.getByWorkerId(workerId);
+        return branchService.getCountOfCurrentVisitationByBranchId(branch.getId());
+    }
+
+    @Override
+    public String getCapacityByWorkerId(Long workerId){
+        getById(workerId);
+        Branch branch = branchService.getByWorkerId(workerId);
+        return branchService.getCapacityByBranchId(branch.getId());
     }
 
 }

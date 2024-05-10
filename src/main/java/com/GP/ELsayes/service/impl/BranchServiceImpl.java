@@ -40,13 +40,12 @@ public class BranchServiceImpl implements BranchService {
 
     private final PackageService packageService;
     private final ServiceService serviceService;
-    private final VisitationsOfBranchesService customerVisitationsService;
-
+    private final VisitationsOfBranchesService visitationsOfBranchesService;
 
     public BranchServiceImpl(BranchMapper branchMapper, BranchRepo branchRepo, OwnerService ownerService,
                              @Lazy WorkerService workerService, @Lazy ManagerService managerService,
                              OwnersOfBranchesService ownersOfBranchesService, @Lazy PackageService packageService,
-                             @Lazy ServiceService serviceService,@Lazy VisitationsOfBranchesService customerVisitationsService) {
+                             @Lazy ServiceService serviceService,@Lazy VisitationsOfBranchesService visitationsOfBranchesService) {
         this.branchMapper = branchMapper;
         this.branchRepo = branchRepo;
         this.ownerService = ownerService;
@@ -55,7 +54,7 @@ public class BranchServiceImpl implements BranchService {
         this.ownersOfBranchesService = ownersOfBranchesService;
         this.packageService = packageService;
         this.serviceService = serviceService;
-        this.customerVisitationsService = customerVisitationsService;
+        this.visitationsOfBranchesService = visitationsOfBranchesService;
     }
     // This method will run at midnight every day to reset the profitOfDay to zero
     @Scheduled(cron = "0 0 0 * * ?")
@@ -202,12 +201,12 @@ public class BranchServiceImpl implements BranchService {
 
     @Override
     public List<VisitationsOfBranchesResponse> getResponseAllCurrentVisitationsInBranch(Long branchId) {
-        return customerVisitationsService.getResponseAllCurrentVisitationsInBranch(branchId);
+        return visitationsOfBranchesService.getResponseAllCurrentVisitationsInBranch(branchId);
     }
 
     @Override
     public List<VisitationsOfBranchesResponse> getResponseAllVisitationsInBranchByADate(Long branchId, Date date) {
-        return customerVisitationsService.getResponseAllVisitationsInBranchByADate(branchId,date);
+        return visitationsOfBranchesService.getResponseAllVisitationsInBranchByADate(branchId,date);
     }
 
     @Override
@@ -226,6 +225,16 @@ public class BranchServiceImpl implements BranchService {
         // Save the updated branch back to the repository (if needed)
         branchRepo.save(branch);
 
+    }
+
+    @Override
+    public String getCountOfCurrentVisitationByBranchId(Long branchId) {
+        return visitationsOfBranchesService.getCountOfCurrentVisitationByBranchId(branchId);
+    }
+
+    @Override
+    public String getCapacityByBranchId(Long branchId) {
+        return getById(branchId).getCapacityOfCars();
     }
 
 
