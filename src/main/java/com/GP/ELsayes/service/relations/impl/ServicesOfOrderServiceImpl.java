@@ -132,6 +132,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
             servicesOfOrders.setProgressStatus(ProgressStatus.ON_WORKING);
             servicesOfOrders.setStartWorkingDate(new Date());
 
+
             // Save the updated ServicesOfOrders instance
             servicesOfOrderRepo.save(servicesOfOrders);
             workerService.updateWorkerStatus(worker.getId(), WorkerStatus.UN_AVAILABLE);

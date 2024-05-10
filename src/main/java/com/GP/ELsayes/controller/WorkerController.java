@@ -80,13 +80,19 @@ public class WorkerController {
         return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
-    @GetMapping("get-count-of-visitation-of-branch/{workerId}")
-    ResponseEntity<?> getCountOfCurrentVisitationByWorkerId(@PathVariable Long workerId){
-        return new ResponseEntity<>(this.workerService.getCountOfCurrentVisitationByWorkerId(workerId), HttpStatus.OK);
+    @GetMapping("/get-count-of-visitation-of-branch/{workerId}")
+    public ResponseEntity<Map<String, String>> getCountOfCurrentVisitationByWorkerId(@PathVariable Long workerId){
+        String visitationCount = this.workerService.getCountOfCurrentVisitationByWorkerId(workerId);
+        Map<String, String> response = new HashMap<>();
+        response.put("visitationCount", visitationCount);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
-    @GetMapping("get-getCapacity-of-branch/{workerId}")
-    ResponseEntity<?> getCapacityByBranchId(@PathVariable Long workerId){
-        return new ResponseEntity<>(this.workerService.getCapacityByWorkerId(workerId), HttpStatus.OK);
+    @GetMapping("/get-getCapacity-of-branch/{workerId}")
+    public ResponseEntity<Map<String, String>> getCapacityByBranchId(@PathVariable Long workerId){
+        String capacity = this.workerService.getCapacityByWorkerId(workerId);
+        Map<String, String> response = new HashMap<>();
+        response.put("capacity", capacity);
+        return new ResponseEntity<>(response, HttpStatus.OK);
     }
 
 
