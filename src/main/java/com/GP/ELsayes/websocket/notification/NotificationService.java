@@ -23,6 +23,13 @@ public class NotificationService {
     private final UserService userService;
 
 
+    private void throwExceptionIfCustomerAlreadyHasCar(Long notificationId){
+        Notification notification = getById(notificationId);
+        if(notification.getStatus() == NotificationStatus.NOT_OPENED)
+            throw new RuntimeException("You can't delete this notification , not open yet");
+    }
+
+
     public Notification add(Notification notification){
 
         User user = new User();
@@ -76,6 +83,7 @@ public class NotificationService {
 
     public void delete(Long notificationId) {
         getById(notificationId);
+        throwExceptionIfCustomerAlreadyHasCar(notificationId);
         notificationRepo.deleteById(notificationId);
     }
 
