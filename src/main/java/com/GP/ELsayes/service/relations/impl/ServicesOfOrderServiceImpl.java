@@ -3,10 +3,12 @@ package com.GP.ELsayes.service.relations.impl;
 import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
+import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
 import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
 import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
+import com.GP.ELsayes.model.enums.NotificationType;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.mapper.relations.ServicesOfOrderMapper;
@@ -14,6 +16,8 @@ import com.GP.ELsayes.repository.relations.ServicesOfOrderRepo;
 import com.GP.ELsayes.service.*;
 import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
+import com.GP.ELsayes.websocket.notification.Notification;
+import com.GP.ELsayes.websocket.notification.NotificationService;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
@@ -33,6 +37,8 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     private final WorkerService workerService;
     private final PackagesOfOrderService packagesOfOrderService;
     private final ServicesOfOrderMapper servicesOfOrderMapper;
+    private final UserService userService;
+    private final NotificationService notificationService;
 
 
 
@@ -43,7 +49,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
                                       ServiceService serviceService,
                                       @Lazy WorkerService workerService,
                                       @Lazy PackagesOfOrderService packagesOfOrderService,
-                                      @Lazy ServicesOfOrderMapper servicesOfOrderMapper){
+                                      @Lazy ServicesOfOrderMapper servicesOfOrderMapper, UserService userService, NotificationService notificationService){
         this.servicesOfOrderRepo = servicesOfOrderRepo;
         this.orderService = orderService;
         this.customerService = customerService;
@@ -51,6 +57,8 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         this.workerService = workerService;
         this.packagesOfOrderService = packagesOfOrderService;
         this.servicesOfOrderMapper = servicesOfOrderMapper;
+        this.userService = userService;
+        this.notificationService = notificationService;
     }
 
 
@@ -71,6 +79,20 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         List<ServicesOfOrders> servicesOfOrder = servicesOfOrderRepo.findObjectByOrderIdAndPackageOfOrderId(orderId,packageOfOrderId);
         return servicesOfOrder.stream().allMatch(serviceOrder -> serviceOrder.getFinishWorkingDate() != null);
     }
+
+    private void sendNotificationToCustomer(Long customerId,String serviceName ){
+
+        Notification notification = new Notification();
+        notification.setNotificationTitle(serviceName);
+        notification.setNotificationContent("Now," + serviceName + " service is finished successfully.");
+        notification.setType(NotificationType.Worker_Notification);
+        User user = userService.getById(customerId);
+        notification.setUser(user);
+        notificationService.sendPrivateNotification(String.valueOf(customerId), notification);
+
+
+    }
+
 
 
     public Optional<ServicesOfOrders> getObjectFirstByServiceIdAndCustomerId(Long serviceId, Long customerId) {
@@ -152,6 +174,9 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         servicesOfOrders.setProgressStatus(ProgressStatus.FINISHED);
         servicesOfOrders.setFinishWorkingDate(new Date());
         servicesOfOrderRepo.save(servicesOfOrders);
+
+        ServiceEntity service = serviceService.getById(servicesOfOrders.getService().getId());
+        sendNotificationToCustomer(servicesOfOrders.getCustomer().getId(),service.getName());
 
         Long orderId = servicesOfOrders.getOrder().getId();
         if (checkIfOrderIsFinished(orderId)) {
