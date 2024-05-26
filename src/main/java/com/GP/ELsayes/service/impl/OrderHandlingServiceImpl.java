@@ -92,6 +92,19 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
 //        System.out.println("||||||||||||||||||||||||||||||||||||||||||||||");
     }
 
+    private void sendNotificationToAssignedWorker(Long workerId , String carPlateNumber,String serviceName ){
+
+        Notification notification = new Notification();
+        notification.setNotificationTitle(serviceName);
+        notification.setNotificationContent("You have new task for car : " + carPlateNumber);
+        notification.setType(NotificationType.Worker_Notification);
+        User user = userService.getById(workerId);
+        notification.setUser(user);
+        notificationService.sendPrivateNotification(String.valueOf(workerId), notification);
+
+
+    }
+
     @Override
     public synchronized void saveOrder(Long orderId) {
         Optional<Order> order = orderService.getObjectById(orderId);
@@ -165,13 +178,10 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
             availableWorkers.remove(assignedWorker.getId());
 
             // Send notification to the customer
-            Notification notification = new Notification();
-            notification.setNotificationContent("You have new task");
-            notification.setType(NotificationType.Worker_Notification);
-            User user = (User) assignedWorker;
-            notification.setUser(user);
-            notificationService.sendPrivateNotification(String.valueOf(servicesOfOrder.getCustomer().getId()), notification);
-
+            sendNotificationToAssignedWorker(
+                    assignedWorker.getId(),
+                    servicesOfOrder.getCustomer().getCar().getCarPlateNumber(),
+                    servicesOfOrder.getService().getName());
             return true;
         } else {
             // No available worker found, return false

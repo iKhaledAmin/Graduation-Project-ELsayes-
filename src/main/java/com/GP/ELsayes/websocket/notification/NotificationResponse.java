@@ -15,6 +15,7 @@ import java.util.Date;
 public class NotificationResponse {
 
     private Long id;
+    private String notificationTitle;
     private String notificationContent;
     private Date sentAt;
     NotificationStatus status;

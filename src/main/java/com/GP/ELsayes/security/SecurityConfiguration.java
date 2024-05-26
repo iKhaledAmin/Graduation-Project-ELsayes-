@@ -138,6 +138,16 @@ public class SecurityConfiguration {
 
                         ).hasAnyRole("OWNER")
 
+
+                        .requestMatchers(
+                                "/notifications/get-by-id/{notificationId}",
+                                "/notifications/get-all-notification-by-userId/{userId}",
+                                "/notifications/delete/{notificationId}",
+                                "/notifications/delete-all-by-user-id/{userId}",
+                                "/notifications/delete-all-by-user-id/{userId}",
+                                "/notifications/get-count-unOpened-by-user-id/{userId}"
+                        ).hasAnyRole("PARKING_WORKER", "CLEANING_WORKER","MAINTENANCE_WORKER","CUSTOMER")
+
                         .anyRequest().authenticated()
                 )
                 .csrf(AbstractHttpConfigurer::disable) // Disable CSRF if not used

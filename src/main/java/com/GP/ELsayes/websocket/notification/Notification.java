@@ -29,6 +29,7 @@ public class Notification {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
+    private String notificationTitle;
     private String notificationContent;
     private Date sentAt;
 
