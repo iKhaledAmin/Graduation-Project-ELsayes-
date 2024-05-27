@@ -152,7 +152,7 @@ private ManagerService managerService;
 
     @PostMapping("/add-package")
     public ResponseEntity<?> addPackage(@RequestBody @Valid PackageRequest packageRequest) {
-        return new ResponseEntity<>(this.managerService.addPackage(packageRequest), HttpStatus.CREATED);
+        return new ResponseEntity<>(this.managerService.addPackage(packageRequest,packageRequest.getServiceIds()), HttpStatus.CREATED);
     }
     @PutMapping("/update-package/{packageId}")
     public ResponseEntity<?> updatePackage(@RequestBody @Valid PackageRequest packageRequest, @PathVariable Long packageId){

@@ -4,6 +4,7 @@ import com.GP.ELsayes.model.dto.PackageRequest;
 import com.GP.ELsayes.model.dto.PackageResponse;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesRequest;
 import com.GP.ELsayes.model.dto.relations.PackageOfBranchesResponse;
+import com.GP.ELsayes.model.dto.relations.ServicesOfPackageRequest;
 import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
@@ -112,6 +113,22 @@ import java.util.Optional;
         );
 
         return this.packageMapper.toResponse(aPackage);
+    }
+
+    @Override
+    public PackageResponse add(PackageRequest packageRequest, List<Long> serviceIds){
+
+        if (serviceIds.isEmpty())
+            throw new RuntimeException("Failed to save, add at least one service to the package");
+
+        Package aPackage = packageMapper.toEntity(add(packageRequest));
+
+        serviceIds.forEach(id -> {
+            ServicesOfPackageRequest servicesOfPackageRequest = new ServicesOfPackageRequest(id, aPackage.getId());
+            serviceService.addServiceToPackage(servicesOfPackageRequest);
+        });
+
+        return packageMapper.toResponse(getById(aPackage.getId()));
     }
 
     @SneakyThrows

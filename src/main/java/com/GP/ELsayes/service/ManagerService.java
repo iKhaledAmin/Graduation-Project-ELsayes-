@@ -60,7 +60,7 @@ public interface ManagerService extends CrudService<ManagerRequest, Manager, Man
 
 
 
-    public PackageResponse addPackage(PackageRequest packageRequest);
+    public PackageResponse addPackage(PackageRequest packageRequest, List<Long> serviceIds);
     public PackageResponse updatePackage(PackageRequest packageRequest, Long offerId);
     public void deletePackage(Long offerId);
     public List<PackageResponse> getAllPackages();

@@ -19,6 +19,7 @@ public interface PackageMapper {
     PackageMapper INSTANCE = Mappers.getMapper(PackageMapper.class);
 
     Package toEntity(PackageRequest request);
+    Package toEntity(PackageResponse response);
 
 
     PackageResponse toResponse(Package entity);

@@ -334,8 +334,8 @@ public class ManagerServiceImpl implements  ManagerService {
 
 
     @Override
-    public PackageResponse addPackage(PackageRequest packageRequest){
-        return packageService.add(packageRequest);
+    public PackageResponse addPackage(PackageRequest packageRequest, List<Long> serviceIds){
+        return packageService.add(packageRequest,serviceIds);
     }
     @Override
     public PackageResponse updatePackage(PackageRequest packageRequest, Long offerId){

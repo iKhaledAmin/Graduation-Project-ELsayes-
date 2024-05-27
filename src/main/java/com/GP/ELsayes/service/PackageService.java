@@ -10,6 +10,7 @@ import java.util.List;
 import java.util.Optional;
 
 public interface PackageService extends CrudService<PackageRequest, Package, PackageResponse,Long> {
+    public PackageResponse add(PackageRequest packageRequest, List<Long> serviceIds);
 
     public List<PackageResponse> getResponseAllPackagesIncludeService(Long serviceId);
 

@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.util.List;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -27,6 +29,8 @@ public class PackageRequest {
     @NotNull(message = "Percentage of discount must not be null")
     @NotEmpty(message = "Percentage of discount must not be empty")
     private String percentageOfDiscount;
+
+    List<Long> serviceIds;
 
     private String originalTotalPrice;
     private String originalTotalRequiredTime;
