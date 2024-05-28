@@ -112,9 +112,13 @@ public class SecurityConfiguration {
                                 "/managers/add-package",
                                 "/managers/add-package-to-branch",
                                 "/managers/update-package/{packageId}",
-                                "/managers/delete-package/{packageId}",
-                                "/owners/get-all-branches"
+                                "/managers/delete-package/{packageId}"
                         ).hasRole("TOP_MANAGER")
+
+
+                        .requestMatchers(
+                                "/owners/get-all-branches"
+                        ).hasAnyRole("TOP_MANAGER", "OWNER")
 
 
                         .requestMatchers(
@@ -133,7 +137,6 @@ public class SecurityConfiguration {
                             "/owners/add-branch",
                             "/owners/update-branch/{branchId}",
                             "/owners/delete-branch/{branchId}",
-                            "/owners/get-all-branches",
                             "/owners/get-branch-by-id/{branchId}"
 
                         ).hasAnyRole("OWNER")
