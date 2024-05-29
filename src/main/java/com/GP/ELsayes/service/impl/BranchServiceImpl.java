@@ -126,7 +126,14 @@ public class BranchServiceImpl implements BranchService {
         Branch updatedBranch = this.branchMapper.toEntity(branchRequest);
 
         updatedBranch.setId(branchId);
-        BeanUtils.copyProperties(existedBranch,updatedBranch);
+        updatedBranch.setProfitOfDay(existedBranch.getProfitOfDay());
+        updatedBranch.setProfitOfMonth(existedBranch.getProfitOfMonth());
+        updatedBranch.setProfitOfYear(existedBranch.getProfitOfYear());
+        updatedBranch.setTotalProfit(existedBranch.getTotalProfit());
+        updatedBranch.setManager(existedBranch.getManager());
+        //BeanUtils.copyProperties(updatedBranch,existedBranch);
+
+
         updatedBranch = branchRepo.save(updatedBranch);
 
 
