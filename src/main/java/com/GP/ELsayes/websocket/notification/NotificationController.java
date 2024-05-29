@@ -9,6 +9,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
+import java.util.HashMap;
+import java.util.Map;
 
 
 @RestController
@@ -39,14 +41,18 @@ public class NotificationController {
 
     @DeleteMapping("/delete/{notificationId}")
     public ResponseEntity<?> delete(@PathVariable Long notificationId){
+        Map<String, String> response = new HashMap<>();
         this.notificationService.delete(notificationId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+        response.put("message", "Deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @DeleteMapping("/delete-all-by-user-id/{userId}")
     public ResponseEntity<?> deleteALLByUserId(@PathVariable Long userId){
+        Map<String, String> response = new HashMap<>();
         this.notificationService.deleteAllByUserId(userId);
-        return new ResponseEntity<>("Deleted Successfully", HttpStatus.ACCEPTED);
+        response.put("message", "Deleted successfully");
+        return new ResponseEntity<>(response, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/get-count-unOpened-by-user-id/{userId}")
