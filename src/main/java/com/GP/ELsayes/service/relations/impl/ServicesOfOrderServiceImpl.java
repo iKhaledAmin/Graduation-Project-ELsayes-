@@ -85,7 +85,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
         Notification notification = new Notification();
         notification.setNotificationTitle(serviceName);
         notification.setNotificationContent("Now," + serviceName + " service is finished successfully.");
-        notification.setType(NotificationType.Worker_Notification);
+        notification.setType(NotificationType.Customer_Notification);
         User user = userService.getById(customerId);
         notification.setUser(user);
         notificationService.sendPrivateNotification(String.valueOf(customerId), notification);

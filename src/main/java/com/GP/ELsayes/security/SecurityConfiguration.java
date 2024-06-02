@@ -66,6 +66,8 @@ public class SecurityConfiguration {
 
                         .requestMatchers("/customers/**").hasRole("CUSTOMER")
 
+                        .requestMatchers("/notifications/**").hasAnyRole("CUSTOMER","PARKING_WORKER", "CLEANING_WORKER","MAINTENANCE_WORKER")
+
 
                         .requestMatchers(
                                 "/workers/edit-profile/{workerId}"
