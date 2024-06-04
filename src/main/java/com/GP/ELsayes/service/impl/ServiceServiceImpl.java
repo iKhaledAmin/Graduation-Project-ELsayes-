@@ -22,6 +22,7 @@ import com.GP.ELsayes.service.relations.ManagersOfServicesService;
 import com.GP.ELsayes.service.relations.ServicesOfBranchesService;
 import com.GP.ELsayes.service.relations.ServicesOfPackagesService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -46,6 +47,35 @@ public class ServiceServiceImpl implements ServiceService {
     private  final ServicesOfPackagesService servicesOfpackagesService;
 
 
+    // This method will run at midnight every day to reset the profitOfDay to zero
+    @Scheduled(cron = "0 0 0 * * ?")
+    public void resetProfitOfDay() {
+        List<ServiceEntity> services = serviceRepo.findAll();
+        for (ServiceEntity service : services) {
+            service.setProfitOfDay("0");
+            serviceRepo.save(service);
+        }
+    }
+
+    // Runs on the first day of every month at midnight
+    @Scheduled(cron = "0 0 0 1 * ?")
+    public void resetProfitOfMonthTask() {
+        List<ServiceEntity> services = serviceRepo.findAll();
+        for (ServiceEntity service : services) {
+            service.setProfitOfDay("0");
+            serviceRepo.save(service);
+        }
+    }
+
+    // Runs on the first day of every year at midnight
+    @Scheduled(cron = "0 0 0 1 1 ?")
+    public void resetProfitOfYearTask() {
+        List<ServiceEntity> services = serviceRepo.findAll();
+        for (ServiceEntity service : services) {
+            service.setProfitOfDay("0");
+            serviceRepo.save(service);
+        }
+    }
 
 
     void throwExceptionIfServiceStillIncludedInPackage(Long serviceId){
@@ -70,7 +100,12 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public ServiceResponse add(ServiceRequest serviceRequest) {
         ServiceEntity service = this.serviceMapper.toEntity(serviceRequest);
+        service.setProfitOfDay("0");
+        service.setProfitOfMonth("0");
+        service.setProfitOfYear("0");
+        service.setTotalProfit("0");
         service = this.serviceRepo.save(service);
+
 
         Manager manager = managerService.getById(serviceRequest.getManagerId());
         ManagersOfServices managersOfServices= this.managersOfServicesService.add(
@@ -95,6 +130,10 @@ public class ServiceServiceImpl implements ServiceService {
         updatedService.setPrice(serviceRequest.getPrice());
         updatedService.setRequiredTime(serviceRequest.getRequiredTime());
         updatedService.setServiceCategory(serviceRequest.getServiceCategory());
+        updatedService.setProfitOfDay(existedService.getProfitOfDay());
+        updatedService.setProfitOfMonth(existedService.getProfitOfMonth());
+        updatedService.setProfitOfYear(existedService.getProfitOfYear());
+        updatedService.setTotalProfit(existedService.getTotalProfit());
 
         //BeanUtils.copyProperties(updatedService,existedService);
         updatedService = serviceRepo.save(updatedService);
@@ -325,5 +364,22 @@ public class ServiceServiceImpl implements ServiceService {
     @Override
     public List<ServiceResponse> getAllTakeAwayServices(){
         return getAllByCategory(ServiceCategory.TAKE_AWAY_SERVICE);
+    }
+
+    @Override
+    public void incrementProfit(Long serviceId) {
+        ServiceEntity service= getById(serviceId);
+        double profitOfDay = Double.parseDouble(service.getProfitOfDay()) + Double.parseDouble(service.getPrice());
+        double profitOfMonth = Double.parseDouble(service.getProfitOfMonth()) + Double.parseDouble(service.getPrice());
+        double profitOfYear = Double.parseDouble(service.getProfitOfYear()) + Double.parseDouble(service.getPrice());
+        double totalProfit = Double.parseDouble(service.getTotalProfit()) + Double.parseDouble(service.getPrice());
+
+        service.setProfitOfDay(String.valueOf(profitOfDay));
+        service.setProfitOfMonth(String.valueOf(profitOfMonth));
+        service.setProfitOfYear(String.valueOf(profitOfYear));
+        service.setTotalProfit(String.valueOf(totalProfit));
+
+        serviceRepo.save(service);
+
     }
 }

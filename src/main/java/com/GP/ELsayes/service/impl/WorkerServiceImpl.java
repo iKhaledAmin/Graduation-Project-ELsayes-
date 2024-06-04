@@ -10,6 +10,7 @@ import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.Order;
+import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
@@ -50,6 +51,7 @@ public class WorkerServiceImpl implements WorkerService {
     private final BranchService branchService;
     private final OrderService orderService;
     private final CarService carService;
+    private final ServiceService serviceService;
     private final ServicesOfOrderService servicesOfOrderService;
     private final VisitationsOfBranchesService visitationsOfBranchesService;
     private final FreeTrialCodeService freeTrialCodeService;
@@ -272,6 +274,11 @@ public class WorkerServiceImpl implements WorkerService {
                 checkOutResponse.setTotalCost(String.valueOf(currentTotalCost));
 
                 orderService.updateOrderStatus(order.get().getId(), ProgressStatus.PAYED);
+
+                List<ServiceEntity> servicesOfOrder = serviceService.getAllByOrderId(order.get().getId());
+                servicesOfOrder.forEach(service -> {
+                    serviceService.incrementProfit(service.getId());
+                });
             }
         }
 

@@ -48,5 +48,6 @@ public interface ServiceService extends CrudService<ServiceRequest , ServiceEnti
     public List<ServiceResponse> getAllCleaningServices();
     public List<ServiceResponse> getAllMaintenanceServices();
     public List<ServiceResponse> getAllTakeAwayServices();
+    public void incrementProfit(Long serviceId);
 }
 

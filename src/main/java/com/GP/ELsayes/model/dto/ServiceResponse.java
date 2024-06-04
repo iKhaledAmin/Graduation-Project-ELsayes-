@@ -19,4 +19,9 @@ public class ServiceResponse {
     private String requiredTime;
     private ServiceCategory serviceCategory;
     private Boolean availableInBranch;
+
+    private String profitOfDay;
+    private String profitOfMonth;
+    private String profitOfYear;
+    private String totalProfit;
 }

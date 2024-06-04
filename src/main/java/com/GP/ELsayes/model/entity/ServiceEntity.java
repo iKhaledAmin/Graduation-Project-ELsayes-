@@ -41,6 +41,11 @@ import java.util.List;
         @Enumerated(EnumType.STRING)
         private ServiceCategory serviceCategory;
 
+        private String profitOfDay;
+        private String profitOfMonth;
+        private String profitOfYear;
+        private String totalProfit;
+
 
         @JsonManagedReference
         @OneToMany(mappedBy = "service")

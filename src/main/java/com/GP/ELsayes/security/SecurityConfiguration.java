@@ -58,7 +58,7 @@ public class SecurityConfiguration {
                         .requestMatchers(
                                 "/auth/login"
                                 , "/customers/register"
-                                ,"/customers/owners/main-owner-is-exist"
+                                ,"/owners/main-owner-is-exist"
                                 ,"/owners/register-owner"
                                 ,"/notifications/**"
                         ).permitAll() // Permit all for these endpoints
