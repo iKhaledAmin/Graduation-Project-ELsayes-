@@ -150,6 +150,11 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
 
     }
 
+    @Override
+    public List<PackagesOfOrder> getAllByOrderId(Long orderId) {
+        return packagesOfOrderRepo.findAllByOrderId(orderId);
+    }
+
 
     @Override
     public void confirmAllPackagesOfOrder(Long orderId) {

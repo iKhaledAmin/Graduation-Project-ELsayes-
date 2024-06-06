@@ -32,4 +32,5 @@ public interface PackageService extends CrudService<PackageRequest, Package, Pac
     public List<PackageResponse> getResponseAllByBranchId(Long branchId);
 
     Optional<Package> getByServiceIdAndBranchId(Long serviceId, Long branchId);
+    public void incrementProfit(Long packageId);
 }

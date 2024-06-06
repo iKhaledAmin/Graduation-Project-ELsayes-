@@ -29,6 +29,9 @@ public class PackageResponse {
 
 
 
-
+    private String profitOfDay;
+    private String profitOfMonth;
+    private String profitOfYear;
+    private String totalProfit;
 
 }

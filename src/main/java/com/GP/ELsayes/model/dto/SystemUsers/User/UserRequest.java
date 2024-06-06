@@ -19,13 +19,13 @@ public class UserRequest {
     @NotNull(message = "First Name Must Not Be Null")
     @NotEmpty(message = "First Name Must Not Be Empty")
     @Size(min = 3 ,message = "First name Must be more than 3 letters")
-    @Size(max = 10 ,message = "First name Must be less than 10 letters")
+    @Size(max = 20 ,message = "First name Must be less than 20 letters")
     private String firstName;
 
     @NotNull(message = "Last Name Must Not Be Null")
     @NotEmpty(message = "Last Name Must Not Be Empty")
     @Size(min = 3 ,message = "Last name Must be more than 3 letters")
-    @Size(max = 10 ,message = "Last name Must be less than 10 letters")
+    @Size(max = 20 ,message = "Last name Must be less than 20 letters")
     private String lastName;
 
 //    @Size(min = 5 ,message = "User name must be more than 5 letters")

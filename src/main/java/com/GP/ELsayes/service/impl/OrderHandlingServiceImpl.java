@@ -127,7 +127,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
 
     private void serveOrder(Long orderId) {
         // Logic to serve the order
-        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getObjectByOrderId(orderId);
+        List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getAlltByOrderId(orderId);
         for (ServicesOfOrders service : servicesOfOrder){
             assignServiceToWorker(service);
         }

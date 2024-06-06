@@ -5,33 +5,29 @@ import com.GP.ELsayes.model.dto.FreeTrialCodeResponse;
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.EmployeeChildren.WorkerResponse;
-import com.GP.ELsayes.model.dto.SystemUsers.User.UserRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserResponse;
 import com.GP.ELsayes.model.entity.Branch;
 import com.GP.ELsayes.model.entity.Car;
 import com.GP.ELsayes.model.entity.Order;
+import com.GP.ELsayes.model.entity.Package;
 import com.GP.ELsayes.model.entity.ServiceEntity;
-import com.GP.ELsayes.model.entity.SystemUsers.User;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
-import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Manager;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.EmployeeChildren.Worker;
+import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
-import com.GP.ELsayes.model.enums.NotificationType;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.model.enums.roles.UserRole;
 import com.GP.ELsayes.model.enums.WorkerStatus;
 import com.GP.ELsayes.model.enums.roles.WorkerRole;
-import com.GP.ELsayes.model.mapper.UserMapper;
 import com.GP.ELsayes.model.mapper.WorkerMapper;
 import com.GP.ELsayes.repository.WorkerRepo;
 import com.GP.ELsayes.service.*;
+import com.GP.ELsayes.service.relations.PackagesOfOrderService;
 import com.GP.ELsayes.service.relations.ServicesOfOrderService;
 import com.GP.ELsayes.service.relations.VisitationsOfBranchesService;
-import com.GP.ELsayes.websocket.notification.Notification;
-import com.GP.ELsayes.websocket.notification.NotificationService;
 import lombok.RequiredArgsConstructor;
 import lombok.SneakyThrows;
-import org.apache.commons.beanutils.BeanUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -46,13 +42,14 @@ public class WorkerServiceImpl implements WorkerService {
 
     private final  WorkerMapper workerMapper;
     private final  WorkerRepo workerRepo;
-    private final UserMapper userMapper;
     private final UserService userService;
     private final BranchService branchService;
     private final OrderService orderService;
     private final CarService carService;
     private final ServiceService serviceService;
+    private final PackageService packageService;
     private final ServicesOfOrderService servicesOfOrderService;
+    private final PackagesOfOrderService packagesOfOrderService;
     private final VisitationsOfBranchesService visitationsOfBranchesService;
     private final FreeTrialCodeService freeTrialCodeService;
 
@@ -117,10 +114,21 @@ public class WorkerServiceImpl implements WorkerService {
 
         Worker existedWorker = this.getById(workerId);
         Worker updatedWorker = this.workerMapper.toEntity(workerRequest);
+        Branch branch = this.branchService.getById(workerRequest.getBranchId());
 
-        // Set fields from the existing manager that are not supposed to change
-        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
+
+        updatedWorker.setId(workerId);
+        //BeanUtils.copyProperties(existedWorker,updatedWorker);
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
+        updatedWorker.setUserName(existedWorker.getUserName());
+        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
+        updatedWorker.setScore(existedWorker.getScore());
+        updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
+        updatedWorker.setTotalSalary(emp -> {
+            double baseSalary = Double.parseDouble(emp.getBaseSalary());
+            double bonus = Double.parseDouble(emp.getBonus());
+            return baseSalary + bonus;
+        });
 
         if (updatedWorker.getBaseSalary() == null || updatedWorker.getBonus() == null) {
             updatedWorker.setBaseSalary(existedWorker.getBaseSalary());
@@ -134,22 +142,8 @@ public class WorkerServiceImpl implements WorkerService {
         }else updatedWorker.setUserRole(UserRole.PARKING_WORKER);
 
 
-        updatedWorker.setId(workerId);
-        updatedWorker.setUserName(existedWorker.getUserName());
-        BeanUtils.copyProperties(existedWorker,updatedWorker);
-        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
-        updatedWorker.setScore(workerRequest.getScore());
-        updatedWorker.setTotalSalary(emp -> {
-            double baseSalary = Double.parseDouble(emp.getBaseSalary());
-            double bonus = Double.parseDouble(emp.getBonus());
-            return baseSalary + bonus;
-        });
-
-
-        Branch branch = this.branchService.getById(workerRequest.getBranchId());
         updatedWorker.setBranch(branch);
         updatedWorker.setManager(branch.getManager());
-
 
 
         return this.workerMapper.toResponse(workerRepo.save(updatedWorker));
@@ -275,9 +269,18 @@ public class WorkerServiceImpl implements WorkerService {
 
                 orderService.updateOrderStatus(order.get().getId(), ProgressStatus.PAYED);
 
-                List<ServiceEntity> servicesOfOrder = serviceService.getAllByOrderId(order.get().getId());
-                servicesOfOrder.forEach(service -> {
-                    serviceService.incrementProfit(service.getId());
+                List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getAlltByOrderId(order.get().getId());
+                servicesOfOrder.forEach(serviceOfOrder -> {
+                    if (serviceOfOrder.getPackagesOfOrder() == null){
+                        ServiceEntity service = serviceService.getById(serviceOfOrder.getService().getId());
+                        serviceService.incrementProfit(service.getId());
+                    }
+                });
+
+                List<PackagesOfOrder> packagesOfOrder = packagesOfOrderService.getAllByOrderId(order.get().getId());
+                packagesOfOrder.forEach(packageOfOrder -> {
+                    Package aPackage = packageService.getById(packageOfOrder.getPackageEntity().getId());
+                    packageService.incrementProfit(aPackage.getId());
                 });
             }
         }

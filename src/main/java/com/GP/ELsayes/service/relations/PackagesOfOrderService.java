@@ -24,4 +24,5 @@ public interface PackagesOfOrderService {
 
     public void deletePackageFromOrderList(Long packageId);
 
+    List<PackagesOfOrder> getAllByOrderId(Long orderId);
 }

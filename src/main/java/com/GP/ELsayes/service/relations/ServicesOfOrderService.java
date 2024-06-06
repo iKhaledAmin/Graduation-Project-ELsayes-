@@ -12,7 +12,7 @@ public interface ServicesOfOrderService {
     public void addServiceToOrder(Long customerId, Long serviceId );
     public void confirmAllServiceOfOrder(Long orderId);
 
-    public List<ServicesOfOrders> getObjectByOrderId(Long orderId);
+    public List<ServicesOfOrders> getAlltByOrderId(Long orderId);
     public Optional<ServicesOfOrders> getUnConfirmedByOrderIdAndServiceId(Long orderId, Long serviceId);
     public void setWorkerServiceTask(Long customerId, Long serviceId, Worker worker);
 

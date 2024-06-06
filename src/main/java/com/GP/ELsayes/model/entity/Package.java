@@ -35,6 +35,11 @@ public class Package {
     private String currentPackagePrice;
     //private String currentPackageRequiredTime;
 
+    private String profitOfDay;
+    private String profitOfMonth;
+    private String profitOfYear;
+    private String totalProfit;
+
 
 
     @JsonManagedReference

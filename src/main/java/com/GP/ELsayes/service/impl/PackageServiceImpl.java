@@ -299,5 +299,20 @@ import java.util.Optional;
     }
 
 
+    @Override
+    public void incrementProfit(Long packageId) {
+        Package aPackage = getById(packageId);
+        double profitOfDay = Double.parseDouble(aPackage.getProfitOfDay()) + Double.parseDouble(aPackage.getCurrentPackagePrice());
+        double profitOfMonth = Double.parseDouble(aPackage.getProfitOfMonth()) + Double.parseDouble(aPackage.getCurrentPackagePrice());
+        double profitOfYear = Double.parseDouble(aPackage.getProfitOfYear()) + Double.parseDouble(aPackage.getCurrentPackagePrice());
+        double totalProfit = Double.parseDouble(aPackage.getTotalProfit()) + Double.parseDouble(aPackage.getCurrentPackagePrice());
+
+        aPackage.setProfitOfDay(String.valueOf(profitOfDay));
+        aPackage.setProfitOfMonth(String.valueOf(profitOfMonth));
+        aPackage.setProfitOfYear(String.valueOf(profitOfYear));
+        aPackage.setTotalProfit(String.valueOf(totalProfit));
+
+        packageRepo.save(aPackage);
+    }
 
 }
