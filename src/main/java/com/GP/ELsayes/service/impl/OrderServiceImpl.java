@@ -194,12 +194,6 @@ public class OrderServiceImpl implements OrderService {
         orderResponse.setPackages(packagesOfOrder);
         orderResponse.setOrderTotalCost(unConfirmedOrder.get().getTotalPrice());
         orderResponse.setTotalRequiredTime(unConfirmedOrder.get().getTotalRequiredTime());
-//        return new OrderResponse(
-//                servicesOfOrder
-//                ,packagesOfOrder
-//                ,unConfirmedOrder.get().getTotalPrice()
-//                ,unConfirmedOrder.get().getTotalRequiredTime()
-//        );
 
         return orderResponse;
     }
@@ -216,12 +210,6 @@ public class OrderServiceImpl implements OrderService {
         orderResponse.setPackages(packagesOfOrder);
         orderResponse.setOrderTotalCost(finishedOrder.get().getTotalPrice());
         orderResponse.setTotalRequiredTime(finishedOrder.get().getTotalRequiredTime());
-//        return new OrderResponse(
-//                servicesOfOrder
-//                ,packagesOfOrder
-//                ,finishedOrder.get().getTotalPrice()
-//                ,finishedOrder.get().getTotalRequiredTime()
-//        );
 
         return orderResponse;
     }

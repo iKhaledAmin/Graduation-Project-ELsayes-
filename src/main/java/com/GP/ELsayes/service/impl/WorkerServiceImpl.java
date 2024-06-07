@@ -121,7 +121,7 @@ public class WorkerServiceImpl implements WorkerService {
         //BeanUtils.copyProperties(existedWorker,updatedWorker);
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
         updatedWorker.setUserName(existedWorker.getUserName());
-        updatedWorker.setWorkerStatus(existedWorker.getWorkerStatus());
+        updatedWorker.setWorkerStatus(workerRequest.getWorkerStatus());
         updatedWorker.setScore(existedWorker.getScore());
         updatedWorker.setDateOfEmployment(existedWorker.getDateOfEmployment());
         updatedWorker.setTotalSalary(emp -> {

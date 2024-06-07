@@ -78,7 +78,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         workerStorage.addWorkersByRole(WorkerRole.PARKING_WORKER, availableParkingWorkers);
         workerStorage.addWorkersByRole(WorkerRole.MAINTENANCE_WORKER, availableMaintenanceWorkers);
     }
-    @Scheduled(fixedRate = 60000 ) // 60,000 milliseconds = 1 minute
+    @Scheduled(fixedRate = 30000 ) // 60,000 milliseconds = 1 minute
     private void getAllAvailableWorkers() {
         availableCleaningWorkers = getAllAvailableCleaningWorkers();
         availableParkingWorkers = getAllAvailableParkingWorkers();
@@ -181,7 +181,8 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
             sendNotificationToAssignedWorker(
                     assignedWorker.getId(),
                     servicesOfOrder.getCustomer().getCar().getCarPlateNumber(),
-                    servicesOfOrder.getService().getName());
+                    servicesOfOrder.getService().getName()
+            );
             return true;
         } else {
             // No available worker found, return false

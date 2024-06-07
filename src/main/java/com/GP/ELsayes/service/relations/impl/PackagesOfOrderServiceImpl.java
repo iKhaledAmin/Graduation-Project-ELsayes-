@@ -75,7 +75,6 @@ public class PackagesOfOrderServiceImpl implements PackagesOfOrderService {
     @Override
     public List<PackagesOfOrderResponse> getUnConfirmedPackagesOfOrderByCustomerId(Long customerId, Long branchId){
 
-        System.out.println("THe  " + branchId);
         if (branchId == null)
             return getResponseAllUnConfirmedPackagesByCustomerId(customerId);
         else {
