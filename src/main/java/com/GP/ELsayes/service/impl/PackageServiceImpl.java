@@ -104,6 +104,11 @@ import java.util.Optional;
     public PackageResponse add(PackageRequest packageRequest) {
         Package aPackage = this.packageMapper.toEntity(packageRequest);
 
+        aPackage.setProfitOfDay("0");
+        aPackage.setProfitOfMonth("0");
+        aPackage.setProfitOfYear("0");
+        aPackage.setTotalProfit("0");
+
         aPackage = this.packageRepo.save(aPackage);
 
         Manager manager = managerService.getById(packageRequest.getManagerId());
@@ -142,11 +147,15 @@ import java.util.Optional;
         String currentPackagePrice = calculateActualPackagePrice(packageId, updatedPackage.getPercentageOfDiscount());
 
         updatedPackage.setId(packageId);
-        BeanUtils.copyProperties(updatedPackage, existedPackage);
+        //BeanUtils.copyProperties(updatedPackage, existedPackage);
         updatedPackage.setPercentageOfDiscount(packageRequest.getPercentageOfDiscount());
         updatedPackage.setOriginalTotalPrice(originalTotalPrice);
         updatedPackage.setOriginalTotalRequiredTime(originalTotalRequiredTime);
         updatedPackage.setCurrentPackagePrice(currentPackagePrice);
+        updatedPackage.setProfitOfDay(existedPackage.getProfitOfDay());
+        updatedPackage.setProfitOfMonth(existedPackage.getProfitOfMonth());
+        updatedPackage.setProfitOfYear(existedPackage.getProfitOfYear());
+        updatedPackage.setTotalProfit(existedPackage.getTotalProfit());
 
         updatedPackage = packageRepo.save(updatedPackage);
 

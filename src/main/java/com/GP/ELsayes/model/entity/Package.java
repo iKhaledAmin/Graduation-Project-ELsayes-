@@ -48,7 +48,7 @@ public class Package {
 
 
     @JsonManagedReference
-    @OneToMany(mappedBy = "packageEntity")
+    @OneToMany(mappedBy = "packageEntity",cascade = CascadeType.REMOVE)
     private List<ServicesOfPackage> servicesOfPackage ;
 
     @JsonManagedReference
