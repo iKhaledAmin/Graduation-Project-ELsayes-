@@ -7,6 +7,8 @@ import com.GP.ELsayes.model.dto.ServicesOfOrderResponse;
 import com.GP.ELsayes.model.entity.Order;
 import com.GP.ELsayes.model.entity.ServiceEntity;
 import com.GP.ELsayes.model.entity.SystemUsers.userChildren.Customer;
+import com.GP.ELsayes.model.entity.relations.PackagesOfOrder;
+import com.GP.ELsayes.model.entity.relations.ServicesOfOrders;
 import com.GP.ELsayes.model.entity.relations.VisitationsOfBranches;
 import com.GP.ELsayes.model.enums.ProgressStatus;
 import com.GP.ELsayes.repository.OrderRepo;
@@ -127,6 +129,45 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
+    public OrderResponse getResponseById(Long orderId){
+        OrderResponse orderResponse = new OrderResponse();
+        Order order = getById(orderId);
+
+        orderResponse.setId(orderId);
+        orderResponse.setOrderDate(order.getOrderDate());
+        orderResponse.setOrderFinishDate(order.getOrderFinishDate());
+        orderResponse.setTotalRequiredTime(order.getTotalRequiredTime());
+        orderResponse.setTotalPrice(order.getTotalPrice());
+        orderResponse.setProgressStatus(order.getProgressStatus());
+        orderResponse.setServices(servicesOfOrderService.getResponseAllByOrderId(orderId));
+        orderResponse.setPackages(packagesOfOrderService.getResponseAllByOrderId(orderId));
+        orderResponse.setOrderTotalCost(order.getTotalPrice());
+
+        orderResponse.setCustomerName(order.getCustomer().getFirstName() + " " + order.getCustomer().getLastName());
+
+        return orderResponse;
+    }
+
+    List<Order> getAll(){
+        return orderRepo.findAll();
+    }
+
+    List<Order> getAllByByBranchId(Long branchId){
+        return orderRepo.findAllByBranchId(branchId);
+    }
+
+    @Override
+    public List<OrderResponse> getAllResponseByBranchId(Long branchId){
+        List<Order> orders = getAllByByBranchId(branchId);
+        List<OrderResponse> responseList = new ArrayList<>();
+        orders.forEach(order -> {
+            responseList.add(getResponseById(order.getId()));
+        });
+
+        return responseList;
+    }
+
+    @Override
     public Optional<Order> getUnConfirmedByCustomerId(Long customerId) {
         return orderRepo.findUnConfirmedByCustomerId(customerId);
     }
@@ -147,12 +188,20 @@ public class OrderServiceImpl implements OrderService {
 
         List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getUnConfirmedServicesOfOrderByCustomerId(customerId,branchId);
         List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getUnConfirmedPackagesOfOrderByCustomerId(customerId,branchId);
-        return new OrderResponse(
-                servicesOfOrder
-                ,packagesOfOrder
-                ,unConfirmedOrder.get().getTotalPrice()
-                ,unConfirmedOrder.get().getTotalRequiredTime()
-        );
+
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setServices(servicesOfOrder);
+        orderResponse.setPackages(packagesOfOrder);
+        orderResponse.setOrderTotalCost(unConfirmedOrder.get().getTotalPrice());
+        orderResponse.setTotalRequiredTime(unConfirmedOrder.get().getTotalRequiredTime());
+//        return new OrderResponse(
+//                servicesOfOrder
+//                ,packagesOfOrder
+//                ,unConfirmedOrder.get().getTotalPrice()
+//                ,unConfirmedOrder.get().getTotalRequiredTime()
+//        );
+
+        return orderResponse;
     }
 
 
@@ -162,12 +211,19 @@ public class OrderServiceImpl implements OrderService {
         List<ServicesOfOrderResponse> servicesOfOrder = servicesOfOrderService.getResponseAllByOrderId(finishedOrder.get().getId());
         List<PackagesOfOrderResponse> packagesOfOrder = packagesOfOrderService.getResponseAllByOrderId(finishedOrder.get().getId());
 
-        return new OrderResponse(
-                servicesOfOrder
-                ,packagesOfOrder
-                ,finishedOrder.get().getTotalPrice()
-                ,finishedOrder.get().getTotalRequiredTime()
-        );
+        OrderResponse orderResponse = new OrderResponse();
+        orderResponse.setServices(servicesOfOrder);
+        orderResponse.setPackages(packagesOfOrder);
+        orderResponse.setOrderTotalCost(finishedOrder.get().getTotalPrice());
+        orderResponse.setTotalRequiredTime(finishedOrder.get().getTotalRequiredTime());
+//        return new OrderResponse(
+//                servicesOfOrder
+//                ,packagesOfOrder
+//                ,finishedOrder.get().getTotalPrice()
+//                ,finishedOrder.get().getTotalRequiredTime()
+//        );
+
+        return orderResponse;
     }
 
     @Override

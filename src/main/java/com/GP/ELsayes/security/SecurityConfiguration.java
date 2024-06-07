@@ -99,7 +99,8 @@ public class SecurityConfiguration {
                                 "/managers/get-all-packages",
                                 "/managers/activate-package-in-branch",
                                 "/managers/deactivate-package-in-branch",
-                                "/managers/get-all-packages-by-branch-id/{branchId}"
+                                "/managers/get-all-packages-by-branch-id/{branchId}",
+                                "/managers/get-all-orders-by-branch-id/{branchId}"
                         ).hasAnyRole("TOP_MANAGER", "MANAGER")
                         .requestMatchers(
                                 "/managers/get-all-workers",

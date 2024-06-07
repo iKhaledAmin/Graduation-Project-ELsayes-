@@ -1,9 +1,6 @@
 package com.GP.ELsayes.service;
 
-import com.GP.ELsayes.model.dto.PackageRequest;
-import com.GP.ELsayes.model.dto.PackageResponse;
-import com.GP.ELsayes.model.dto.ServiceRequest;
-import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.*;
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
@@ -69,6 +66,7 @@ public interface ManagerService extends CrudService<ManagerRequest, Manager, Man
     public PackageOfBranchesResponse activatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
     public PackageOfBranchesResponse deactivatePackageInBranch(PackageOfBranchesRequest packageOfBranchesRequest);
     public List<PackageResponse> getAllPackageResponseByBranchId(Long branchId);
+    public List<OrderResponse> getAllOrdersByBranchId(Long branchId);
 
 
 }

@@ -188,20 +188,12 @@ private ManagerService managerService;
         return new ResponseEntity<>(this.managerService.getAllPackageResponseByBranchId(branchId),HttpStatus.OK);
     }
 
+    @GetMapping("/get-all-orders-by-branch-id/{branchId}")
+    public ResponseEntity<?> getAllOrdersByBranchId(@PathVariable Long branchId){
+        return new ResponseEntity<>(this.managerService.getAllOrdersByBranchId(branchId),HttpStatus.OK);
+    }
 
-//
-//    @GetMapping("/get-current-customer-in-branch/{branchId}")
-//    ResponseEntity<?> getAllCurrentVisitationsInBranch(@PathVariable Long branchId){
-//        return new ResponseEntity<>(this.ownerService.getResponseAllCurrentVisitationsInBranch(branchId), HttpStatus.OK);
-//    }
-//    @GetMapping("/get-visitations-by-date")
-//    ResponseEntity<?> getAllVisitationsInBranchByADate(@RequestBody GetVisitationsRequest getVisitationsRequest){
-//        Long branchId = getVisitationsRequest.getBranchId();
-//        Date date = getVisitationsRequest.getDate();
-//        if (date == null) {
-//            date = java.sql.Date.valueOf(LocalDate.now());
-//        }
-//        return new ResponseEntity<>(this.ownerService.getResponseAllVisitationsInBranchByADate(branchId, date), HttpStatus.OK);
-//    }
+
+
 
 }

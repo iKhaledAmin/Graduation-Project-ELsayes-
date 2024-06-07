@@ -203,7 +203,7 @@ public class ServicesOfOrderServiceImpl implements ServicesOfOrderService {
     }
 
     @Override
-    public List<ServicesOfOrders> getAlltByOrderId(Long orderId) {
+    public List<ServicesOfOrders> getAllByOrderId(Long orderId) {
         return servicesOfOrderRepo.findObjectByOrderId(orderId);
     }
 

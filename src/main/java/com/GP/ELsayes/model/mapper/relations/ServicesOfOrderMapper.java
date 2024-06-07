@@ -21,6 +21,7 @@ public interface ServicesOfOrderMapper {
     @Mapping(source = "entity.service.price", target = "servicePrice")
     @Mapping(source = "entity.service.requiredTime", target = "requiredTime")
     @Mapping(source = "entity.service.image", target = "image")
+    @Mapping(source = "entity.worker.firstName", target = "workerName")
     ServicesOfOrderResponse toResponse(ServicesOfOrders entity);
 
 

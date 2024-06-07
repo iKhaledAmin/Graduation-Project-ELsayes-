@@ -269,7 +269,7 @@ public class WorkerServiceImpl implements WorkerService {
 
                 orderService.updateOrderStatus(order.get().getId(), ProgressStatus.PAYED);
 
-                List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getAlltByOrderId(order.get().getId());
+                List<ServicesOfOrders> servicesOfOrder = servicesOfOrderService.getAllByOrderId(order.get().getId());
                 servicesOfOrder.forEach(serviceOfOrder -> {
                     if (serviceOfOrder.getPackagesOfOrder() == null){
                         ServiceEntity service = serviceService.getById(serviceOfOrder.getService().getId());

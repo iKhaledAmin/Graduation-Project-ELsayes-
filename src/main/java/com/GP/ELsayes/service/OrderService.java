@@ -17,6 +17,8 @@ public interface OrderService {
     public Order update(Order updatedOrder);
     public Optional<Order> getObjectById(Long orderId);
     public Order getById(Long orderId);
+    public OrderResponse getResponseById(Long orderId);
+    public List<OrderResponse> getAllResponseByBranchId(Long branchId);
     public Optional<Order> getUnConfirmedByCustomerId(Long customerId);
     public OrderResponse getResponseUnConfirmedByCustomerId(Long customerId,Long branchId);
     public OrderProgressResponse getProgressOfConfirmedOrderByCustomerId(Long customerId);

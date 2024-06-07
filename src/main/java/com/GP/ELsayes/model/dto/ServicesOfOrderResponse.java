@@ -16,4 +16,6 @@ public class ServicesOfOrderResponse {
     private ProgressStatus progressStatus;
     private Boolean availableInBranch;
     private String image;
+
+    private String workerName;
 }

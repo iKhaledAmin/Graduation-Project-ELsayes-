@@ -1,8 +1,5 @@
 package com.GP.ELsayes.service.impl;
-import com.GP.ELsayes.model.dto.PackageRequest;
-import com.GP.ELsayes.model.dto.PackageResponse;
-import com.GP.ELsayes.model.dto.ServiceRequest;
-import com.GP.ELsayes.model.dto.ServiceResponse;
+import com.GP.ELsayes.model.dto.*;
 import com.GP.ELsayes.model.dto.SystemUsers.User.EditUserProfileRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerRequest;
 import com.GP.ELsayes.model.dto.SystemUsers.User.UserChildren.CustomerResponse;
@@ -47,12 +44,13 @@ public class ManagerServiceImpl implements  ManagerService {
     private final WorkerService workerService;
     private final PackageService packageService;
     private final CustomerService customerService;
+    private final OrderService orderService;
     private final OwnersOfManagersService ownersOfManagersService;
 
     public ManagerServiceImpl(ManagerMapper managerMapper, ManagerRepo managerRepo, UserMapper userMapper,
                               UserService userService, @Lazy BranchService branchService, @Lazy OwnerService ownerService,
                               @Lazy ServiceService serviceService, @Lazy WorkerService workerService,
-                              @Lazy PackageService packageService, CustomerService customerService, OwnersOfManagersService ownersOfManagersService) {
+                              @Lazy PackageService packageService, CustomerService customerService, OrderService orderService, OwnersOfManagersService ownersOfManagersService) {
         this.managerMapper = managerMapper;
         this.managerRepo = managerRepo;
         this.userMapper = userMapper;
@@ -63,6 +61,7 @@ public class ManagerServiceImpl implements  ManagerService {
         this.workerService = workerService;
         this.packageService = packageService;
         this.customerService = customerService;
+        this.orderService = orderService;
         this.ownersOfManagersService = ownersOfManagersService;
     }
 
@@ -368,6 +367,11 @@ public class ManagerServiceImpl implements  ManagerService {
     @Override
     public List<PackageResponse> getAllPackageResponseByBranchId(Long branchId){
         return packageService.getResponseAllByBranchId(branchId);
+    }
+
+    @Override
+    public List<OrderResponse> getAllOrdersByBranchId(Long branchId){
+        return orderService.getAllResponseByBranchId(branchId);
     }
 
 }
