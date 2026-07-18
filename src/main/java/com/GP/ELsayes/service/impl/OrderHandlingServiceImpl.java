@@ -78,7 +78,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         workerStorage.addWorkersByRole(WorkerRole.PARKING_WORKER, availableParkingWorkers);
         workerStorage.addWorkersByRole(WorkerRole.MAINTENANCE_WORKER, availableMaintenanceWorkers);
     }
-    @Scheduled(fixedRate = 30000 ) // 60,000 milliseconds = 1 minute
+    @Scheduled(fixedRate = 20000 ) // 60,000 milliseconds = 1 minute
     private void getAllAvailableWorkers() {
         availableCleaningWorkers = getAllAvailableCleaningWorkers();
         availableParkingWorkers = getAllAvailableParkingWorkers();
@@ -188,6 +188,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
             // No available worker found, return false
             getAllAvailableWorkers();
             if (pendingServices.contains(servicesOfOrder)){
+
                 return false;
             }else {
                 pendingServices.add(servicesOfOrder);
@@ -196,7 +197,7 @@ public class OrderHandlingServiceImpl implements OrderHandlingService {
         }
     }
 
-    @Scheduled(fixedRate = 20000) // Runs every 1m
+    @Scheduled(fixedRate = 10000) // Runs every 1m
     public void processPendingServices() {
         while (!pendingServices.isEmpty()) {
             ServicesOfOrders service = pendingServices.peek();

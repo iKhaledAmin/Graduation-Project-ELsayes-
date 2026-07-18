@@ -90,13 +90,13 @@ public class SecurityConfiguration {
                                 "/managers/get-worker-by-id/{workerId}",
                                 "/managers/get-all-workers-by-branchId/{branchId}",
                                 "/managers/get-customer-by-id/{customerId}",
-                                "/managers/get-all-services",
+                                //"/managers/get-all-services",
                                 "/managers/get-service-by-id/{serviceId}",
                                 "/managers/activate-service-in-branch",
                                 "/managers/deactivate-service-in-branch",
                                 "/managers/get-all-service-by-branch-id/{branchId}",
                                 "/managers/get-package-by-id/{packageId}",
-                                "/managers/get-all-packages",
+                                //"/managers/get-all-packages",
                                 "/managers/activate-package-in-branch",
                                 "/managers/deactivate-package-in-branch",
                                 "/managers/get-all-packages-by-branch-id/{branchId}",
@@ -120,8 +120,11 @@ public class SecurityConfiguration {
 
 
                         .requestMatchers(
-                                "/owners/get-all-branches"
-                        ).hasAnyRole("TOP_MANAGER", "OWNER")
+                                "/owners/get-all-branches",
+                                "/managers/get-all-services",
+                                "/managers/get-all-packages"
+
+                        ).hasAnyRole("TOP_MANAGER","MANAGER","OWNER")
 
 
                         .requestMatchers(

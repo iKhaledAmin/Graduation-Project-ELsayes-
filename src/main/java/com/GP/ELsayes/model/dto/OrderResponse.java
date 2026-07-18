@@ -1,6 +1,7 @@
 package com.GP.ELsayes.model.dto;
 
 import com.GP.ELsayes.model.enums.ProgressStatus;
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import lombok.AllArgsConstructor;
@@ -17,7 +18,9 @@ import java.util.List;
 public class OrderResponse {
 
     private Long id;
+    @JsonFormat(pattern="yyyy-MM-dd-hh")
     private Date orderDate;
+    @JsonFormat(pattern="yyyy-MM-dd-hh")
     private Date orderFinishDate;
     private String totalRequiredTime;
     private String totalPrice;

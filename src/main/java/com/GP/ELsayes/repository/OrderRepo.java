@@ -27,7 +27,7 @@ public interface OrderRepo extends JpaRepository<Order,Long> {
     @Query("SELECT o FROM Order o WHERE o.customer.id = :customerId AND o.progressStatus = 'UN_CONFIRMED'")
     Optional<Order> findUnConfirmedByCustomerId(Long customerId);
 
-    @Query("SELECT o FROM Order o WHERE o.branch.id = :branchId")
+    @Query("SELECT o FROM Order o WHERE o.branch.id = :branchId ORDER BY o.orderDate DESC")
     List<Order> findAllByBranchId(Long branchId);
 }
 

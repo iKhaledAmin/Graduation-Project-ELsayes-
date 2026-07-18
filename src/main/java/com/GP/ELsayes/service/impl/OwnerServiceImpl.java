@@ -173,10 +173,10 @@ public class OwnerServiceImpl
 
     @Override
     public List<OwnerResponse> getAll() {
-        return ownerRepo.findAll()
-                .stream()
-                .map(owner ->  ownerMapper.toResponse(owner))
-                .toList();
+            return ownerRepo.findAll()
+                    .stream()
+                    .map(owner ->  ownerMapper.toResponse(owner))
+                    .toList();
     }
 
     @Override
