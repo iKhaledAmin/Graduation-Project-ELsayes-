@@ -6,8 +6,6 @@ Elsays is a mobile platform that enables customers to reserve parking spaces and
 
 ## Project Poster 🎓
 
-The following poster was presented as part of the Elsays graduation project and provides a high-level overview of the platform, its objectives, architecture, and key functionalities.
-
 ![Elsays Graduation Project Poster](docs/poster/elsays-poster.png)
 
 ---
