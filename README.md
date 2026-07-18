@@ -1,4 +1,4 @@
-# El Says 🚗
+# ElSays 🚗
 
 El Says is a mobile platform that enables customers to reserve parking spaces and request vehicle-related services while visiting malls and hotels. The platform combines parking management, vehicle care services, and electronic payments into a unified customer experience.
 
